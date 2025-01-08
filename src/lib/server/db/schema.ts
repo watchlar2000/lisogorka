@@ -1,26 +1,89 @@
-import { integer, pgTable, serial, text, timestamp } from 'drizzle-orm/pg-core';
+import { relations } from 'drizzle-orm';
+import * as t from 'drizzle-orm/pg-core';
+import { pgEnum, pgTable as table } from 'drizzle-orm/pg-core';
+import { categories } from './types';
 
-export const usersTable = pgTable('users_table', {
-	id: serial('id').primaryKey(),
-	name: text('name').notNull(),
-	age: integer('age').notNull(),
-	email: text('email').notNull().unique()
-});
-
-export const postsTable = pgTable('posts_table', {
-	id: serial('id').primaryKey(),
-	title: text('title').notNull(),
-	content: text('content').notNull(),
-	userId: integer('user_id')
-		.notNull()
-		.references(() => usersTable.id, { onDelete: 'cascade' }),
-	createdAt: timestamp('created_at').notNull().defaultNow(),
-	updatedAt: timestamp('updated_at')
+const timestamps = {
+	createdAt: t.timestamp('created_at').notNull().defaultNow(),
+	updatedAt: t
+		.timestamp('updated_at')
 		.notNull()
 		.$onUpdate(() => new Date())
+};
+
+export const categoryEnum = pgEnum('category', categories);
+
+export const authors = table('authors', {
+	id: t.serial('id').primaryKey(),
+	name: t.varchar('name').notNull(),
+	surname: t.varchar('surname'),
+	photoUrl: t.varchar('photo_url').notNull(),
+	about: t.text('about').notNull(),
+	...timestamps
 });
 
-export type InsertUser = typeof usersTable.$inferInsert;
-export type SelectUser = typeof usersTable.$inferSelect;
-export type InsertPost = typeof postsTable.$inferInsert;
-export type SelectPost = typeof postsTable.$inferSelect;
+export const projects = table('projects', {
+	id: t.serial('id').primaryKey(),
+	title: t.varchar('title').notNull(),
+	slug: t.varchar('slug').notNull().unique(),
+	description: t.varchar('description'),
+	category: categoryEnum('category'),
+	coverImageId: t
+		.integer('cover_image_id')
+		.notNull()
+		.references(() => images.id),
+	isFeatured: t.boolean('is_featured').default(false),
+	...timestamps
+});
+
+export const projectsRelations = relations(projects, ({ one, many }) => ({
+	coverImage: one(images, {
+		fields: [projects.coverImageId],
+		references: [images.id]
+	}),
+	images: many(projectsToImages)
+}));
+
+export const images = table('images', {
+	id: t.serial('id').primaryKey(),
+	url: t.varchar('url').notNull(),
+	alt: t.varchar('alt').notNull(),
+	width: t.integer('width').notNull(),
+	height: t.integer('height').notNull(),
+	...timestamps
+});
+
+export const imagesRelations = relations(images, ({ many }) => ({
+	projects: many(projectsToImages)
+}));
+
+export const projectsToImages = table('projects_to_images', {
+	projectId: t
+		.integer('project_id')
+		.notNull()
+		.references(() => projects.id, { onDelete: 'cascade' }),
+	imageId: t
+		.integer('image_id')
+		.notNull()
+		.references(() => images.id, { onDelete: 'cascade' })
+});
+
+export const projectsToImagesRelations = relations(projectsToImages, ({ one }) => ({
+	project: one(projects, {
+		fields: [projectsToImages.projectId],
+		references: [projects.id]
+	}),
+	image: one(images, {
+		fields: [projectsToImages.imageId],
+		references: [images.id]
+	})
+}));
+
+export type AuthorInsert = typeof authors.$inferInsert;
+export type AuthorSelect = typeof authors.$inferSelect;
+
+export type ProjectInsert = typeof projects.$inferInsert;
+export type ProjectSelect = typeof projects.$inferSelect;
+
+export type ImageInsert = typeof images.$inferInsert;
+export type ImageSelect = typeof images.$inferSelect;
