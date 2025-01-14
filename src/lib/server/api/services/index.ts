@@ -1,5 +1,5 @@
-import { ProjectRepository } from '$lib/server/repositories/project/projectRepository';
-import { db } from '..';
+import { db } from '../database';
+import { ProjectRepository } from '../repositories/project/projectRepository';
 import { ProjectService } from './project';
 
 const projectRepository = new ProjectRepository(db);

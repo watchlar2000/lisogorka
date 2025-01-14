@@ -1,4 +1,4 @@
-import { routing } from '$lib/server/db/api';
+import { routing } from '$lib/server/api/services';
 import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async () => {

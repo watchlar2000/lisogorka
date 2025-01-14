@@ -1,5 +1,5 @@
+import { projects } from '$lib/server/api/database/schema';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { projects } from '../../db/schema';
 import { BaseRepository } from '../base/baseRepository';
 import type { IProjectRepository, ProjectOptions } from './project.types';
 

@@ -1,5 +1,5 @@
-import type { IProjectRepository } from '$lib/server/repositories/project/project.types';
-import type { Project } from '../types';
+import type { Project } from '../database/types';
+import type { IProjectRepository } from '../repositories/project/project.types';
 
 interface IProjectService {
 	listAll: () => Promise<Project[]>;

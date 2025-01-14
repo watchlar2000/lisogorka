@@ -1,4 +1,8 @@
-import type { Category, Project, ProjectInsert } from '../../db/types';
+import type {
+	Category,
+	Project,
+	ProjectInsert,
+} from '$lib/server/api/database/types';
 import type { IBaseRepository } from '../base/base.types';
 
 // TODO implement other options

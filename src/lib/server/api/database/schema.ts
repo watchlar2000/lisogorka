@@ -1,17 +1,8 @@
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { pgEnum, pgTable as table } from 'drizzle-orm/pg-core';
+import { timestamps } from '../utils/drizzle';
 import { categories } from './types';
-
-const timestamps = {
-	createdAt: t.timestamp('created_at').notNull().defaultNow(),
-	updatedAt: t
-		.timestamp('updated_at')
-		.notNull()
-		.$onUpdate(() => new Date()),
-};
-
-export const categoryEnum = pgEnum('category', categories);
 
 export const authors = table('authors', {
 	id: t.serial('id').primaryKey(),
@@ -21,6 +12,8 @@ export const authors = table('authors', {
 	about: t.text('about').notNull(),
 	...timestamps,
 });
+
+export const categoryEnum = pgEnum('category', categories);
 
 export const projects = table('projects', {
 	id: t.serial('id').primaryKey(),
