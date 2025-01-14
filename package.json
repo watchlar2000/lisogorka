@@ -17,7 +17,7 @@
 		"db:studio": "drizzle-kit studio",
 		"db:start": "docker-compose up -d",
 		"db:stop": "docker-compose down",
-		"db:seed": "psql -h localhost -U postgres -d local -f ./db/seed.sql"
+		"db:seed": "psql -h localhost -U postgres -d local -f ./drizzle/seed/seed.sql"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.3",
