@@ -1,8 +1,8 @@
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { pgEnum, pgTable as table } from 'drizzle-orm/pg-core';
+import { categories } from '../types/types';
 import { timestamps } from '../utils/drizzle';
-import { categories } from './types';
 
 export const authors = table('authors', {
 	id: t.serial('id').primaryKey(),

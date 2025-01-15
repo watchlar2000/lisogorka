@@ -1,10 +1,12 @@
-import type { authors, images, projects } from './schema';
-
-export type Author = typeof authors.$inferSelect;
-export type AuthorInsert = typeof authors.$inferInsert;
+import type { images, projects } from '../database/schema';
 
 export type Project = typeof projects.$inferSelect;
 export type ProjectInsert = typeof projects.$inferInsert;
+
+export type ProjectWithImages = Project & {
+	coverImage: Image;
+	images: Image[];
+};
 
 export type Image = typeof images.$inferSelect;
 export type ImageInsert = typeof images.$inferInsert;
