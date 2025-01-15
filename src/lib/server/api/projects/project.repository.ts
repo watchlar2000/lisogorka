@@ -19,7 +19,7 @@ export class ProjectRepository
 	extends DrizzleRepository
 	implements IProjectRepository
 {
-	protected db = this.drizzle.db;
+	db = this.drizzle.db;
 
 	async listAll() {
 		const rows = await this.db.execute(
