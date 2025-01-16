@@ -1,13 +1,8 @@
-import { ImageService } from '$lib/server/api/images/image.service';
-import { ProjectService } from '$lib/server/api/projects/project.service';
+import { routing } from '$lib/server/api/routing';
 import type { PageServerLoad } from './$types';
 
-const projectService = new ProjectService();
-const imageService = new ImageService();
-
 export const load: PageServerLoad = async () => {
-	// const data = await projectService.listAll({ isFeatured: false });
-	const data = await imageService.listAll();
+	const data = await routing.projects.listAll({ isFeatured: true });
 
 	return {
 		data,

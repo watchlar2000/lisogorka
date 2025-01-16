@@ -1,6 +1,6 @@
 import type { Image } from '../types/types';
 import { createImageDTO, type CreateImageDTO } from './image.dto';
-import { ImageRepository, type IImageRepository } from './image.repository';
+import { type IImageRepository } from './image.repository';
 
 export interface IImageService {
 	listAll: () => Promise<Image[]>;
@@ -9,7 +9,11 @@ export interface IImageService {
 }
 
 export class ImageService implements IImageService {
-	constructor(private repository: IImageRepository = new ImageRepository()) {}
+	private repository;
+
+	constructor(imageRepository: IImageRepository) {
+		this.repository = imageRepository;
+	}
 
 	async listAll() {
 		return this.repository.listAll();

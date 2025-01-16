@@ -1,5 +1,5 @@
 import { sql } from 'drizzle-orm';
-import { DrizzleRepository } from '../database/drizzle.respository';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { projects } from '../database/schema';
 import type { ProjectInsert, ProjectWithImages } from '../types/types';
 
@@ -15,11 +15,13 @@ export interface IProjectRepository {
 	update?(id: number, data: ProjectInsert): Promise<ProjectWithImages>;
 }
 
-export class ProjectRepository
-	extends DrizzleRepository
-	implements IProjectRepository
-{
-	db = this.drizzle.db;
+export class ProjectRepository implements IProjectRepository {
+	db;
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	constructor(db: PostgresJsDatabase<any>) {
+		this.db = db;
+	}
 
 	async listAll() {
 		const rows = await this.db.execute(

@@ -1,5 +1,5 @@
 import { eq } from 'drizzle-orm';
-import { DrizzleRepository } from '../database/drizzle.respository';
+import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { images } from '../database/schema';
 import type { Image, ImageInsert } from '../types/types';
 
@@ -9,11 +9,12 @@ export interface IImageRepository {
 	create(data: ImageInsert): Promise<Image>;
 }
 
-export class ImageRepository
-	extends DrizzleRepository
-	implements IImageRepository
-{
-	protected db = this.drizzle.db;
+export class ImageRepository implements IImageRepository {
+	db;
+
+	constructor(db: PostgresJsDatabase<Record<string, unknown>>) {
+		this.db = db;
+	}
 
 	async listAll() {
 		return this.db.select().from(images);

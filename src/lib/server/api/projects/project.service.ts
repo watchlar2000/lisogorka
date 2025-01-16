@@ -1,10 +1,7 @@
 import type { Project, ProjectInsert, ProjectWithImages } from '../types/types';
 import { titleToSlug } from '../utils/titleToSlug';
 import { createProjectDTO } from './project.dto';
-import {
-	ProjectRepository,
-	type IProjectRepository,
-} from './project.repository';
+import { type IProjectRepository } from './project.repository';
 
 interface IProjectService {
 	listAll: ({
@@ -17,22 +14,24 @@ interface IProjectService {
 }
 
 export class ProjectService implements IProjectService {
-	constructor(
-		private projectRepository: IProjectRepository = new ProjectRepository(),
-	) {}
+	private repository;
+
+	constructor(projectRepository: IProjectRepository) {
+		this.repository = projectRepository;
+	}
 
 	async listAll(
 		{ isFeatured }: { isFeatured?: boolean } = { isFeatured: undefined },
 	) {
 		if (isFeatured !== undefined) {
-			return this.projectRepository.listAllByIsFeatured({ isFeatured });
+			return this.repository.listAllByIsFeatured({ isFeatured });
 		}
 
-		return this.projectRepository.listAll();
+		return this.repository.listAll();
 	}
 
 	async findById(id: number) {
-		return this.projectRepository.findById(id);
+		return this.repository.findById(id);
 	}
 
 	async create(data: ProjectInsert) {
@@ -57,6 +56,6 @@ export class ProjectService implements IProjectService {
 			coverImageId: parseInt(values.coverImageId, 10),
 		};
 
-		return this.projectRepository.create(projectData);
+		return this.repository.create(projectData);
 	}
 }
