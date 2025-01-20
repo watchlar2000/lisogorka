@@ -1,10 +1,10 @@
-import type { Image } from '../types/types';
-import { createImageDTO, type CreateImageDTO } from './image.dto';
 import { type IImageRepository } from './image.repository';
+import { createImageDTO, type CreateImageDTO, type Image } from './image.types';
 
 export interface IImageService {
 	listAll: () => Promise<Image[]>;
 	findById: (id: number) => Promise<Image>;
+	findByIds(ids: number[]): Promise<Image[]>;
 	create?: (data: CreateImageDTO) => Promise<null>;
 }
 
@@ -21,6 +21,10 @@ export class ImageService implements IImageService {
 
 	async findById(id: number) {
 		return this.repository.findById(id);
+	}
+
+	async findByIds(ids: number[]) {
+		return this.repository.findByIds(ids);
 	}
 
 	async create(data: CreateImageDTO) {

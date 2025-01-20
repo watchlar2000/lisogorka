@@ -1,14 +1,6 @@
-import { z } from 'zod';
-
-// export const imageDTO = z.object({
-// 	id: z.string(),
-// 	url: z.string(),
-// 	alt: z.string(),
-// 	width: z.string(),
-// 	height: z.string(),
-// 	createdAt: z.date(),
-// 	updatedAt: z.date(),
-// });
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
+import { type z as zod, z } from 'zod';
+import { images } from '../database/schema';
 
 const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
 const ACCEPTED_FILE_TYPES = [
@@ -17,6 +9,12 @@ const ACCEPTED_FILE_TYPES = [
 	'image/png',
 	'image/webp',
 ];
+
+export const imageSelectSchema = createSelectSchema(images);
+export const imageInsertSchema = createInsertSchema(images);
+
+export type Image = zod.infer<typeof imageSelectSchema>;
+export type NewImage = zod.infer<typeof imageInsertSchema>;
 
 export const createImageDTO = z.object({
 	file: z
