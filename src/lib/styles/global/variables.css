@@ -38,17 +38,59 @@
 	/* Custom pairs */
 	--space-l-3xl: clamp(2.25rem, 0.4239rem + 9.1304vw, 7.5rem);
 
-	--text-size-base: var(--size-step-1);
-	--text-size-meta: var(--size-step--1);
-	--text-size-heading-1: var(--size-step-5);
-	--text-size-heading-2: var(--size-step-4);
-	--text-size-heading-3: var(--size-step-3);
-	--text-size-heading-4: var(--size-step-2);
-	--text-size-heading-5: var(--size-step-1);
-	--text-size-heading-6: var(--size-step--2);
-	--text-logo: var(--size-step-6);
+	/* Colors */
+	--color-dark: #252525;
+	--color-dark-glare: #363636;
+	--color-mid: #c9c9c9;
+	--color-mid-shade: #dedede;
+	--color-light: #efefef;
+	--color-light-shade: ;
+	--color-blue: #1a8fe3;
+	--color-blue-glare: #eef6fd;
 
-	--transition-duration-short: 125ms;
-	--transition-duration-medium: 300ms;
-	--transition-duration-long: 500ms;
+	--leading: 1.5;
+	--leading-fine: 1.1;
+	--leading-loose: 1.7;
+	--kerning: normal; /* AKA letter-spacing */
+	--kerning-tight: -0.04ch;
+	--kerning-loose: 0.1ch;
+	--kerning-uppercase: 0.04ch;
+	--text-size-base: var(--step-1);
+	--text-size-meta: var(--step--1);
+	--text-size-heading-1: var(--step-5);
+	--text-size-heading-2: var(--step-4);
+	--text-size-heading-3: var(--step-3);
+	--text-size-heading-4: var(--step-2);
+	--text-size-heading-5: var(--step-1);
+	--text-size-heading-6: var(--step--2);
+	--gutter: var(--space-m-l);
+	--space-gutter: var(--space-m);
+	--space-gutter-s: var(--space-s);
+	--space-gutter-l: var(--space-l);
+	--space-regions: var(--space-xl);
+	--size-wrapper-max-width: 1035px;
+	--color-global-bg: var(--color-light);
+	--color-global-text: var(--color-dark);
+	--color-surface-bg: var(--color-mid);
+	--color-surface-bg-interact: var(--color-mid-shade);
+	--color-surface-text: var(--color-dark);
+	--color-surface-text-interact: var(--color-dark);
+	--font-base: 'Urbanist', sans-serif;
+	--font-display: 'Ubuntu', sans-serif;
+	--font-regular: 400;
+	--font-medium: 500;
+	--font-bold: 700;
+	--font-black: 900;
+	--focus-ring: 2px solid currentColor;
+	--focus-ring-offset: 2px;
+
+	--transition-base: 250ms ease;
+	--transition-movement: 200ms linear;
+	--transition-fade: 300ms ease;
+	--transition-bounce: 500ms cubic-bezier(0.5, 0.05, 0.2, 1.5);
+	--stroke: 2px dashed var(--color-mid, var(--color-dark));
+	--stroke-solid: 2px solid var(--color-mid, var(--color-dark));
+	--radius-s: 0.2rem;
+	--radius-m: 0.75rem;
+	--radius-l: 2.5rem;
 }

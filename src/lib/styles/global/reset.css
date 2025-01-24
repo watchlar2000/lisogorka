@@ -103,9 +103,9 @@ h4 {
 	text-wrap: balance;
 }
 
-a:not([class]) {
+a {
 	text-decoration-skip-ink: auto;
-	color: currentColor;
+	color: currentColor !important;
 }
 
 img,
@@ -120,6 +120,7 @@ article > * + * {
 
 img,
 picture {
+	height: auto;
 	max-width: 100%;
 	display: block;
 }

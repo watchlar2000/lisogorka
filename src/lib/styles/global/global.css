@@ -1,0 +1,192 @@
+body {
+	background: var(--color-light);
+	color: var(--color-dark);
+	font-size: var(--step-1);
+	font-family: var(--font-base);
+	line-height: var(--leading-standard);
+	font-size-adjust: from-font;
+	min-height: unset;
+	padding: 1rem 0rem 5rem 0rem;
+	margin: 0;
+}
+
+:is(h1, h2, h3, h4) {
+	line-height: var(--leading-fine);
+	text-wrap: balance;
+}
+
+h1 {
+	font-size: var(--step-5);
+	max-width: 20ch;
+}
+
+h2 {
+	font-size: var(--step-4);
+	max-width: 35ch;
+}
+
+h3 {
+	font-size: var(--step-3);
+	max-width: 35ch;
+}
+
+:is(h1, h2, h3) {
+	font-weight: 600;
+}
+
+:is(h4, h5, h6) {
+	font-size: var(--step-2);
+}
+
+ul:not([class]) {
+	padding-inline-start: 1.7ch;
+	list-style-type: disc;
+}
+
+ul:not([class]) > li {
+	padding-inline-start: var(--space-4xs);
+}
+
+ul ::marker {
+	font-size: 0.8lh;
+}
+
+ol ::marker {
+	font-size: 1em;
+	font-weight: var(--font-bold);
+}
+
+[role='list'][class],
+[role='tablist'][class] {
+	margin-block: 0;
+	padding: 0;
+}
+
+a:hover {
+	text-underline-offset: 0.2lh;
+}
+
+:is(h1, h2, h3, h4) a {
+	text-decoration-thickness: 0.1ex;
+	text-underline-offset: 0.2ex;
+}
+
+:is(h1, h2, h3, h4) a:hover {
+	text-underline-offset: 0.3ex;
+}
+
+:focus {
+	outline: none;
+}
+
+:focus-visible {
+	outline: 2px solid var(--focus-color, currentColor);
+	outline-offset: var(--focus-offset, 0.2lh);
+}
+
+/* Firefox is the only browser that doesn't outline the whole element unless you make it display: inline-block. That in itself causes multiple flow issues so we can detect it, using its own vendor prefix and reduce focus offset
+*/
+@supports (-moz-appearance: none) {
+	:root {
+		--focus-offset: 0.08em;
+	}
+}
+
+:target {
+	scroll-margin-block: 5lh;
+}
+
+::selection {
+	color: var(--color-light);
+	background: var(--color-dark);
+}
+
+hr {
+	border: none;
+	border-block-start: var(--stroke);
+	margin-block: var(--flow-space, var(--space-xl));
+}
+
+svg:not([class]) {
+	width: auto;
+	max-width: 1lh;
+	height: 1lh;
+}
+
+svg {
+	flex-shrink: 0;
+}
+
+svg[role='img'][width][height] {
+	width: revert;
+	height: revert;
+	background: var(--color-light);
+	padding: var(--space-xs);
+}
+
+/* There's a .flow composition, but this prevents forms from having to have that applied where markup is harder to control in certain systems. It still uses the --flow-space variables though to make managing space easier */
+form > * + * {
+	margin-top: var(--flow-space, 1rem);
+}
+
+:is(input, select, textarea) {
+	accent-color: var(--color-primary);
+}
+
+:is(
+	input:not([type='checkbox'], [type='radio'], [type='color']),
+	select,
+	textarea
+) {
+	padding: 0.5em 0.8em;
+	border-radius: var(--radius-s);
+	border: var(--stroke-solid);
+	background: var(--color-dark-glare);
+	color: var(--color-light);
+	width: 100%;
+}
+
+:is(
+		input:not([type='checkbox'], [type='radio'], [type='color']),
+		select,
+		textarea
+	)::placeholder {
+	color: var(--color-light);
+	opacity: 1;
+}
+
+label {
+	line-height: var(--leading-fine);
+	font-weight: var(--font-medium);
+}
+
+label::after {
+	content: '\A';
+	white-space: pre;
+}
+
+/* Usually label wraps checkbox and radio buttons, so we give ourselves more layout and text-flow control with flex */
+label:has(input) {
+	display: flex;
+	align-items: baseline;
+	gap: var(--space-s);
+	font-weight: var(--font-normal);
+}
+
+label:has(input) + label:has(input) {
+	--flow-spce: var(--space-s-m);
+}
+
+/* Slightly adjusts the vertical position of the check/radio */
+label:has(input) input {
+	transform: translateY(-0.1ex);
+}
+
+input:disabled {
+	background: var(--color-mid);
+}
+
+input:disabled,
+label input:disabled + * {
+	cursor: not-allowed;
+}
