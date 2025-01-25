@@ -2,8 +2,8 @@
 	let { children } = $props();
 </script>
 
-<div>
-	<header class="flow repel">
+<div class="container flow">
+	<header class="repel">
 		<!-- svelte-ignore a11y_consider_explicit_label -->
 		<a href="/" class="header__logo">
 			<svg
@@ -22,8 +22,8 @@
 			</svg>
 		</a>
 
-		<nav aria-label="Primary">
-			<ul class="flow" role="list">
+		<nav aria-label="Primary" class="nav">
+			<ul class="cluster" role="list">
 				<li>
 					<a href="/" aria-current="page">Home</a>
 				</li>
@@ -39,13 +39,47 @@
 			</ul>
 		</nav>
 	</header>
-	{@render children()}
-	<footer></footer>
+	<div class="content">
+		{@render children()}
+	</div>
+	<footer class="footer">
+		<div class="wrapper repel">
+			<p>All artistic content Copyright &#169;</p>
+			<p>2025 Iryna Lisogor, All rights</p>
+		</div>
+	</footer>
 </div>
 
 <style>
-	.header__logo svg {
-		width: 100%;
-		height: auto;
+	.container {
+		--flow-space: var(--space-regions);
+
+		display: flex;
+		flex-direction: column;
+		min-height: 100%;
+	}
+
+	.nav {
+		--gutter: var(--space-l) var(--space-xl);
+		font-size: var(--text-size-heading-4);
+
+		line-height: var(--leading-loose);
+	}
+
+	.nav a:not(:hover):not([aria-current='page']) {
+		text-decoration: none;
+	}
+
+	.content {
+		flex-grow: 1;
+	}
+
+	.footer {
+		padding-block: var(--space-m);
+		font-size: var(--text-size-meta);
+	}
+
+	.footer .wrapper * {
+		margin: 0;
 	}
 </style>

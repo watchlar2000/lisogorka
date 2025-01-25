@@ -26,6 +26,13 @@ html {
 	scrollbar-gutter: stable;
 }
 
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
 body {
 	min-height: 100vh;
 	line-height: 1.5;

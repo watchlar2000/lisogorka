@@ -10,6 +10,8 @@
 @import url('./compositions/flow.css');
 @import url('./compositions/wrapper.css');
 @import url('./compositions/repel.css');
+@import url('./compositions/cluster.css');
+@import url('./compositions/grid.css');
 
 /* Utilities */
 @import url('./utilities/visually-hidden.css');

@@ -13,6 +13,7 @@ export class DrizzleService {
 		const connection = postgres(this.configService.envs.DATABASE_URL);
 		this.db = drizzle(connection, {
 			schema,
+			casing: 'snake_case',
 		});
 	}
 }
