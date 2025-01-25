@@ -18,7 +18,8 @@
 		"db:start": "docker-compose up -d",
 		"db:stop": "docker-compose down",
 		"db:seed": "psql -h localhost -U postgres -d local -f ./drizzle/seed/seed.sql",
-		"test": "vitest"
+		"test": "vitest",
+		"prepare": "husky"
 	},
 	"devDependencies": {
 		"@eslint/compat": "^1.2.5",
@@ -31,6 +32,8 @@
 		"eslint-config-prettier": "^10.0.1",
 		"eslint-plugin-svelte": "^2.46.1",
 		"globals": "^15.14.0",
+		"husky": "^9.1.7",
+		"lint-staged": "^15.4.2",
 		"prettier": "^3.4.2",
 		"prettier-plugin-svelte": "^3.3.3",
 		"svelte": "^5.19.0",
@@ -45,5 +48,16 @@
 		"drizzle-zod": "^0.6.1",
 		"postgres": "^3.4.5",
 		"zod": "^3.24.1"
+	},
+	"husky": {
+		"hooks": {
+			"pre-commit": "lint-staged"
+		}
+	},
+	"lint-staged": {
+		"*.{js,jsx,ts,tsx,json,css,scss,md}": [
+			"eslint --fix",
+			"prettier --write"
+		]
 	}
 }
