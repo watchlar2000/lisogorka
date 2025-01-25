@@ -7,7 +7,9 @@
 <ul role="list" class="auto-grid projects__list">
 	{#each data.projects as p}
 		<li>
-			<img src={p.coverImage?.url} alt="" />
+			<a href="/">
+				<img src={p.coverImage?.url} alt="" />
+			</a>
 		</li>
 	{/each}
 </ul>
@@ -22,6 +24,12 @@
 	}
 	.projects__list li {
 		background-color: var(--color-surface-bg);
-		padding: var(--gutter);
+		padding: var(--space-gutter-l);
+	}
+
+	.projects__list img {
+		object-fit: cover;
+		width: 100%;
+		height: 100%;
 	}
 </style>
