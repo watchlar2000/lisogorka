@@ -1,11 +1,9 @@
 import type { IProjectsToImagesRepository } from './projectsToImages.repository';
-import type {
-	NewProjectToImage,
-	ProjectToImage,
-} from './projectsToImages.types';
+import type { ProjectToImage } from './projectsToImages.types';
 
 interface IProjectsToImagesService {
-	createRelation(payload: NewProjectToImage): Promise<ProjectToImage>;
+	createRelation(payload: ProjectToImage): Promise<ProjectToImage>;
+	getRelatedImageIds(projectId: number): Promise<number[]>;
 }
 
 export class ProjectsToImagesService implements IProjectsToImagesService {
@@ -15,7 +13,13 @@ export class ProjectsToImagesService implements IProjectsToImagesService {
 		this.repository = repository;
 	}
 
-	async createRelation(payload: NewProjectToImage) {
-		return await this.repository.createRelation(payload);
+	async createRelation(payload: ProjectToImage) {
+		return this.repository.createRelation(payload);
+	}
+
+	async getRelatedImageIds(projectId: number) {
+		return await this.repository
+			.getRelatedImageIds(projectId)
+			.then((result) => result.map((r) => r.imageId));
 	}
 }

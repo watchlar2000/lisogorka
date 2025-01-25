@@ -1,12 +1,11 @@
+import { eq } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { projectsToImages } from '../database/schema';
-import type {
-	NewProjectToImage,
-	ProjectToImage,
-} from './projectsToImages.types';
+import type { ProjectToImage } from './projectsToImages.types';
 
 export interface IProjectsToImagesRepository {
-	createRelation(payload: NewProjectToImage): Promise<ProjectToImage>;
+	createRelation(payload: ProjectToImage): Promise<ProjectToImage>;
+	getRelatedImageIds(projectId: number): Promise<ProjectToImage[]>;
 }
 
 export class ProjectsToImagesRepository<T extends Record<string, unknown>>
@@ -18,11 +17,18 @@ export class ProjectsToImagesRepository<T extends Record<string, unknown>>
 		this.db = db;
 	}
 
-	async createRelation(payload: NewProjectToImage) {
+	async createRelation(payload: ProjectToImage) {
 		const [relation] = await this.db
 			.insert(projectsToImages)
 			.values(payload)
 			.returning();
 		return relation;
+	}
+
+	async getRelatedImageIds(projectId: number) {
+		return await this.db
+			.select()
+			.from(projectsToImages)
+			.where(eq(projectsToImages.projectId, projectId));
 	}
 }

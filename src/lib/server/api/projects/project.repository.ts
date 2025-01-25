@@ -1,11 +1,15 @@
-import { eq } from 'drizzle-orm';
+import { desc, eq, getTableColumns } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { projects } from '../database/schema';
-import type { NewProject, Project } from './project.types';
+import { images, projects } from '../database/schema';
+import type {
+	NewProject,
+	Project,
+	ProjectWithCoverImage,
+} from './project.types';
 
 export interface IProjectRepository {
-	listAll(where: Pick<Project, 'isFeatured'>): Promise<Project[]>;
-	findById(id: number): Promise<Project | null>;
+	listAll(where: Pick<Project, 'isFeatured'>): Promise<ProjectWithCoverImage[]>;
+	findById(id: number): Promise<ProjectWithCoverImage | null>;
 	create(data: NewProject): Promise<Project>;
 	update(id: number, payload: Partial<NewProject>): Promise<Project>;
 	deleteById(id: number): Promise<Project>;
@@ -21,10 +25,20 @@ export class ProjectRepository<T extends Record<string, unknown>>
 	}
 
 	async listAll(where: Pick<Project, 'isFeatured'>) {
-		const query = this.db.select().from(projects).$dynamic();
+		const { isFeatured } = where;
 
-		if (where.isFeatured) {
-			return query.where(eq(projects.isFeatured, where.isFeatured));
+		const query = this.db
+			.select({
+				...getTableColumns(projects),
+				coverImage: images,
+			})
+			.from(projects)
+			.orderBy(desc(projects.createdAt))
+			.leftJoin(images, eq(projects.coverImageId, images.id))
+			.$dynamic();
+
+		if (isFeatured) {
+			return query.where(eq(projects.isFeatured, isFeatured));
 		}
 
 		return query.execute();
@@ -32,7 +46,10 @@ export class ProjectRepository<T extends Record<string, unknown>>
 
 	async findById(id: number) {
 		const [found] = await this.db
-			.select()
+			.select({
+				...getTableColumns(projects),
+				coverImage: images,
+			})
 			.from(projects)
 			.where(eq(projects.id, id));
 		return found ?? null;

@@ -4,14 +4,10 @@
 	const { data }: PageProps = $props();
 </script>
 
-<!-- <pre>
-  {JSON.stringify(data.projects, null, 4)}
-</pre> -->
-
 <ul role="list" class="auto-grid projects__list">
 	{#each data.projects as p}
 		<li>
-			<h2>{p.title}</h2>
+			<img src={p.coverImage?.url} alt="" />
 		</li>
 	{/each}
 </ul>
@@ -25,7 +21,7 @@
 		width: 100%;
 	}
 	.projects__list li {
-		background-color: orange;
+		background-color: var(--color-surface-bg);
 		padding: var(--gutter);
 	}
 </style>

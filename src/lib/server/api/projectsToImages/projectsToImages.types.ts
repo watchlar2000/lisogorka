@@ -8,4 +8,3 @@ export const projectsToImagesInsertSchema =
 	createInsertSchema(projectsToImages);
 
 export type ProjectToImage = zod.infer<typeof projectsToImagesSelectSchema>;
-export type NewProjectToImage = zod.infer<typeof projectsToImagesInsertSchema>;

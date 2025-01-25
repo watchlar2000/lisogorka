@@ -16,7 +16,6 @@ export const projectInsertSchema = createInsertSchema(projects, {
 export type Project = zod.infer<typeof projectSelectSchema>;
 export type NewProject = zod.infer<typeof projectInsertSchema>;
 
-export type ProjectWithImages = Project & {
-	coverImage: Image;
-	images: Image[];
+export type ProjectWithCoverImage = Project & {
+	coverImage: Image | null;
 };
