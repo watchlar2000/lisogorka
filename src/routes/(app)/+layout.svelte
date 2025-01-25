@@ -1,4 +1,6 @@
 <script>
+	import { page } from '$app/state';
+
 	let { children } = $props();
 </script>
 
@@ -25,16 +27,33 @@
 		<nav aria-label="Primary" class="nav">
 			<ul class="cluster" role="list">
 				<li>
-					<a href="/" aria-current="page">Home</a>
+					<a
+						href="/"
+						aria-current={page.url.pathname === '/' ? 'page' : undefined}
+						>Home</a
+					>
 				</li>
 				<li>
-					<a href="/works">Works</a>
+					<a
+						href="/works"
+						aria-current={page.url.pathname === '/works' ? 'page' : undefined}
+						>Works</a
+					>
 				</li>
 				<li>
-					<a href="/playground">Playground</a>
+					<a
+						href="/playground"
+						aria-current={page.url.pathname === '/playground'
+							? 'page'
+							: undefined}>Playground</a
+					>
 				</li>
 				<li>
-					<a href="/about">About</a>
+					<a
+						href="/about"
+						aria-current={page.url.pathname === '/about' ? 'page' : undefined}
+						>About</a
+					>
 				</li>
 			</ul>
 		</nav>
@@ -76,10 +95,5 @@
 
 	.footer {
 		padding-block: var(--space-m);
-		font-size: var(--text-size-meta);
-	}
-
-	.footer .wrapper * {
-		margin: 0;
 	}
 </style>

@@ -62,13 +62,17 @@ ol ::marker {
 	padding: 0;
 }
 
+:is(a[aria-current='page']) {
+	background-color: hsl(39, 100%, 50%);
+}
+
 a {
-	text-underline-offset: 0.1lh;
+	text-underline-offset: 0.2lh;
 	text-decoration-thickness: 0.2ex;
 }
 
 a:hover {
-	text-underline-offset: 0.2lh;
+	background-color: hsl(33, 100%, 70%);
 }
 
 :is(h1, h2, h3, h4) a {
