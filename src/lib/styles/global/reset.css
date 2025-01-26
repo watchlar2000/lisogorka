@@ -112,7 +112,7 @@ h4 {
 
 a {
 	text-decoration-skip-ink: auto;
-	color: currentColor !important;
+	color: currentColor;
 }
 
 img,

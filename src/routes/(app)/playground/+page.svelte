@@ -1,1 +1,1 @@
-<h2>Playground page</h2>
+<h2>Playground</h2>

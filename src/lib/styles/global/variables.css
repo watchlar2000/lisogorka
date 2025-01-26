@@ -75,6 +75,7 @@
 	--color-surface-bg-interact: var(--color-mid-shade);
 	--color-surface-text: var(--color-dark);
 	--color-surface-text-interact: var(--color-dark);
+	--color-primary: var(--color-blue);
 	--font-base: 'Urbanist', sans-serif;
 	--font-display: 'Ubuntu', sans-serif;
 	--font-regular: 400;

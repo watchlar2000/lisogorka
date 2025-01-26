@@ -1,10 +1,6 @@
-<script>
-	import about from './about.jpg';
-</script>
-
 <div class="with-sidebar about__container">
 	<div class="sidebar about__meta">
-		<img src={about} alt="" />
+		<enhanced:img src="./about.jpeg" alt="" />
 	</div>
 	<div class="not-sidebar prose flow about__content">
 		<h2>Hi!</h2>
@@ -34,11 +30,7 @@
 
 	.about__meta {
 		--sidebar-width: 20ch;
-	}
-
-	.about__meta img {
-		margin-inline: auto;
-		min-width: 100%;
+		margin-bottom: var(--space-xl);
 	}
 
 	.about__content {

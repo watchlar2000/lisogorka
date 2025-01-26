@@ -1,0 +1,24 @@
+.button {
+	--button-bg: var(--color-primary);
+	--button-text: var(--color-dark);
+	--button-x-padding: 1.5em;
+	--button-y-padding: 0.6em;
+	--button-gutter: 0.5ch;
+	--focus-color: var(--color-primary);
+
+	display: inline-flex;
+	gap: var(--button-gutter);
+	align-items: center;
+	line-height: var(--leading);
+	position: relative;
+	border: none;
+	cursor: pointer;
+	background: var(--button-bg);
+	color: var(--button-text);
+	padding: var(--button-y-padding) var(--button-x-padding);
+	text-transform: uppercase;
+	letter-spacing: var(--kerning-uppercase);
+	text-decoration: none;
+	font-size: var(--step-0);
+	font-weight: var(--font-medium);
+}

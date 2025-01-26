@@ -1,12 +1,11 @@
 body {
-	background: var(--color-light);
-	color: var(--color-dark);
+	background: var(--color-global-bg);
+	color: var(--color-global-text);
 	font-size: var(--step-2);
 	font-family: var(--font-base);
 	line-height: var(--leading);
 	font-size-adjust: from-font;
 	min-height: unset;
-	/* padding: 2rem 0rem; */
 	margin: 0;
 }
 
@@ -63,16 +62,12 @@ ol ::marker {
 }
 
 :is(a[aria-current='page']) {
-	background-color: hsl(39, 100%, 50%);
+	background-color: var(--color-primary);
 }
 
 a {
 	text-underline-offset: 0.2lh;
 	text-decoration-thickness: 0.2ex;
-}
-
-a:hover {
-	background-color: hsl(33, 100%, 70%);
 }
 
 :is(h1, h2, h3, h4) a {
@@ -89,7 +84,7 @@ a:hover {
 
 :focus-visible {
 	outline: 3px solid var(--focus-color, currentColor);
-	outline-offset: var(--focus-offset, 0.2lh);
+	outline-offset: var(--focus-offset, 0.2rem);
 }
 
 /* Firefox is the only browser that doesn't outline the whole element unless you make it display: inline-block. That in itself causes multiple flow issues so we can detect it, using its own vendor prefix and reduce focus offset

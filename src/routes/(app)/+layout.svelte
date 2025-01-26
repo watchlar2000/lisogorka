@@ -1,6 +1,6 @@
 <script>
-	import { page } from '$app/state';
 	import Footer from '$lib/components/Footer.svelte';
+	import Nav from '$lib/components/Nav.svelte';
 
 	let { children } = $props();
 </script>
@@ -8,7 +8,7 @@
 <div class="container flow">
 	<header class="repel">
 		<!-- svelte-ignore a11y_consider_explicit_label -->
-		<a href="/" class="header__logo">
+		<a href="/" tabindex="-1" class="header__logo">
 			<svg
 				aria-label="Iryna Lisogor"
 				focusable="false"
@@ -24,40 +24,7 @@
 				/>
 			</svg>
 		</a>
-
-		<nav aria-label="Primary" class="nav">
-			<ul class="cluster" role="list">
-				<li>
-					<a
-						href="/"
-						aria-current={page.url.pathname === '/' ? 'page' : undefined}
-						>Home</a
-					>
-				</li>
-				<li>
-					<a
-						href="/works"
-						aria-current={page.url.pathname === '/works' ? 'page' : undefined}
-						>Works</a
-					>
-				</li>
-				<li>
-					<a
-						href="/playground"
-						aria-current={page.url.pathname === '/playground'
-							? 'page'
-							: undefined}>Playground</a
-					>
-				</li>
-				<li>
-					<a
-						href="/about"
-						aria-current={page.url.pathname === '/about' ? 'page' : undefined}
-						>About</a
-					>
-				</li>
-			</ul>
-		</nav>
+		<Nav />
 	</header>
 	<div class="content">
 		{@render children()}
@@ -72,17 +39,6 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100%;
-	}
-
-	.nav {
-		--gutter: var(--space-l) var(--space-xl);
-		font-size: var(--text-size-heading-4);
-
-		line-height: var(--leading-loose);
-	}
-
-	.nav a:not(:hover):not([aria-current='page']) {
-		text-decoration: none;
 	}
 
 	.content {

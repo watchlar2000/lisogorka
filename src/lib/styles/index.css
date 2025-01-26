@@ -5,6 +5,7 @@
 
 /* Blocks */
 @import url('./blocks/prose.css');
+@import url('./blocks/button.css');
 
 /* Compositions */
 @import url('./compositions/flow.css');

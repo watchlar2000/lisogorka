@@ -28,7 +28,10 @@
 		padding-block: var(--space-m);
 		font-family: var(--font-display);
 		font-size: var(--text-size-meta);
+		margin-top: var(--space-l-3xl);
 		margin-bottom: var(--space-l);
+		background-color: var(--color-global-text);
+		color: var(--color-global-bg);
 	}
 
 	svg {
