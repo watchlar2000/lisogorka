@@ -1,17 +1,22 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { PAGE } from '$lib/constants';
 	import { createDropdownMenu } from '@melt-ui/svelte';
+	import { fly } from 'svelte/transition';
 
 	const {
 		elements: { trigger, menu, item, overlay },
 	} = createDropdownMenu({
 		preventScroll: false,
 		loop: true,
+		positioning: {
+			gutter: 0,
+			placement: 'bottom',
+		},
 	});
 
-	function isCurrentPage(path: string) {
-		return page.url.pathname === path ? 'page' : undefined;
-	}
+	const isCurrentPage = (path: string) =>
+		page.url.pathname === path ? PAGE : undefined;
 </script>
 
 <nav aria-label="Primary" class="nav">
@@ -24,21 +29,40 @@
 				type="button"
 				{...$trigger}
 				use:trigger
-				aria-label="Works"
-				class="button menu__item"
+				aria-label="Open works menu"
+				class="menu__item button dropdown__button"
 			>
 				Works
+				<svg
+					aria-hidden="true"
+					focusable="false"
+					xmlns="http://www.w3.org/2000/svg"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="2"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg
+				>
 			</button>
 			<!-- svelte-ignore element_invalid_self_closing_tag -->
 			<div {...$overlay} use:overlay />
-			<ul {...$menu} use:menu class="cluster dropdown__menu" role="list">
+			<ul
+				{...$menu}
+				use:menu
+				class="cluster dropdown__menu"
+				role="list"
+				transition:fly={{ duration: 150, y: -10 }}
+			>
 				<li {...$item} use:item>
-					<!-- svelte-ignore a11y_invalid_attribute -->
-					<a href="#" class="menu__item">Visual development</a>
+					<a href="/visual-development" class="menu__item">Visual development</a
+					>
 				</li>
 				<li {...$item} use:item>
-					<!-- svelte-ignore a11y_invalid_attribute -->
-					<a href="#" class="menu__item">Background painting</a>
+					<a href="/background-painting" class="menu__item"
+						>Background painting</a
+					>
 				</li>
 			</ul>
 		</li>
@@ -108,5 +132,19 @@
 	.menu__item[aria-current='page'] {
 		color: var(--color-global-bg);
 		background-color: var(--color-global-text);
+	}
+
+	.dropdown__button {
+		display: flex;
+		gap: var(--space-s);
+	}
+
+	.dropdown__button svg {
+		height: 1lh;
+		transition: transform 0.2s ease;
+	}
+
+	.dropdown__button[aria-expanded='true'] svg {
+		transform: rotate(180deg);
 	}
 </style>
