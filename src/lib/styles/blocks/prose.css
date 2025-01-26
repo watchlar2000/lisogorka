@@ -1,5 +1,6 @@
 .prose {
 	--flow-space: var(--space-l);
+	font-family: var(--font-display);
 }
 
 .prose :is(h1, h2, h3) {

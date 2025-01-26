@@ -95,5 +95,7 @@
 
 	.footer {
 		padding-block: var(--space-m);
+		font-family: var(--font-display);
+		font-size: var(--text-size-meta);
 	}
 </style>

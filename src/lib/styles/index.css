@@ -12,6 +12,7 @@
 @import url('./compositions/repel.css');
 @import url('./compositions/cluster.css');
 @import url('./compositions/grid.css');
+@import url('./compositions/sidebar.css');
 
 /* Utilities */
 @import url('./utilities/visually-hidden.css');

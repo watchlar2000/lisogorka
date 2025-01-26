@@ -24,15 +24,3 @@ VALUES
 (2, 2),
 (3, 3),
 (3, 1);
-
-SELECT
-    p.*,
-    jsonb_build_object(
-      'id', im.id
-    )
-    json_agg(i.*) AS images
-FROM projects AS p
-LEFT JOIN projects_to_images pti ON pti.project_id = p.id
-LEFT JOIN images AS i ON i.id = pti.image_id
-LEFT JOIN images AS im ON im.id = p.cover_image_id
-GROUP BY p.id;
