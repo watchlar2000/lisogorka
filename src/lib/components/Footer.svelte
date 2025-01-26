@@ -1,14 +1,6 @@
-<script>
-	import { page } from '$app/state';
-	import Footer from '$lib/components/Footer.svelte';
-
-	let { children } = $props();
-</script>
-
-<div class="container flow">
-	<header class="repel">
-		<!-- svelte-ignore a11y_consider_explicit_label -->
-		<a href="/" class="header__logo">
+<footer class="footer">
+	<div class="wrapper repel">
+		<div>
 			<svg
 				aria-label="Iryna Lisogor"
 				focusable="false"
@@ -23,69 +15,24 @@
 					fill="currentColor"
 				/>
 			</svg>
-		</a>
-
-		<nav aria-label="Primary" class="nav">
-			<ul class="cluster" role="list">
-				<li>
-					<a
-						href="/"
-						aria-current={page.url.pathname === '/' ? 'page' : undefined}
-						>Home</a
-					>
-				</li>
-				<li>
-					<a
-						href="/works"
-						aria-current={page.url.pathname === '/works' ? 'page' : undefined}
-						>Works</a
-					>
-				</li>
-				<li>
-					<a
-						href="/playground"
-						aria-current={page.url.pathname === '/playground'
-							? 'page'
-							: undefined}>Playground</a
-					>
-				</li>
-				<li>
-					<a
-						href="/about"
-						aria-current={page.url.pathname === '/about' ? 'page' : undefined}
-						>About</a
-					>
-				</li>
-			</ul>
-		</nav>
-	</header>
-	<div class="content">
-		{@render children()}
+		</div>
+		<div>
+			<p>All artistic content Copyright &#169;</p>
+			<p>2025 Iryna Lisogor, All rights</p>
+		</div>
 	</div>
-	<Footer />
-</div>
+</footer>
 
 <style>
-	.container {
-		--flow-space: var(--space-regions);
-
-		display: flex;
-		flex-direction: column;
-		min-height: 100%;
+	.footer {
+		padding-block: var(--space-m);
+		font-family: var(--font-display);
+		font-size: var(--text-size-meta);
+		margin-bottom: var(--space-l);
 	}
 
-	.nav {
-		--gutter: var(--space-l) var(--space-xl);
-		font-size: var(--text-size-heading-4);
-
-		line-height: var(--leading-loose);
-	}
-
-	.nav a:not(:hover):not([aria-current='page']) {
-		text-decoration: none;
-	}
-
-	.content {
-		flex-grow: 1;
+	svg {
+		width: 15ch;
+		height: auto;
 	}
 </style>

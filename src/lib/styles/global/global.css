@@ -6,7 +6,7 @@ body {
 	line-height: var(--leading);
 	font-size-adjust: from-font;
 	min-height: unset;
-	padding: 2rem 0rem;
+	/* padding: 2rem 0rem; */
 	margin: 0;
 }
 
