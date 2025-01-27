@@ -5,9 +5,9 @@ import type {
 	NewProject,
 	Project,
 	ProjectWithCoverImage,
-} from './project.types';
+} from './projects.types';
 
-export interface IProjectRepository {
+export interface IProjectsRepository {
 	listAll(where: Pick<Project, 'isFeatured'>): Promise<ProjectWithCoverImage[]>;
 	findById(id: number): Promise<ProjectWithCoverImage | null>;
 	create(data: NewProject): Promise<Project>;
@@ -15,8 +15,8 @@ export interface IProjectRepository {
 	deleteById(id: number): Promise<Project>;
 }
 
-export class ProjectRepository<T extends Record<string, unknown>>
-	implements IProjectRepository
+export class ProjectsRepository<T extends Record<string, unknown>>
+	implements IProjectsRepository
 {
 	db;
 

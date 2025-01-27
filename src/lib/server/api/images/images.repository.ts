@@ -1,16 +1,16 @@
 import { eq, inArray } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { images } from '../database/schema';
-import type { Image, NewImage } from './image.types';
+import type { Image, NewImage } from './images.types';
 
-export interface IImageRepository {
+export interface IImagesRepository {
 	listAll(): Promise<Image[]>;
 	findById(id: number): Promise<Image>;
 	findByIds(ids: number[]): Promise<Image[]>;
 	create(data: NewImage): Promise<Image>;
 }
 
-export class ImageRepository implements IImageRepository {
+export class ImagesRepository implements IImagesRepository {
 	db;
 
 	constructor(db: PostgresJsDatabase<Record<string, unknown>>) {

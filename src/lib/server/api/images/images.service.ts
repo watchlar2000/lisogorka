@@ -1,17 +1,21 @@
-import { type IImageRepository } from './image.repository';
-import { createImageDTO, type CreateImageDTO, type Image } from './image.types';
+import { type IImagesRepository } from './images.repository';
+import {
+	createImageDTO,
+	type CreateImageDTO,
+	type Image,
+} from './images.types';
 
-export interface IImageService {
+export interface IImagesService {
 	listAll: () => Promise<Image[]>;
 	findById: (id: number) => Promise<Image>;
 	findByIds(ids: number[]): Promise<Image[]>;
 	create?: (data: CreateImageDTO) => Promise<null>;
 }
 
-export class ImageService implements IImageService {
+export class ImagesService implements IImagesService {
 	private repository;
 
-	constructor(imageRepository: IImageRepository) {
+	constructor(imageRepository: IImagesRepository) {
 		this.repository = imageRepository;
 	}
 

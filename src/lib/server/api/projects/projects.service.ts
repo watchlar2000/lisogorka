@@ -1,22 +1,22 @@
 import { titleToSlug } from '../utils/titleToSlug';
-import { type IProjectRepository } from './project.repository';
+import { type IProjectsRepository } from './projects.repository';
 import {
 	projectInsertSchema,
 	type NewProject,
 	type Project,
-} from './project.types';
+} from './projects.types';
 
-interface IProjectService {
+interface IProjectsService {
 	listAll: (where?: Pick<Project, 'isFeatured'>) => Promise<Project[]>;
 	findById?: (id: number) => Promise<Project>;
 	create: (payload: NewProject) => Promise<Project>;
 	update: (id: number, payload: NewProject) => Promise<Project>;
 }
 
-export class ProjectService implements IProjectService {
+export class ProjectsService implements IProjectsService {
 	private projectRepository;
 
-	constructor(projectRepository: IProjectRepository) {
+	constructor(projectRepository: IProjectsRepository) {
 		this.projectRepository = projectRepository;
 	}
 

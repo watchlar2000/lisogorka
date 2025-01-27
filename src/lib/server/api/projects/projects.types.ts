@@ -1,7 +1,7 @@
 import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 import { type z as zod, z } from 'zod';
 import { projects } from '../database/schema';
-import type { Image } from '../images/image.types';
+import type { Image } from '../images/images.types';
 
 export const projectSelectSchema = createSelectSchema(projects);
 export const projectInsertSchema = createInsertSchema(projects, {
