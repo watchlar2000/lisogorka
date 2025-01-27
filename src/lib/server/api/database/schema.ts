@@ -4,13 +4,24 @@ import { pgEnum, pgTable as table } from 'drizzle-orm/pg-core';
 import { categories } from '../types/types';
 import { timestamps } from '../utils/drizzle';
 
-export const authors = table('authors', {
+export const users = table('users', {
 	id: t.serial('id').primaryKey(),
-	name: t.varchar('name').notNull(),
-	surname: t.varchar('surname'),
-	photoUrl: t.varchar('photo_url').notNull(),
-	about: t.text('about').notNull(),
-	...timestamps,
+	email: t.varchar('email').unique().notNull(),
+	passwordHash: t.varchar('password_hash').notNull(),
+});
+
+export const sessions = table('sessions', {
+	id: t.serial('id').primaryKey(),
+	userId: t
+		.integer('user_id')
+		.references(() => users.id, { onDelete: 'cascade' }),
+	token: t.varchar('token').unique().notNull(),
+	expiresAt: t
+		.timestamp('expires_at', {
+			mode: 'date',
+			withTimezone: true,
+		})
+		.notNull(),
 });
 
 export const categoryEnum = pgEnum('category', categories);

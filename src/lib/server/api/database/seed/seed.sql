@@ -1,8 +1,3 @@
--- Insert sample data into authors
-INSERT INTO "authors" ("name", "surname", "photo_url", "about", "created_at", "updated_at")
-VALUES
-('Jane', 'Smith', 'https://live.staticflickr.com/65535/54252141226_8e8fafa488.jpg', 'An experienced artist specializing in visual development.', now(), now());
-
 -- Insert sample data into images
 INSERT INTO "images" ("url", "alt", "width", "height", "created_at", "updated_at")
 VALUES
