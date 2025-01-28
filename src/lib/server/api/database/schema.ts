@@ -6,15 +6,17 @@ import { timestamps } from '../utils/drizzle';
 
 export const users = table('users', {
 	id: t.serial('id').primaryKey(),
+	googleId: t.varchar('google_id').unique().notNull(),
 	email: t.varchar('email').unique().notNull(),
-	passwordHash: t.varchar('password_hash').notNull(),
+	name: t.varchar('name').notNull(),
 });
 
 export const sessions = table('sessions', {
 	id: t.serial('id').primaryKey(),
 	userId: t
 		.integer('user_id')
-		.references(() => users.id, { onDelete: 'cascade' }),
+		.references(() => users.id, { onDelete: 'cascade' })
+		.notNull(),
 	token: t.varchar('token').unique().notNull(),
 	expiresAt: t
 		.timestamp('expires_at', {

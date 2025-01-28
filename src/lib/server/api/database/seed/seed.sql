@@ -1,3 +1,8 @@
+-- Clear existing data
+TRUNCATE TABLE "projects_to_images" RESTART IDENTITY CASCADE;
+TRUNCATE TABLE "projects" RESTART IDENTITY CASCADE;
+TRUNCATE TABLE "images" RESTART IDENTITY CASCADE;
+
 -- Insert sample data into images
 INSERT INTO "images" ("url", "alt", "width", "height", "created_at", "updated_at")
 VALUES

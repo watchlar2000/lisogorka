@@ -9,13 +9,13 @@ export class ConfigService {
 		this.envs = this.validateEnvs()!;
 	}
 
-	private parseEnvs(envs: unknown) {
+	#parseEnvs(envs: unknown) {
 		return envsDTO.parse(envs);
 	}
 
 	validateEnvs() {
 		try {
-			return this.parseEnvs(envs);
+			return this.#parseEnvs(envs);
 		} catch (error) {
 			if (error instanceof z.ZodError) {
 				const { fieldErrors } = error.flatten();
@@ -31,3 +31,5 @@ export class ConfigService {
 		}
 	}
 }
+
+export const config = new ConfigService();
