@@ -68,13 +68,14 @@ ol ::marker {
 a {
 	text-underline-offset: 0.2lh;
 	text-decoration-thickness: 0.2ex;
+	text-decoration-color: var(--color-primary);
 }
 
-:is(h1, h2, h3, h4) a {
+:is(a) {
 	text-underline-offset: 0.2ex;
 }
 
-:is(h1, h2, h3, h4) a:hover {
+:is(a):hover {
 	text-underline-offset: 0.3ex;
 }
 
@@ -110,7 +111,7 @@ hr {
 	margin-block: var(--flow-space, var(--space-xl));
 }
 
-svg:not([class]) {
+svg[class~='icon'] {
 	width: auto;
 	max-width: 1lh;
 	height: 1lh;
