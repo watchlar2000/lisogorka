@@ -1,19 +1,31 @@
+import { Unauthorized } from '$lib/utils/exceptions';
 import { sha256 } from '@oslojs/crypto/sha2';
 import {
 	encodeBase32LowerCaseNoPadding,
 	encodeHexLowerCase,
 } from '@oslojs/encoding';
-import { eq } from 'drizzle-orm';
-import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
-import { sessions, users } from '../api/database/schema';
+import { ObjectParser } from '@pilcrowjs/object-parser';
+import { decodeIdToken, generateCodeVerifier, generateState } from 'arctic';
+import { routing } from '../api/routing';
+import type { ISessionsService } from '../api/sessions/sessions.service';
+import type { NewSession } from '../api/sessions/sessions.types';
+import type { IUsersService } from '../api/users/users.service';
 import type { Session, SessionValidationResult } from './auth.types';
+import { googleService, type GoogleService } from './google.service';
 
 export class AuthService {
-	#db;
+	private sessionsService;
+	private usersService;
+	private googleService;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	constructor(db: PostgresJsDatabase<any>) {
-		this.#db = db;
+	constructor(
+		sessionsService: ISessionsService,
+		usersService: IUsersService,
+		googleService: GoogleService,
+	) {
+		this.sessionsService = sessionsService;
+		this.usersService = usersService;
+		this.googleService = googleService;
 	}
 
 	generateSessionToken() {
@@ -28,12 +40,12 @@ export class AuthService {
 			sha256(new TextEncoder().encode(token)),
 		);
 
-		const session: Session = {
+		const session: NewSession = {
 			userId,
 			token: sessionToken,
-			expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 30),
+			expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2),
 		};
-		await this.#db.insert(sessions).values(session);
+		await this.sessionsService.create(session);
 		return session;
 	}
 
@@ -41,37 +53,91 @@ export class AuthService {
 		const sessionToken = encodeHexLowerCase(
 			sha256(new TextEncoder().encode(token)),
 		);
-		const result = await this.#db
-			.select({ user: users, session: sessions })
-			.from(sessions)
-			.innerJoin(users, eq(sessions.userId, users.id))
-			.where(eq(sessions.token, sessionToken));
+		const session = await this.sessionsService.findByToken(sessionToken);
 
-		if (result.length < 1) {
+		if (!session) {
 			return { session: null, user: null };
 		}
 
-		const { user, session } = result[0];
+		const user = await this.usersService.findById(session.userId);
 
-		if (Date.now() >= session.expiresAt.getTime()) {
-			await this.#db.delete(sessions).where(eq(sessions.token, session.token));
+		if (!user) {
 			return { session: null, user: null };
 		}
 
-		if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24 * 15) {
-			session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 30);
-			await this.#db
-				.update(sessions)
-				.set({
-					expiresAt: session.expiresAt,
-				})
-				.where(eq(sessions.token, session.token));
+		if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24) {
+			session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 2);
+			await this.sessionsService.updateByToken(session.token, {
+				expiresAt: session.expiresAt,
+			});
 		}
 
 		return { session, user };
 	}
 
-	async invalidateSession(sessionId: number): Promise<void> {
-		await this.#db.delete(sessions).where(eq(sessions.id, sessionId));
+	async invalidateSession(id: number): Promise<void> {
+		await this.sessionsService.deleteById(id);
+	}
+
+	generateOAuthDetails() {
+		const state = generateState();
+		const codeVerifier = generateCodeVerifier();
+		const url = this.googleService.createAuthorizationURL({
+			state,
+			codeVerifier,
+			scopes: ['openid', 'profile', 'email'],
+		});
+		return { state, codeVerifier, url: url.toString() };
+	}
+
+	async authenticateWithGoogle(params: { code: string; codeVerifier: string }) {
+		const { code, codeVerifier } = params;
+
+		try {
+			const token = await this.googleService.client.validateAuthorizationCode(
+				code,
+				codeVerifier,
+			);
+
+			const claims = decodeIdToken(token.idToken());
+			const claimsParser = new ObjectParser(claims);
+
+			const googleId = claimsParser.getString('sub');
+			const name = claimsParser.getString('name');
+			const email = claimsParser.getString('email');
+
+			if (email === 'xpanda4@gmail.com') {
+				Unauthorized();
+			}
+
+			let user = await this.usersService.findByGoogleId(googleId);
+
+			if (!user) {
+				user = await this.usersService.create({
+					googleId: googleId,
+					email: email,
+					name: name,
+				});
+			}
+
+			const sessionToken = this.generateSessionToken();
+			const session = await this.createSession(sessionToken, user.id);
+			return {
+				session,
+				sessionToken,
+			};
+		} catch (error) {
+			console.error(`Error: ${error}`);
+			throw Error(
+				'Something went wrong during authentication. Please try one more time.',
+			);
+			// return new Response('Something went wrong. Please try one more time.', {
+			// 	status: 400,
+			// });
+		}
 	}
 }
+
+const { sessions, users } = routing;
+
+export const authService = new AuthService(sessions, users, googleService);

@@ -86,6 +86,7 @@ a {
 :focus-visible {
 	outline: 3px solid var(--focus-color, currentColor);
 	outline-offset: var(--focus-offset, 0.2rem);
+	border-radius: var(--radius-s);
 }
 
 /* Firefox is the only browser that doesn't outline the whole element unless you make it display: inline-block. That in itself causes multiple flow issues so we can detect it, using its own vendor prefix and reduce focus offset

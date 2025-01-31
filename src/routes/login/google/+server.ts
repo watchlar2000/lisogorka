@@ -1,30 +1,20 @@
-import { google } from '$lib/server/auth/provider';
+import { authService } from '$lib/server/auth/auth.service';
+import { COOKIE } from '$lib/server/auth/constants';
 import type { RequestEvent } from '@sveltejs/kit';
-import { generateCodeVerifier, generateState } from 'arctic';
 
 export async function GET(event: RequestEvent): Promise<Response> {
-	const state = generateState();
-	const codeVerifier = generateCodeVerifier();
-	const url = google.createAuthorizationURL(state, codeVerifier, [
-		'openid',
-		'profile',
-		'email',
-	]);
+	const { state, url, codeVerifier } = authService.generateOAuthDetails();
 
-	event.cookies.set('google_oauth_state', state, {
+	const cookieOptions = {
 		path: '/',
 		httpOnly: true,
 		maxAge: 60 * 10, // 10 minutes
 		secure: import.meta.env.PROD,
-		sameSite: 'lax',
-	});
-	event.cookies.set('google_code_verifier', codeVerifier, {
-		path: '/',
-		httpOnly: true,
-		maxAge: 60 * 10, // 10 minutes
-		secure: import.meta.env.PROD,
-		sameSite: 'lax',
-	});
+		sameSite: 'lax' as const,
+	};
+
+	event.cookies.set(COOKIE.GOOGLE_OAUTH_STATE, state, cookieOptions);
+	event.cookies.set(COOKIE.GOOGLE_CODE_VERIFIER, codeVerifier, cookieOptions);
 
 	return new Response(null, {
 		status: 302,

@@ -1,16 +1,13 @@
-import { DrizzleService } from '$lib/server/api/database/drizzle.service';
-import { AuthService } from '$lib/server/auth/auth.service';
+import { authService } from '$lib/server/auth/auth.service';
+import { COOKIE } from '$lib/server/auth/constants';
 import {
 	deleteSessionTokenCookie,
 	setSessionTokenCookie,
 } from '$lib/server/auth/cookie';
 import type { Handle } from '@sveltejs/kit';
 
-const { db } = new DrizzleService();
-const authService = new AuthService(db);
-
 export const handle: Handle = async ({ event, resolve }) => {
-	const token = event.cookies.get('session') ?? null;
+	const token = event.cookies.get(COOKIE.SESSION) ?? null;
 
 	if (token === null) {
 		event.locals.user = null;
