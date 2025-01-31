@@ -1,5 +1,5 @@
 import {
-	GOOGLE_CLIENT_CALLBACK_URL,
+	GOOGLE_CLIENT_CALLBACK_URI,
 	GOOGLE_CLIENT_ID,
 	GOOGLE_CLIENT_SECRET,
 } from '$env/static/private';
@@ -12,7 +12,7 @@ export class GoogleService {
 		this.client = new Google(
 			GOOGLE_CLIENT_ID,
 			GOOGLE_CLIENT_SECRET,
-			GOOGLE_CLIENT_CALLBACK_URL,
+			GOOGLE_CLIENT_CALLBACK_URI,
 		);
 	}
 
