@@ -1,16 +1,14 @@
-import { drizzle } from 'drizzle-orm/postgres-js';
+import { drizzle, PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import postgres from 'postgres';
 import { ConfigService } from '../configs/config';
 import * as schema from './schema';
 
 export class DrizzleService {
 	private static instance: DrizzleService;
-	private configService: ConfigService;
 	public readonly schema = schema;
-	public readonly _db;
+	public readonly _db: PostgresJsDatabase<typeof schema>;
 
-	constructor() {
-		this.configService = new ConfigService();
+	constructor(private configService = new ConfigService()) {
 		const connection = postgres(this.configService.envs.DATABASE_URL);
 		this._db = drizzle(connection, {
 			schema,
@@ -25,4 +23,4 @@ export class DrizzleService {
 	}
 }
 
-export const drizzleService = new DrizzleService();
+// export const drizzleService = new DrizzleService();
