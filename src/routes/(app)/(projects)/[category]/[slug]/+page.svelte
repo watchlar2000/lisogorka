@@ -15,7 +15,7 @@
 	</div>
 
 	<div>
-		<ul role="list" class="flow images">
+		<ul role="list" class="flow images__list">
 			{#each project.images as image}
 				<li>
 					<img src={image.url} alt={image.alt} />
@@ -26,8 +26,10 @@
 </article>
 
 <style>
-	.images li img {
-		width: 100%;
+	.images__list {
+		display: grid;
+		place-content: center;
+		background-color: orange;
 	}
 
 	.article__content {

@@ -1,9 +1,16 @@
-<footer class="footer">
-	<div class="wrapper repel" data-wrapper-type="inner">
+<script>
+	import Nav from './Nav.svelte';
+</script>
+
+<header class="repel">
+	<!-- svelte-ignore a11y_consider_explicit_label -->
+	<a href="/" tabindex="-1" class="header__logo">
 		<svg
 			aria-hidden="true"
 			focusable="false"
 			xmlns="http://www.w3.org/2000/svg"
+			width="264"
+			height="123"
 			viewBox="0 0 264 123"
 			fill="none"
 		>
@@ -12,32 +19,12 @@
 				fill="currentColor"
 			/>
 		</svg>
-		<div>
-			<p>All artistic content Copyright &#169;</p>
-			<p>2025 Iryna Lisogor, All rights</p>
-		</div>
-	</div>
-</footer>
+	</a>
+	<Nav />
+</header>
 
 <style>
-	.footer {
-		--border-radius: var(--radius-m);
-
-		font-family: var(--font-display);
-		font-size: var(--text-size-meta);
-		margin-top: var(--space-l-3xl);
-		/* margin-bottom: var(--space-l); */
-		background-color: var(--color-global-text);
-		color: var(--color-global-bg);
-		border-radius: var(--border-radius) var(--border-radius) 0 0;
-	}
-
-	.footer p {
-		font-size: var(--text-size-lede);
-		color: var(--color-surface-bg);
-	}
-
-	svg {
+	.header__logo svg {
 		height: 5ch;
 		width: auto;
 	}

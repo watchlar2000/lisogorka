@@ -82,15 +82,12 @@
 </nav>
 
 <style>
-	.nav {
-		--gutter: var(--space-l) var(--space-xl);
-		font-size: var(--text-size-heading-4);
-
-		line-height: var(--leading-loose);
-	}
-
 	.nav a:not(:hover):not([aria-current='page']) {
 		text-decoration: none;
+	}
+
+	.nav .cluster {
+		--gutter: 1ch;
 	}
 
 	.dropdown__menu {
@@ -98,7 +95,9 @@
 		--gutter: var(--space-s);
 
 		background-color: #fff;
-		padding: var(--space-m);
+		padding: var(--space-s);
+		border-radius: var(--radius-m);
+		box-shadow: 0px 0px 20px 16px rgba(17, 17, 26, 0.01);
 	}
 
 	.dropdown__menu li {
@@ -107,15 +106,15 @@
 	}
 
 	.menu__item {
-		--focus-color: var(--color-primary);
-
+		width: 100%;
 		background-color: var(--color-bg-global);
 		display: inline-block;
 		text-decoration: none;
-		font-size: var(--text-size-heading-4);
+		font-size: var(--step-0);
 		text-transform: capitalize;
 		font-weight: var(--font-regular);
-		padding: 0.25rem 1rem;
+		border-radius: var(--radius-m);
+		padding: var(--space-4xs) var(--space-m);
 		line-height: var(--leading);
 
 		transition: background 0.125s ease;
@@ -126,6 +125,8 @@
 	}
 
 	.menu__item:focus-visible {
+		--focus-color: var(--color-global-text);
+
 		background-color: var(--color-mid);
 	}
 

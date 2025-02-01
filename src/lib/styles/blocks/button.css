@@ -4,7 +4,7 @@
 	--button-x-padding: 1.5em;
 	--button-y-padding: 0.6em;
 	--button-gutter: 0.5ch;
-	--focus-color: var(--color-primary);
+	--focus-color: var(--button-bg, var(--color-primary));
 
 	display: inline-flex;
 	gap: var(--button-gutter);
@@ -12,6 +12,7 @@
 	line-height: var(--leading);
 	position: relative;
 	border: none;
+	border-radius: var(--radius-m);
 	cursor: pointer;
 	background: var(--button-bg);
 	color: var(--button-text);

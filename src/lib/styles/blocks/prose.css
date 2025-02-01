@@ -9,7 +9,7 @@
 }
 
 .prose :is(p, li, dl, figcaption, blockquote) {
-	max-width: 60ch;
+	max-width: 50ch;
 	text-wrap: pretty;
 }
 
@@ -31,6 +31,12 @@
 	--flow-space: var(--space-2xl);
 }
 
-.prose :is(img, picture, video) {
-	border: var(--stroke-solid);
+.prose :is(a):active,
+.prose :is(a):focus-visible {
+	text-decoration-color: var(--color-primary);
+	color: var(--color-primary);
 }
+
+/* .prose :is(img, picture, video) {
+	border: var(--stroke-solid);
+} */
