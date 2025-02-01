@@ -6,7 +6,7 @@
 </script>
 
 <div class="container flow">
-	<header class="repel">
+	<header class="wrapper repel">
 		<!-- svelte-ignore a11y_consider_explicit_label -->
 		<a href="/" tabindex="-1" class="header__logo">
 			<svg
@@ -26,10 +26,12 @@
 		</a>
 		<Nav />
 	</header>
-	<div class="content">
+	<div class="wrapper content">
 		{@render children()}
 	</div>
-	<Footer />
+	<div class="wrapper">
+		<Footer />
+	</div>
 </div>
 
 <style>
@@ -39,6 +41,10 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100%;
+	}
+
+	.container > * {
+		width: 100%;
 	}
 
 	.content {

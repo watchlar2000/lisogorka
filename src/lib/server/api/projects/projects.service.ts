@@ -8,7 +8,8 @@ import {
 
 interface IProjectsService {
 	listAll: (where?: Pick<Project, 'isFeatured'>) => Promise<Project[]>;
-	findById?: (id: number) => Promise<Project>;
+	findById: (id: number) => Promise<Project>;
+	findBySlug: (slug: string) => Promise<Project>;
 	create: (payload: NewProject) => Promise<Project>;
 	update: (id: number, payload: NewProject) => Promise<Project>;
 }
@@ -25,7 +26,17 @@ export class ProjectsService implements IProjectsService {
 	}
 
 	async findById(id: number) {
-		const found = await this.projectRepository.findById(id);
+		const found = await this.projectRepository.findByIdOrSlug({ id });
+
+		if (!found) {
+			throw new Error('Project not found');
+		}
+
+		return found;
+	}
+
+	async findBySlug(slug: string) {
+		const found = await this.projectRepository.findByIdOrSlug({ slug });
 
 		if (!found) {
 			throw new Error('Project not found');

@@ -9,7 +9,7 @@
 	<ul role="list" class="auto-grid projects__list">
 		{#each projects as p}
 			<li>
-				<a href="/{p.category}/{p.slug}" data-id={p.id}>
+				<a href="/{p.category}/{p.slug}">
 					<img src={p.coverImage?.url} alt="" aria-hidden="true" />
 					<span class="visually-hidden">{p.title}</span>
 				</a>

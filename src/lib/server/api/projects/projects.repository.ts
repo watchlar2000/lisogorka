@@ -9,7 +9,10 @@ import type {
 
 export interface IProjectsRepository {
 	listAll(where: Pick<Project, 'isFeatured'>): Promise<ProjectWithCoverImage[]>;
-	findById(id: number): Promise<ProjectWithCoverImage | null>;
+	findByIdOrSlug(params: {
+		id?: number;
+		slug?: string;
+	}): Promise<ProjectWithCoverImage | null>;
 	create(data: NewProject): Promise<Project>;
 	update(id: number, payload: Partial<NewProject>): Promise<Project>;
 	deleteById(id: number): Promise<Project>;
@@ -44,14 +47,18 @@ export class ProjectsRepository<T extends Record<string, unknown>>
 		return query.execute();
 	}
 
-	async findById(id: number) {
+	async findByIdOrSlug(params: { id: number; slug: string }) {
+		const { id, slug } = params;
+
+		const whereCondition = id ? eq(projects.id, id) : eq(projects.slug, slug);
 		const [found] = await this.db
 			.select({
 				...getTableColumns(projects),
 				coverImage: images,
 			})
 			.from(projects)
-			.where(eq(projects.id, id));
+			.leftJoin(images, eq(projects.coverImageId, images.id))
+			.where(whereCondition);
 		return found ?? null;
 	}
 

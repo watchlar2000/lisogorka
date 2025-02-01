@@ -14,9 +14,13 @@ import { serviceFactory } from './utils/serviceFactory';
 const drizzleFactory = serviceFactory(DrizzleService.db);
 const projectService = drizzleFactory(ProjectsRepository, ProjectsService);
 const imageService = drizzleFactory(ImagesRepository, ImagesService);
-const projectsToImagesService = drizzleFactory(
-	ProjectsToImagesRepository,
-	ProjectsToImagesService,
+const projectsToImagesRepository = new ProjectsToImagesRepository(
+	DrizzleService.db,
+);
+
+const projectsToImagesService = new ProjectsToImagesService(
+	projectsToImagesRepository,
+	imageService,
 );
 const sessionsService = drizzleFactory(SessionsRepository, SessionsService);
 const usersService = drizzleFactory(UsersRepository, UsersService);
