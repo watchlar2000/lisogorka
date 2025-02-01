@@ -1,0 +1,99 @@
+:root {
+	/* @link https://utopia.fyi/type/calculator?c=320,18,1.125,1240,24,1.2,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+
+	--step--2: clamp(0.8889rem, 0.8357rem + 0.2657vw, 1.0417rem);
+	--step--1: clamp(1rem, 0.913rem + 0.4348vw, 1.25rem);
+	--step-0: clamp(1.125rem, 0.9946rem + 0.6522vw, 1.5rem);
+	--step-1: clamp(1.2656rem, 1.0798rem + 0.9293vw, 1.8rem);
+	--step-2: clamp(1.4238rem, 1.1678rem + 1.2803vw, 2.16rem);
+	--step-3: clamp(1.6018rem, 1.2574rem + 1.7221vw, 2.592rem);
+	--step-4: clamp(1.802rem, 1.3469rem + 2.2754vw, 3.1104rem);
+	--step-5: clamp(2.0273rem, 1.4342rem + 2.9656vw, 3.7325rem);
+
+	/* @link https://utopia.fyi/space/calculator?c=320,18,1.2,1240,20,1.25,5,2,&s=0.75|0.5|2|3|4,1.5|2|3|4|6,l-3xl&g=s%2Cl%2Cxl%2C12,l,xl,12 */
+	--space-5xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
+	--space-4xs: clamp(0.875rem, 0.8533rem + 0.1087vw, 0.9375rem);
+	--space-3xs: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
+	--space-2xs: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
+	--space-xs: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem);
+	--space-s: clamp(1.125rem, 1.0815rem + 0.2174vw, 1.25rem);
+	--space-m: clamp(1.6875rem, 1.6223rem + 0.3261vw, 1.875rem);
+	--space-l: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
+	--space-xl: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
+	--space-2xl: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem);
+	--space-3xl: clamp(6.75rem, 6.4891rem + 1.3043vw, 7.5rem);
+
+	/* One-up pairs */
+	--space-5xs-4xs: clamp(0.5625rem, 0.4321rem + 0.6522vw, 0.9375rem);
+	--space-4xs-3xs: clamp(0.875rem, 0.3098rem + 2.8261vw, 2.5rem);
+	--space-3xs-2xs: clamp(2.25rem, 1.7283rem + 2.6087vw, 3.75rem);
+	--space-2xs-xs: clamp(3.375rem, 2.8098rem + 2.8261vw, 5rem);
+	--space-xs-s: clamp(1.25rem, 5.6304rem + -5.6522vw, 4.5rem);
+	--space-s-m: clamp(1.125rem, 0.8641rem + 1.3043vw, 1.875rem);
+	--space-m-l: clamp(1.6875rem, 1.4049rem + 1.413vw, 2.5rem);
+	--space-l-xl: clamp(2.25rem, 1.7283rem + 2.6087vw, 3.75rem);
+	--space-xl-2xl: clamp(3.375rem, 2.8098rem + 2.8261vw, 5rem);
+	--space-2xl-3xl: clamp(4.5rem, 3.4565rem + 5.2174vw, 7.5rem);
+
+	/* Custom pairs */
+	--space-l-3xl: clamp(2.25rem, 0.4239rem + 9.1304vw, 7.5rem);
+
+	/* Colors */
+	--color-dark: #252525;
+	--color-dark-glare: #363636;
+	--color-mid: #c9c9c9;
+	--color-mid-shade: #dedede;
+	--color-light: #efefef;
+	--color-light-shade: ;
+	--color-blue: #1a8fe3;
+	--color-blue-glare: #eef6fd;
+
+	--leading: 1.5;
+	--leading-fine: 1.1;
+	--leading-loose: 1.7;
+	--kerning: normal; /* AKA letter-spacing */
+	--kerning-tight: -0.04ch;
+	--kerning-loose: 0.1ch;
+	--kerning-uppercase: 0.04ch;
+	--text-size-base: var(--step-1);
+	--text-size-meta: var(--step--1);
+	--text-size-lede: var(--step--2);
+	--text-size-heading-1: var(--step-5);
+	--text-size-heading-2: var(--step-4);
+	--text-size-heading-3: var(--step-3);
+	--text-size-heading-4: var(--step-2);
+	--text-size-heading-5: var(--step-1);
+	--text-size-heading-6: var(--step--2);
+	--gutter: var(--space-m-l);
+	--space-gutter: var(--space-m);
+	--space-gutter-s: var(--space-s);
+	--space-gutter-l: var(--space-l);
+	--space-regions: var(--space-xl);
+	--size-wrapper-max-width: 1035px;
+	--color-global-bg: var(--color-light);
+	--color-global-text: var(--color-dark);
+	--color-surface-bg: var(--color-mid);
+	--color-surface-bg-interact: var(--color-mid-shade);
+	--color-surface-text: var(--color-dark);
+	--color-surface-text-interact: var(--color-dark);
+	--color-primary: var(--color-blue);
+	--font-base: 'Urbanist', sans-serif;
+	--font-display: 'Ubuntu', sans-serif;
+	--font-light: 300;
+	--font-regular: 400;
+	--font-medium: 500;
+	--font-bold: 700;
+	--font-black: 900;
+	--focus-ring: 2px solid currentColor;
+	--focus-ring-offset: 2px;
+
+	--transition-base: 250ms ease;
+	--transition-movement: 200ms linear;
+	--transition-fade: 300ms ease;
+	--transition-bounce: 500ms cubic-bezier(0.5, 0.05, 0.2, 1.5);
+	--stroke: 2px dashed var(--color-mid, var(--color-dark));
+	--stroke-solid: 2px solid var(--color-mid, var(--color-dark));
+	--radius-s: 0.2rem;
+	--radius-m: 0.75rem;
+	--radius-l: 2.5rem;
+}

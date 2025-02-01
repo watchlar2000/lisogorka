@@ -1,0 +1,14 @@
+.wrapper {
+	margin-inline: auto;
+	max-width: var(--wrapper-max-width, 1360px);
+	padding-left: var(--gutter);
+	padding-right: var(--gutter);
+	position: relative;
+}
+
+.wrapper[data-wrapper-type='inner'] {
+	/* --wrapper-max-width: 45ch; */
+	min-width: 100%;
+	padding-block: var(--gutter-wrapper-inner-block, var(--gutter));
+	padding-inline: var(--gutter-wrapper-inner-inline, var(--gutter));
+}

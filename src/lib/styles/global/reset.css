@@ -1,0 +1,151 @@
+/* Modern reset: https://piccalil.li/blog/a-more-modern-css-reset/ */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	*,
+	*::before,
+	*::after {
+		animation-duration: 0.01ms !important;
+		animation-iteration-count: 1 !important;
+		transition-duration: 0.01ms !important;
+		scroll-behavior: auto !important;
+	}
+}
+
+html {
+	/* Prevent font size inflation */
+	-moz-text-size-adjust: none;
+	-webkit-text-size-adjust: none;
+	text-size-adjust: none;
+	scroll-behavior: smooth;
+	scrollbar-gutter: stable;
+}
+
+html,
+body {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	min-height: 100vh;
+	line-height: 1.5;
+	text-rendering: optimizeSpeed;
+	-webkit-font-smoothing: antialiased;
+}
+
+/* Remove default margin in favour of better control in authored CSS */
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+figure,
+blockquote,
+dl,
+dd {
+	margin-block-start: 0;
+	margin-block-end: 0;
+}
+
+h1,
+h2,
+h3,
+h4,
+button,
+input,
+label {
+	line-height: 1.1;
+}
+
+ul[role='list'],
+ol[role='list'] {
+	list-style: none;
+}
+
+ul[class],
+ol[class] {
+	padding: 0;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+p,
+ul[class],
+ol[class],
+figure,
+blockquote,
+dl,
+dd {
+	margin: 0;
+}
+
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+	overflow-wrap: break-word;
+}
+
+/* Balance text wrapping on headings */
+h1,
+h2,
+h3,
+h4 {
+	text-wrap: balance;
+}
+
+a {
+	text-decoration-skip-ink: auto;
+	color: currentColor;
+}
+
+img,
+picture {
+	max-width: 100%;
+	display: block;
+}
+
+article > * + * {
+	margin-top: 1em;
+}
+
+img,
+picture {
+	height: auto;
+	max-width: 100%;
+	display: block;
+}
+
+img:not([alt]) {
+	filter: blur(6px);
+}
+
+:where(input, button, textarea, select) {
+	font-family: inherit;
+	font-size: inherit;
+}
+
+textarea:not([rows]) {
+	min-height: 10em;
+}
+
+/* Anything that has been anchored to should have extra scroll margin */
+:target {
+	scroll-margin-block: 5ex;
+}

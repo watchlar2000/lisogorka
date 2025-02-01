@@ -1,0 +1,42 @@
+.prose {
+	--flow-space: var(--space-l);
+	font-family: var(--font-display);
+}
+
+.prose :is(h1, h2, h3) {
+	overflow-wrap: anywhere;
+	hyphens: auto;
+}
+
+.prose :is(p, li, dl, figcaption, blockquote) {
+	max-width: 50ch;
+	text-wrap: pretty;
+}
+
+.prose :is(h1, h2, h3, h4) + *:not([class]) {
+	--flow-space: var(--space-m);
+}
+
+/* Add more space to headings on block start */
+.prose * + :is(h1, h2, h3, h4):not([class]) {
+	--flow-space: var(--space-xl);
+}
+
+.prose :is(ul, ol):not([class]) li + li,
+.prose :is(ul, ol):not([class]) li > :is(ol, ul) {
+	--flow-space: var(--space-xs);
+}
+
+.prose hr {
+	--flow-space: var(--space-2xl);
+}
+
+.prose :is(a):active,
+.prose :is(a):focus-visible {
+	text-decoration-color: var(--color-primary);
+	color: var(--color-primary);
+}
+
+/* .prose :is(img, picture, video) {
+	border: var(--stroke-solid);
+} */
