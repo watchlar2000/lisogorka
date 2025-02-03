@@ -3,8 +3,8 @@
 	const project = $derived(data.project);
 </script>
 
-<article class="prose flow wrapper">
-	<div class="wrapper flow article__content">
+<article class="flow">
+	<div class="flow prose article__content">
 		<h2>{project.title}</h2>
 		<p>
 			Lorem ipsum dolor sit amet, consectetur adipisicing elit. Consectetur
@@ -28,11 +28,18 @@
 <style>
 	.images__list {
 		display: grid;
-		place-content: center;
-		background-color: orange;
+	}
+
+	.images__list li {
+		margin-inline: auto;
 	}
 
 	.article__content {
-		--wrapper-max-width: 40ch;
+		--wrapper-max-width: 50ch;
+	}
+
+	.prose {
+		display: grid;
+		place-content: center;
 	}
 </style>
