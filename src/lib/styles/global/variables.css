@@ -11,11 +11,14 @@
 	--step-5: clamp(2.0273rem, 1.4342rem + 2.9656vw, 3.7325rem);
 
 	/* @link https://utopia.fyi/space/calculator?c=320,18,1.2,1240,20,1.25,5,2,&s=0.75|0.5|2|3|4,1.5|2|3|4|6,l-3xl&g=s%2Cl%2Cxl%2C12,l,xl,12 */
-	--space-5xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
+	/* --space-5xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
 	--space-4xs: clamp(0.875rem, 0.8533rem + 0.1087vw, 0.9375rem);
 	--space-3xs: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
 	--space-2xs: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
-	--space-xs: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem);
+	--space-xs: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem); */
+	--space-3xs: clamp(0.3125rem, 0.269rem + 0.2174vw, 0.4375rem);
+	--space-2xs: clamp(0.5625rem, 0.4755rem + 0.4348vw, 0.8125rem);
+	--space-xs: clamp(0.875rem, 0.7446rem + 0.6522vw, 1.1rem);
 	--space-s: clamp(1.125rem, 1.0815rem + 0.2174vw, 1.25rem);
 	--space-m: clamp(1.6875rem, 1.6223rem + 0.3261vw, 1.875rem);
 	--space-l: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
@@ -40,7 +43,7 @@
 
 	/* Colors */
 	--color-dark: #252525;
-	--color-dark-glare: #363636;
+	--color-dark-glare: #535353;
 	--color-mid: #c9c9c9;
 	--color-mid-shade: #dedede;
 	--color-light: #efefef;
@@ -75,7 +78,7 @@
 	--color-surface-bg: var(--color-mid);
 	--color-surface-bg-interact: var(--color-mid-shade);
 	--color-surface-text: var(--color-dark);
-	--color-surface-text-interact: var(--color-dark);
+	--color-surface-text-interact: var(--color-dark-glare);
 	--color-primary: var(--color-blue);
 	--font-base: 'Urbanist', sans-serif;
 	--font-display: 'Ubuntu', sans-serif;
