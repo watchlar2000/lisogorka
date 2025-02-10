@@ -40,7 +40,7 @@
 					viewBox="0 0 24 24"
 					fill="none"
 					stroke="currentColor"
-					stroke-width="2"
+					stroke-width="1.5"
 					stroke-linecap="round"
 					stroke-linejoin="round"
 					class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg
@@ -87,7 +87,7 @@
 	}
 
 	.nav .cluster {
-		--gutter: 1ch;
+		--gutter: var(--space-m);
 	}
 
 	.dropdown__menu {
@@ -107,6 +107,7 @@
 
 	.menu__item {
 		width: 100%;
+		color: var(--color-global-text);
 		background-color: var(--color-bg-global);
 		display: inline-block;
 		text-decoration: none;
@@ -114,7 +115,7 @@
 		text-transform: capitalize;
 		font-weight: var(--font-regular);
 		border-radius: var(--radius-m);
-		padding: var(--space-4xs) var(--space-m);
+		padding: var(--space-3xs) var(--space-m);
 		line-height: var(--leading);
 
 		transition: background 0.125s ease;

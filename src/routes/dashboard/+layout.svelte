@@ -8,7 +8,7 @@
 	<header class="header wrapper repel">
 		<h2 class="title">Dashboard</h2>
 		<div class="cluster">
-			<form method="POST" use:enhance>
+			<form method="POST" action="logout?/logout" use:enhance>
 				<button class="button button__logout">Logout</button>
 			</form>
 		</div>
@@ -21,9 +21,21 @@
 </div>
 
 <style>
+	.container {
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		min-height: 100%;
+		padding-bottom: var(--space-l);
+	}
+
+	.container > * {
+		width: 100%;
+	}
+
 	.wrapper[data-wrapper-type='inner'] {
 		background-color: #fefefe;
-		border-radius: var(--radius-l);
+		border-radius: var(--radius-m);
 	}
 
 	.button__logout {
@@ -40,41 +52,6 @@
 		letter-spacing: var(--kerning-uppercase);
 	}
 
-	/* .header {
-		--wrapper-max-width: 60ch;
-
-		width: 100%;
-	}
-
-	.header h2 {
-		color: var(--color-surface-text-interact);
-		font-size: var(--text-size-meta);
-		text-transform: uppercase;
-		letter-spacing: var(--kerning-uppercase);
-	}
-
-	.button__logout {
-		--button-bg: var(--color-surface-text);
-		--button-text: var(--color-global-bg);
-
-		font-size: var(--text-size-meta);
-	}
-	.container {
-		display: flex;
-		flex-direction: column;
-		min-height: 100%;
-		width: 100%;
-		padding-bottom: var(--space-l);
-	}
-
-	.container > * {
-		width: 100%;
-	}
-
-	.container .wrapper {
-		--wrapper-max-width: 60ch;
-	}
-
 	.content {
 		flex-grow: 1;
 		display: flex;
@@ -83,11 +60,6 @@
 	}
 
 	.wrapper[data-wrapper-type='inner'] {
-		/* --wrapper-max-width: 60ch; */
-
-	/* flex-grow: 1;
-		background-color: #fefefe;
-		border-radius: var(--radius-l);
-		height: 100%;
-	}  */
+		flex-grow: 1;
+	}
 </style>

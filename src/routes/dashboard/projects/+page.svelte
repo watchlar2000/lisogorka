@@ -1,19 +1,67 @@
 <script lang="ts">
+	import { parseDate } from '$lib/utils/parseDate.js';
+
 	const { data } = $props();
 
 	const projects = $derived(data.projects);
-
-	const parseDate = (date: Date): string => {
-		return date.toLocaleDateString('en-US', {
-			month: 'short',
-			day: '2-digit',
-			year: 'numeric',
-		});
-	};
 </script>
 
+<!-- <CldUploadWidget
+	uploadPreset="lisogorka"
+	let:open
+	let:isLoading
+	onSuccess={(data) => console.log(data)}
+	options={{
+		showAdvancedOptions: false,
+		uploadPreset: 'lisogorka',
+		cropping: false,
+		multiple: false,
+		showCompletedButton: false,
+		sources: ['local'],
+		defaultSource: 'local',
+		styles: {
+			palette: {
+				window: '#ffffff',
+				sourceBg: '#f4f4f5',
+				windowBorder: '#90a0b3',
+				tabIcon: '#000000',
+				inactiveTabIcon: '#555a5f',
+				menuIcons: '#555a5f',
+				link: '#0433ff',
+				action: '#339933',
+				inProgress: '#0433ff',
+				complete: '#339933',
+				error: '#cc0000',
+				textDark: '#000000',
+				textLight: '#fcfffd',
+			},
+			fonts: {
+				default: null,
+				'sans-serif': {
+					url: null,
+					active: true,
+				},
+			},
+		},
+	}}
+>
+	<button on:click={() => open()} disabled={isLoading}>
+		Open the widget
+	</button>
+</CldUploadWidget>
+
+<CldImage
+	src="https://res.cloudinary.com/dezfqozcv/image/upload/v1713639479/cld-sample-5.jpg"
+	alt="Turtle"
+	width={960}
+	height={600}
+/> -->
+
 <div class="flow">
-	<h6 class="title"><span>🏗️</span> Projects</h6>
+	<div class="repel">
+		<h6 class="title"><span>🏗️</span> Projects</h6>
+		<a href="/dashboard/projects/new" class="button">+ New project</a>
+	</div>
 	<hr />
 	<div>
 		<ul role="list" class="auto-grid cards__list">
@@ -23,14 +71,12 @@
 					<div class="prose card__meta flow">
 						<img src={p.coverImage?.url} alt="" class="card__cover" />
 						<p class="card__title">{p.title}</p>
-						<div class="repel">
-							<p class="card__meta--label">
-								{p.isFeatured ? 'active' : 'disabled'}
-							</p>
-							<p>{parseDate(p.createdAt)}</p>
-						</div>
+						<p>{parseDate(p.createdAt)}</p>
+						<p class="card__meta--label">
+							{p.isFeatured ? 'active' : 'disabled'}
+						</p>
 					</div>
-					<button class="button button__edit"
+					<button class="cluster button button__edit"
 						><svg
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
@@ -39,7 +85,7 @@
 							viewBox="0 0 24 24"
 							fill="none"
 							stroke="currentColor"
-							stroke-width="2"
+							stroke-width="1.5"
 							stroke-linecap="round"
 							stroke-linejoin="round"
 							class="lucide lucide-pencil"
@@ -47,7 +93,7 @@
 								d="M21.174 6.812a1 1 0 0 0-3.986-3.987L3.842 16.174a2 2 0 0 0-.5.83l-1.321 4.352a.5.5 0 0 0 .623.622l4.353-1.32a2 2 0 0 0 .83-.497z"
 							/><path d="m15 5 4 4" /></svg
 						>
-						<span class="visually-hidden">Edit project</span>
+						<span class="">Edit</span>
 					</button>
 				</li>
 			{/each}
@@ -87,17 +133,18 @@
 	}
 	.card__cover {
 		aspect-ratio: 1.5;
-		/* width: 100%; */
-		/* height: 12ch; */
+		width: 100%;
+		height: auto;
 		object-fit: cover;
 		border-radius: calc(var(--radius-m) / 1.5);
 	}
 
 	.button__edit {
-		--button-bg: var(--color-surface-bg);
+		--cluster-horizontal-alignment: center;
+		--gutter: var(--space-2xs);
+		--button-bg: var(--color-surface-text-interact);
 
-		display: grid;
-		place-content: center;
 		width: 100%;
+		font-size: var(--text-size-lede);
 	}
 </style>

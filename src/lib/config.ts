@@ -7,10 +7,15 @@ export const siteConfig = {
 	description:
 		'Portfolio of Iryna Lisogor, showcasing works in visual development and background painting.',
 	links: {
-		github: 'https://github.com/watchlar2000/lisogorka',
+		/// add social links
 	},
 	keywords:
 		'illustrator, visual development, background painting, art portfolio, Iryna Lisogor, lisogorka',
+	creator: {
+		name: 'Sergii Koch',
+		github: 'https://github.com/watchlar2000',
+		mail: 'sergii.koch@gmail.com',
+	},
 };
 
 export const navConfig: NavConfig = {

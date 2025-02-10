@@ -1,22 +1,24 @@
+import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 import { type IImagesRepository } from './images.repository';
-import {
-	createImageDTO,
-	type CreateImageDTO,
-	type Image,
-} from './images.types';
+import { type Image } from './images.types';
 
 export interface IImagesService {
 	listAll: () => Promise<Image[]>;
 	findById: (id: number) => Promise<Image>;
 	findByIds(ids: number[]): Promise<Image[]>;
-	create?: (data: CreateImageDTO) => Promise<null>;
+	create: (payload: { image: File; alt: string }) => Promise<Image>;
 }
 
 export class ImagesService implements IImagesService {
 	private repository;
+	private cloudinaryService;
 
-	constructor(imageRepository: IImagesRepository) {
+	constructor(
+		imageRepository: IImagesRepository,
+		cloudinaryService: CloudinaryService,
+	) {
 		this.repository = imageRepository;
+		this.cloudinaryService = cloudinaryService;
 	}
 
 	async listAll() {
@@ -31,27 +33,36 @@ export class ImagesService implements IImagesService {
 		return this.repository.findByIds(ids);
 	}
 
-	async create(data: CreateImageDTO) {
+	async create({ image, alt }: { image: File; alt: string }) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { success, data: values, error } = createImageDTO.safeParse(data);
+		const { public_id, width, height, secure_url } =
+			await this.cloudinaryService.upload({
+				image,
+			});
 
-		if (!success) {
-			const { fieldErrors } = error.flatten();
-			const errorMessage = Object.entries(fieldErrors)
-				.map(([field, errors]) =>
-					errors ? `${field}: ${errors.join(', ')}` : field,
-				)
-				.join('\n  ');
-			throw new Error(errorMessage);
-		}
+		const payload = {
+			url: secure_url,
+			alt,
+			width,
+			height,
+		};
 
-		/*
-		 TODO:
-      - get metadata from from (height, width)
-      - upload file to the storage (supabase or cloudinary?) and return url
-      - map input values to an object to be passed to repository create method
-    */
+		// const {
+		// 	success,
+		// 	data: values,
+		// 	error,
+		// } = imageInsertSchema.safeParse(payload);
 
-		return Promise.resolve(null);
+		// if (!success) {
+		// 	const { fieldErrors } = error.flatten();
+		// 	const errorMessage = Object.entries(fieldErrors)
+		// 		.map(([field, errors]) =>
+		// 			errors ? `${field}: ${errors.join(', ')}` : field,
+		// 		)
+		// 		.join('\n  ');
+		// 	throw new Error(errorMessage);
+		// }
+
+		return await this.repository.create(payload);
 	}
 }

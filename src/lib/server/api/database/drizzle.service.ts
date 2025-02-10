@@ -8,11 +8,16 @@ export class DrizzleService {
 	public readonly schema = schema;
 	public readonly _db: PostgresJsDatabase<typeof schema>;
 
-	constructor(private configService = new ConfigService()) {
-		const connection = postgres(this.configService.envs.DATABASE_URL);
-		this._db = drizzle(connection, {
-			schema,
-		});
+	constructor(private configService: ConfigService = new ConfigService()) {
+		try {
+			const { DATABASE_URL } = this.configService.envs;
+			const connection = postgres(DATABASE_URL);
+			this._db = drizzle(connection, {
+				schema,
+			});
+		} catch (error: unknown) {
+			throw new Error(`Database connection failed: ${error.message}`);
+		}
 	}
 
 	static get db() {
@@ -22,5 +27,3 @@ export class DrizzleService {
 		return DrizzleService.instance._db;
 	}
 }
-
-// export const drizzleService = new DrizzleService();

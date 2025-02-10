@@ -11,6 +11,7 @@ export const projectInsertSchema = createInsertSchema(projects, {
 			invalid_type_error: "Title can't be blank",
 		})
 		.min(1),
+	slug: z.string().optional(),
 });
 
 export type Project = zod.infer<typeof projectSelectSchema>;

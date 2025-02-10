@@ -140,10 +140,11 @@ form > * + * {
 	textarea
 ) {
 	padding: 0.5em 0.8em;
-	border-radius: var(--radius-s);
+	border-radius: var(--radius-m);
 	border: var(--stroke-solid);
-	background: var(--color-dark-glare);
-	color: var(--color-light);
+	/* background: var(--color-dark-glare); */
+	/* color: var(--color-light); */
+	color: var(--color-surface-text-interact);
 	width: 100%;
 }
 
@@ -152,8 +153,8 @@ form > * + * {
 		select,
 		textarea
 	)::placeholder {
-	color: var(--color-light);
-	opacity: 1;
+	color: var(--color-surface-text-interact);
+	opacity: 0.5;
 }
 
 label {
@@ -161,15 +162,16 @@ label {
 	font-weight: var(--font-medium);
 }
 
-label::after {
+/* label::after {
 	content: '\A';
 	white-space: pre;
-}
+} */
 
 /* Usually label wraps checkbox and radio buttons, so we give ourselves more layout and text-flow control with flex */
 label:has(input) {
 	display: flex;
-	align-items: baseline;
+	flex-direction: column;
+	/* align-items: baseline; */
 	gap: var(--space-s);
 	font-weight: var(--font-normal);
 }
@@ -190,4 +192,13 @@ input:disabled {
 input:disabled,
 label input:disabled + * {
 	cursor: not-allowed;
+}
+
+span.invalid {
+	font-size: var(--text-size-lede);
+	color: rgb(194, 82, 82);
+}
+
+input[data-inavlid='true'] {
+	border-color: rgb(194, 82, 82);
 }

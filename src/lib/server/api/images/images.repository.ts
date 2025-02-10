@@ -35,7 +35,7 @@ export class ImagesRepository implements IImagesRepository {
 	}
 
 	async create(payload: NewImage) {
-		const [image] = await this.db.insert(images).values(payload);
+		const [image] = await this.db.insert(images).values(payload).returning();
 		return image;
 	}
 }
