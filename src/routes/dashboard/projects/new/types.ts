@@ -1,18 +1,12 @@
 import type { Category } from '$lib/server/api/types/types';
-
-export type Image = {
-	id: number;
-	url: string;
-	alt: string;
-	file: File | null;
-};
+import type { ProjectImageData } from '$lib/types/new-project';
 
 export type ProjectState = {
 	title: string;
 	description: string;
 	category: Category;
-	coverImage: Image | null;
-	images: Image[];
+	coverImage: ProjectImageData | null;
+	images: ProjectImageData[];
 };
 
 export type OnSaveParams = {

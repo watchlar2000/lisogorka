@@ -15,7 +15,9 @@
 <dialog bind:this={dialog} onclose={close}>
 	<div class="wrapper flow" data-wrapper-type="inner">
 		<header class="repel">
-			<slot name="header" />
+			<div>
+				<slot name="header" />
+			</div>
 			<button class="button button__close" onclick={close}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"

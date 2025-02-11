@@ -33,6 +33,7 @@ export const UploadImageSchema = z.object({
 });
 
 export const EditImageSchema = UploadImageSchema.pick({ alt: true });
+export const FileSchema = UploadImageSchema.pick({ file: true });
 
 export type UploadImage = z.infer<typeof UploadImageSchema>;
 export type EditImage = z.infer<typeof EditImageSchema>;

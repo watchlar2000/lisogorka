@@ -1,20 +1,13 @@
-type ImageData = {
-	alt: string;
-	url: string;
-	file: File | null;
+import type {
+	FormImageInputValues,
+	FormImageState,
+} from '$lib/types/new-project';
+import type { Snippet } from 'svelte';
+
+export type ImageModalProps = {
+	form: FormImageState;
+	onSave: (params: { alt: string; file: File | null }) => boolean;
+	imagePreview: Snippet;
 };
 
-type OnSaveParams = ImageData;
-
-export type ImageModalProps = ImageData & {
-	onSave: (params: OnSaveParams) => void;
-};
-
-export type FormState = {
-	valid: boolean;
-	errors: {
-		file?: string[] | undefined;
-		alt?: string[] | undefined;
-	};
-	values: ImageData;
-};
+export type FormInputValues = FormImageInputValues;

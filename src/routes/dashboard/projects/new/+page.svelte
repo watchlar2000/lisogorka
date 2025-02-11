@@ -4,9 +4,17 @@
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
 	import { IMAGE_CATEGORY_LIST } from '$lib/constants';
 	import type { Category } from '$lib/server/api/types/types';
+	import type {
+		FormImageState,
+		ProjectImageData,
+	} from '$lib/types/new-project';
+	import {
+		EditImageSchema,
+		UploadImageSchema,
+	} from '$lib/validationSchema/images';
 	import { createSelect } from '@melt-ui/svelte';
 	import type { SubmitFunction } from '@sveltejs/kit';
-	import type { Image, OnSaveParams, ProjectState } from './types';
+	import type { OnSaveParams, ProjectState } from './types';
 
 	let modal: ImageModal;
 
@@ -28,32 +36,40 @@
 		images: [],
 	});
 
-	const selectedImageInitState = {
-		id: 0,
-		file: null,
-		alt: '',
-		url: '',
-		isCoverImage: false,
-	};
+	const imageModalForm: FormImageState = $state({
+		valid: false,
+		errors: {
+			file: undefined,
+			alt: undefined,
+		},
+		values: {
+			file: null,
+			alt: '',
+			url: '',
+		},
+	});
 
-	let selectedImage: Image & { isCoverImage: boolean } = $state(
-		selectedImageInitState,
-	);
+	let selectedImage = $state({
+		id: 0,
+		isCoverImage: false,
+		url: '',
+	});
 
 	const openImageModal = ({
 		image,
 		isCoverImage = false,
 	}: {
-		image: Image | null;
+		image: ProjectImageData | null;
 		isCoverImage?: boolean;
 	}) => {
 		selectedImage.id = image?.id ?? 0;
-		selectedImage.url = image?.url ?? '';
-		selectedImage.alt = image?.alt ?? '';
-		selectedImage.file = image?.file ?? null;
 		selectedImage.isCoverImage = isCoverImage;
+		selectedImage.url = image?.url ?? '';
 
-		selectedImage = { ...selectedImage };
+		imageModalForm.values.file = image?.file ?? null;
+		imageModalForm.values.alt = image?.alt ?? '';
+		imageModalForm.values.url = image?.url ?? '';
+
 		modal.open();
 	};
 
@@ -75,25 +91,49 @@
 
 	const onSave =
 		({ id = 0, isCoverImage = false }: OnSaveParams) =>
-		({ file, alt, url }) => {
-			console.log({ id, isCoverImage });
+		({ file, alt }: { alt: string; file: File | null }): boolean => {
+			console.log({ isCoverImage });
+
+			const schema = id && file === null ? EditImageSchema : UploadImageSchema;
+			const { success, error } = schema.safeParse({ file, alt });
+
+			if (!success) {
+				imageModalForm.errors = error.flatten().fieldErrors;
+				return false;
+			}
 
 			const existingIndex = projectState.images.findIndex(
 				(img) => img.id === id,
 			);
 
 			if (existingIndex !== -1) {
-				projectState.images[existingIndex] = {
-					id,
+				let image = projectState.images[existingIndex];
+				image.alt = alt;
+				image.file = file ?? image.file;
+				image.url = file ? URL.createObjectURL(file) : image.url;
+			} else {
+				projectState.images.push({
+					id: Math.random() + 1,
 					file,
 					alt,
-					url,
-				};
-			} else {
-				projectState.images.push({ id, file, alt, url });
+					url: file ? URL.createObjectURL(file) : '',
+				});
 			}
+
+			imageModalForm.errors.alt = undefined;
+			imageModalForm.errors.file = undefined;
+
+			return true;
 		};
 </script>
+
+{#snippet imagePreview()}
+	{#if selectedImage.url}
+		<div class="image__preview">
+			<img src={selectedImage.url} alt="" />
+		</div>
+	{/if}
+{/snippet}
 
 <ImageModal
 	bind:this={modal}
@@ -101,9 +141,8 @@
 		id: selectedImage.id,
 		isCoverImage: selectedImage.isCoverImage,
 	})}
-	file={selectedImage.file}
-	alt={selectedImage.alt}
-	url={selectedImage.url}
+	form={imageModalForm}
+	{imagePreview}
 />
 <form
 	method="POST"
@@ -242,11 +281,8 @@
 
 	.image {
 		position: relative;
-		/* height: 15ch; */
 		width: 15ch;
-		/* object-fit: cover; */
 		aspect-ratio: 1.5;
-		/* overflow: hidden; */
 	}
 
 	.image button {
@@ -268,5 +304,15 @@
 	.image__list li img {
 		height: 10ch;
 		width: auto;
+	}
+
+	.image__preview {
+		height: 15ch;
+	}
+
+	.image__preview img {
+		height: 100%;
+		width: auto;
+		margin-inline: auto;
 	}
 </style>
