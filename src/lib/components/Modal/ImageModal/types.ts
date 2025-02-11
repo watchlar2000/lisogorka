@@ -1,20 +1,20 @@
-import { MODE_CREATE, MODE_EDIT } from '../../../constants';
-export type ImageModalMode = typeof MODE_CREATE | typeof MODE_EDIT;
-
-export type ImageModalProps = {
-	mode: ImageModalMode;
-	imageCallback: ({
-		file,
-		alt,
-		url,
-	}: {
-		file: File;
-		alt: string;
-		url: string;
-	}) => void;
-	// imageCallback:
-	// 	| (({ alt, file }: { alt: string; file: File }) => void)
-	// 	| (({ alt }: { alt: string }) => void);
-	url: string;
+type ImageData = {
 	alt: string;
+	url: string;
+	file: File | null;
+};
+
+type OnSaveParams = ImageData;
+
+export type ImageModalProps = ImageData & {
+	onSave: (params: OnSaveParams) => void;
+};
+
+export type FormState = {
+	valid: boolean;
+	errors: {
+		file?: string[] | undefined;
+		alt?: string[] | undefined;
+	};
+	values: ImageData;
 };

@@ -6,6 +6,7 @@
 	import type { Category } from '$lib/server/api/types/types';
 	import { createSelect } from '@melt-ui/svelte';
 	import type { SubmitFunction } from '@sveltejs/kit';
+	import type { Image, OnSaveParams, ProjectState } from './types';
 
 	let modal: ImageModal;
 
@@ -19,21 +20,6 @@
 		},
 	});
 
-	type Image = {
-		id: string;
-		url: string;
-		alt: string;
-		file: File | null;
-	};
-
-	type ProjectState = {
-		title: string;
-		description: string;
-		category: Category;
-		coverImage: Image | null;
-		images: Image[];
-	};
-
 	const projectState: ProjectState = $state({
 		title: '',
 		description: '',
@@ -42,22 +28,26 @@
 		images: [],
 	});
 
-	let selectedImage: Image & { isCoverImage: boolean } = $state({
-		id: '',
+	const selectedImageInitState = {
+		id: 0,
 		file: null,
 		alt: '',
 		url: '',
 		isCoverImage: false,
-	});
+	};
+
+	let selectedImage: Image & { isCoverImage: boolean } = $state(
+		selectedImageInitState,
+	);
 
 	const openImageModal = ({
 		image,
 		isCoverImage = false,
 	}: {
 		image: Image | null;
-		isCoverImage: boolean;
+		isCoverImage?: boolean;
 	}) => {
-		selectedImage.id = image?.id ?? '';
+		selectedImage.id = image?.id ?? 0;
 		selectedImage.url = image?.url ?? '';
 		selectedImage.alt = image?.alt ?? '';
 		selectedImage.file = image?.file ?? null;
@@ -84,9 +74,9 @@
 	};
 
 	const onSave =
-		(isCoverImage = false) =>
-		({ id, file, alt, url }: Image) => {
-			console.log(isCoverImage);
+		({ id = 0, isCoverImage = false }: OnSaveParams) =>
+		({ file, alt, url }) => {
+			console.log({ id, isCoverImage });
 
 			const existingIndex = projectState.images.findIndex(
 				(img) => img.id === id,
@@ -107,8 +97,10 @@
 
 <ImageModal
 	bind:this={modal}
-	onSave={onSave(selectedImage.isCoverImage)}
-	id={selectedImage.id}
+	onSave={onSave({
+		id: selectedImage.id,
+		isCoverImage: selectedImage.isCoverImage,
+	})}
 	file={selectedImage.file}
 	alt={selectedImage.alt}
 	url={selectedImage.url}

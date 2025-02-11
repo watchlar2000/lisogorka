@@ -9,15 +9,15 @@
 		modal.open();
 	};
 
-	const { id, alt, url, file, onSave }: ImageModalProps = $props();
+	const { alt, url, file, onSave }: ImageModalProps = $props();
 
 	type ImageModalProps = {
-		id: string;
+		// id: string;
 		alt: string;
 		url: string;
 		file: File | null;
 		onSave: (image: {
-			id: string;
+			// id: string;
 			alt: string;
 			url: string;
 			file: File | null;
@@ -72,7 +72,7 @@
 		form.errors.alt = undefined;
 		form.errors.file = undefined;
 		onSave({
-			id: id ?? new Date().getTime(),
+			// id: id ?? new Date().getTime(),
 			alt: alt,
 			file: file,
 			url: URL.createObjectURL(file!),
