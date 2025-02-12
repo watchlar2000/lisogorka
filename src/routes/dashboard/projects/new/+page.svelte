@@ -105,22 +105,32 @@
 				return false;
 			}
 
-			const existingIndex = projectState.images.findIndex(
-				(img) => img.id === id,
-			);
-
-			if (existingIndex !== -1) {
-				let image = projectState.images[existingIndex];
-				image.alt = alt;
-				image.file = file ?? image.file;
-				image.url = file ? URL.createObjectURL(file) : image.url;
-			} else {
-				projectState.images.push({
-					id: Math.random() + 1,
-					file,
+			if (isCoverImage) {
+				const coverImage = {
+					id,
 					alt,
-					url: file ? URL.createObjectURL(file) : '',
-				});
+					file,
+					url: URL.createObjectURL(file as File),
+				};
+				projectState.coverImage = { ...projectState.coverImage, ...coverImage };
+			} else {
+				const existingIndex = projectState.images.findIndex(
+					(img) => img.id === id,
+				);
+
+				if (existingIndex !== -1) {
+					let image = projectState.images[existingIndex];
+					image.alt = alt;
+					image.file = file ?? image.file;
+					image.url = file ? URL.createObjectURL(file) : image.url;
+				} else {
+					projectState.images.push({
+						id: Math.random() + 1,
+						file,
+						alt,
+						url: file ? URL.createObjectURL(file) : '',
+					});
+				}
 			}
 
 			imageModalForm.errors.alt = undefined;
@@ -128,6 +138,8 @@
 
 			return true;
 		};
+
+	$inspect(projectState.coverImage);
 </script>
 
 {#snippet imagePreview()}
@@ -172,7 +184,11 @@
 				<button
 					class="button"
 					type="button"
-					onclick={() => openImageModal({ image: null, isCoverImage: true })}
+					onclick={() =>
+						openImageModal({
+							image: projectState.coverImage,
+							isCoverImage: true,
+						})}
 				>
 					Edit
 				</button>
