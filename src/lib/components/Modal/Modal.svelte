@@ -1,5 +1,17 @@
 <script lang="ts">
-	const { onCloseCallback = () => {} } = $props();
+	import type { Snippet } from 'svelte';
+
+	const {
+		header,
+		content,
+		controls,
+		onCloseCallback = () => {},
+	}: {
+		header: Snippet;
+		content: Snippet;
+		controls: Snippet;
+		onCloseCallback: () => void;
+	} = $props();
 	let dialog: HTMLDialogElement;
 
 	export const open = () => {
@@ -15,9 +27,7 @@
 <dialog bind:this={dialog} onclose={close}>
 	<div class="wrapper flow" data-wrapper-type="inner">
 		<header class="repel">
-			<div>
-				<slot name="header" />
-			</div>
+			{@render header()}
 			<button class="button button__close" onclick={close}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
@@ -36,18 +46,13 @@
 				<span class="visually-hidden">Close dialog window</span>
 			</button>
 		</header>
-		<slot />
+		{@render content()}
 		<hr />
-		<slot name="commands" />
+		{@render controls()}
 	</div>
 </dialog>
 
 <style lang="scss">
-	// .dialog__content {
-	// 	width: 100%;
-	// 	text-align: center;
-	// }
-
 	dialog {
 		--dialog-width: 40ch;
 

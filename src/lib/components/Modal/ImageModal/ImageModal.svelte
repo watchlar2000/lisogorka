@@ -9,7 +9,7 @@
 		modal.open();
 	};
 
-	const { onSave, form, imagePreview }: ImageModalProps = $props();
+	const { onSave, form }: ImageModalProps = $props();
 
 	const formInputValues: FormInputValues = $state({
 		file: null,
@@ -20,6 +20,7 @@
 	$effect(() => {
 		formInputValues.file = form.values.file;
 		formInputValues.alt = form.values.alt;
+		formInputValues.url = form.values.url;
 	});
 
 	const handleSubmit = (e: SubmitEvent) => {
@@ -34,6 +35,26 @@
 		});
 		if (!isValid) return;
 		modal.close();
+		formInputValues.url = '';
+	};
+
+	const getUrlFromImageFile = (file: File) => {
+		const isImage = file.type.startsWith('image');
+
+		if (!isImage) return '';
+
+		return URL.createObjectURL(file);
+	};
+
+	const handleInputFileChange = (
+		e: Event & {
+			currentTarget: EventTarget & HTMLInputElement;
+		},
+	): string | void => {
+		if (e.currentTarget.files) {
+			const file = e.currentTarget.files[0];
+			formInputValues.url = getUrlFromImageFile(file);
+		}
 	};
 
 	export const resetForm = () => {
@@ -41,12 +62,17 @@
 	};
 </script>
 
-<Modal bind:this={modal} onCloseCallback={resetForm}>
-	<div slot="header" class="modal__header">
-		<span>Add new image </span>
-	</div>
+{#snippet header()}
+	<span class="modal__header">Upload/Edit image</span>
+{/snippet}
+
+{#snippet content()}
 	<form onsubmit={handleSubmit} id="imageForm" class="prose">
-		{@render imagePreview()}
+		{#if formInputValues.url}
+			<div class="image__preview">
+				<img src={formInputValues.url} alt="" />
+			</div>
+		{/if}
 		<label for="file" class="">
 			<span class="label">Select image:</span>
 			<input
@@ -56,6 +82,7 @@
 				id="file"
 				name="file"
 				bind:this={inputFile}
+				onchange={handleInputFileChange}
 			/>
 		</label>
 		{#if form.errors.file}
@@ -76,10 +103,21 @@
 			<span class="invalid">{form.errors.alt}</span>
 		{/if}
 	</form>
-	<div slot="commands" class="cluster commands">
+{/snippet}
+
+{#snippet controls()}
+	<div class="cluster commands">
 		<button type="submit" class="button" form="imageForm">Save</button>
 	</div>
-</Modal>
+{/snippet}
+
+<Modal
+	bind:this={modal}
+	onCloseCallback={resetForm}
+	{header}
+	{content}
+	{controls}
+/>
 
 <style>
 	.modal__header {
@@ -99,5 +137,15 @@
 		display: block;
 		font-weight: var(--font-medium);
 		font-size: var(--text-size-meta);
+	}
+
+	.image__preview {
+		height: 15ch;
+	}
+
+	.image__preview img {
+		height: 100%;
+		width: auto;
+		margin-inline: auto;
 	}
 </style>

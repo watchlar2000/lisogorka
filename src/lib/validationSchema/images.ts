@@ -17,19 +17,14 @@ const ACCEPTED_FILE_TYPES = [
 
 export const UploadImageSchema = z.object({
 	file: z
-		.instanceof(File, { message: 'Please upload an image.' })
+		.instanceof(File, { message: 'Upload an image file' })
 		.refine((file) => {
 			return file.size <= MAX_UPLOAD_SIZE;
-		}, 'File size must be less than 3MB.')
+		}, 'File size must be less than 3MB')
 		.refine((file) => {
 			return ACCEPTED_FILE_TYPES.includes(file.type);
-		}, 'This image type is not supported.'),
-	alt: z
-		.string({
-			required_error: 'Alt text is required',
-			invalid_type_error: 'Alt text must be at least 5 characters long',
-		})
-		.min(5),
+		}, 'Either file type is incorrect or selected image type is not supported.'),
+	alt: z.string().min(1, { message: 'Alt text is required' }),
 });
 
 export const EditImageSchema = UploadImageSchema.pick({ alt: true });

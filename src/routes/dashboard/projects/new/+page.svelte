@@ -14,6 +14,7 @@
 	} from '$lib/validationSchema/images';
 	import { createSelect } from '@melt-ui/svelte';
 	import type { SubmitFunction } from '@sveltejs/kit';
+	import { tick } from 'svelte';
 	import type { OnSaveParams, ProjectState } from './types';
 
 	let modal: ImageModal;
@@ -55,7 +56,7 @@
 		url: '',
 	});
 
-	const openImageModal = ({
+	const openImageModal = async ({
 		image,
 		isCoverImage = false,
 	}: {
@@ -65,11 +66,13 @@
 		selectedImage.id = image?.id ?? 0;
 		selectedImage.isCoverImage = isCoverImage;
 		selectedImage.url = image?.url ?? '';
+		selectedImage = { ...selectedImage };
 
 		imageModalForm.values.file = image?.file ?? null;
 		imageModalForm.values.alt = image?.alt ?? '';
 		imageModalForm.values.url = image?.url ?? '';
 
+		await tick();
 		modal.open();
 	};
 
@@ -193,12 +196,12 @@
 			{$selectedLabel || 'Select a category'}
 		</button>
 		{#if $open}
-			<div {...$menu} use:menu class="select__menu">
+			<div {...$menu} use:menu class="select-menu">
 				{#each IMAGE_CATEGORY_LIST as category}
 					<div
 						{...$option({ value: category, label: category })}
 						use:option
-						class="select__menu--item"
+						class="select-menu__item"
 					>
 						<div
 							class="check {$isSelected(category) ? 'block' : 'hidden'}"
@@ -218,17 +221,22 @@
 		>
 		{#if projectState.images.length}
 			<div>
-				<ul role="list" class="flow image__list">
+				<ul role="list" class="auto-grid image-list">
 					{#each projectState.images as image}
-						<li>
-							<button
-								type="button"
-								class="button"
-								onclick={() => openImageModal({ image })}
-							>
-								edit image
-							</button>
+						<li class="image-list__item">
 							<img src={image.url} alt="" />
+							<div class="cluster controls">
+								<button
+									type="button"
+									class="button"
+									onclick={() => openImageModal({ image })}
+								>
+									Edit
+								</button>
+								<button type="button" class="button" onclick={() => {}}>
+									Delete
+								</button>
+							</div>
 						</li>
 					{/each}
 				</ul>
@@ -254,7 +262,7 @@
 		font-size: var(--text-size-meta);
 	}
 
-	.select__menu {
+	.select-menu {
 		background-color: #fefefe;
 		padding: var(--space-2xs);
 		font-weight: var(--font-regular);
@@ -262,57 +270,20 @@
 		box-shadow: 0px 0px 20px 16px rgba(17, 17, 26, 0.05);
 	}
 
-	.select__menu--item {
+	.select-menu__item {
 		cursor: pointer;
 		padding: var(--space-xs) var(--space-s);
 		border-radius: calc(var(--radius-m) / 1.5);
 	}
 
-	.select__menu--item:focus-visible,
+	/* .select__menu--item:focus-visible,
 	.select__menu--item:hover,
 	.select__menu--item:active {
 		background-color: var(--color-mid-shade);
-	}
+	} */
 
-	.button__select {
+	/* .button__select {
 		--button-bg: var(--color-surface-bg);
 		--button-text: currentColor;
-	}
-
-	.image {
-		position: relative;
-		width: 15ch;
-		aspect-ratio: 1.5;
-	}
-
-	.image button {
-		position: absolute;
-		top: 0;
-		right: 0;
-	}
-
-	.button__add-image {
-		--button-bg: var(--color-surface-bg);
-		--button-text: var(--color-global-text);
-
-		justify-content: center;
-		border: dashed 3px var(--color-surface-text-interact);
-		width: 15ch;
-		aspect-ratio: 1.5;
-	}
-
-	.image__list li img {
-		height: 10ch;
-		width: auto;
-	}
-
-	.image__preview {
-		height: 15ch;
-	}
-
-	.image__preview img {
-		height: 100%;
-		width: auto;
-		margin-inline: auto;
-	}
+	} */
 </style>
