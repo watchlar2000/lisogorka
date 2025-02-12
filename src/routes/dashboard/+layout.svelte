@@ -6,10 +6,10 @@
 
 <div class="container flow">
 	<header class="header wrapper repel">
-		<h2 class="title">Dashboard</h2>
+		<h2 class="title"><a href="/dashboard">Dashboard</a></h2>
 		<div class="cluster">
 			<form method="POST" action="logout?/logout" use:enhance>
-				<button class="button button__logout">Logout</button>
+				<button class="button button-logout">Logout</button>
 			</form>
 		</div>
 	</header>
@@ -38,11 +38,11 @@
 		border-radius: var(--radius-m);
 	}
 
-	.button__logout {
-		--button-bg: var(--color-surface-text);
-		--button-text: var(--color-global-bg);
+	.button-logout {
+		--button-bg: var(--color-surface-bg);
+		--button-text: var(--color-global-text);
 
-		font-size: var(--text-size-meta);
+		font-size: var(--text-size-lede);
 	}
 
 	.title {
