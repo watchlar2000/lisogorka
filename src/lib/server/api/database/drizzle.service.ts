@@ -11,7 +11,7 @@ export class DrizzleService {
 	constructor(private configService: ConfigService = new ConfigService()) {
 		try {
 			const { DATABASE_URL } = this.configService.envs;
-			const connection = postgres(DATABASE_URL);
+			const connection = postgres(DATABASE_URL, { prepare: false });
 			this._db = drizzle(connection, {
 				schema,
 			});
