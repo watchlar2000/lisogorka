@@ -36,6 +36,7 @@
 		if (!isValid) return;
 		modal.close();
 		formInputValues.url = '';
+		formInputValues.alt = '';
 	};
 
 	const getUrlFromImageFile = (file: File) => {

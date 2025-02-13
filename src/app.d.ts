@@ -5,7 +5,9 @@ import type { Session, User } from '$lib/server/auth/auth.types';
 // for information about these interfaces
 declare global {
 	namespace App {
-		// interface Error {}
+		interface Error {
+			message: string;
+		}
 		interface Locals {
 			user: User | null;
 			session: Session | null;

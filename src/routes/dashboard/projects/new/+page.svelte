@@ -70,20 +70,33 @@
 		selectedImage.alt = image?.alt ?? '';
 		selectedImage = { ...selectedImage };
 
-		imageModalForm.values.file = image?.file ?? null;
-		imageModalForm.values.alt = image?.alt ?? '';
-		imageModalForm.values.url = image?.url ?? '';
+		imageModalForm.values.file = null;
+		imageModalForm.values.alt = selectedImage?.alt ?? '';
+		imageModalForm.values.url = selectedImage?.url ?? '';
 
 		await tick();
 		modal.open();
 	};
 
-	const handleEnhance: SubmitFunction = ({ formData }) => {
+	const prepareFormData = (formData: FormData) => {
 		formData.set('category', $selectedLabel);
 		if (projectState.coverImage && projectState.coverImage.file) {
 			formData.set('coverImageAlt', projectState.coverImage.alt);
 			formData.set('coverImageFile', projectState.coverImage.file);
 		}
+
+		let index = 0;
+		for (const image of projectState.images) {
+			formData.set(`image-file-${index}`, image.file as File);
+			formData.set(`image-alt-${index}`, image.alt);
+			index++;
+		}
+
+		return formData;
+	};
+
+	const handleEnhance: SubmitFunction = ({ formData }) => {
+		prepareFormData(formData);
 
 		return async ({ result }) => {
 			if (result.type === 'success') {
@@ -94,11 +107,9 @@
 		};
 	};
 
-	const onSave =
+	const onSaveImageModalCallback =
 		({ id = 0, isCoverImage = false }: OnSaveParams) =>
 		({ file, alt }: { alt: string; file: File | null }): boolean => {
-			console.log({ isCoverImage });
-
 			const schema = id && file === null ? EditImageSchema : UploadImageSchema;
 			const { success, error } = schema.safeParse({ file, alt });
 
@@ -135,11 +146,14 @@
 				}
 			}
 
-			imageModalForm.errors.alt = undefined;
-			imageModalForm.errors.file = undefined;
-
+			resetImageModalFormErrors();
 			return true;
 		};
+
+	const resetImageModalFormErrors = () => {
+		imageModalForm.errors.alt = undefined;
+		imageModalForm.errors.file = undefined;
+	};
 </script>
 
 {#snippet imagePreview()}
@@ -152,7 +166,7 @@
 
 <ImageModal
 	bind:this={modal}
-	onSave={onSave({
+	onSave={onSaveImageModalCallback({
 		id: selectedImage.id,
 		isCoverImage: selectedImage.isCoverImage,
 	})}

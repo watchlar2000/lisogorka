@@ -6,7 +6,7 @@ export interface IImagesService {
 	listAll: () => Promise<Image[]>;
 	findById: (id: number) => Promise<Image>;
 	findByIds(ids: number[]): Promise<Image[]>;
-	create: (payload: { image: File; alt: string }) => Promise<Image>;
+	create: (payload: { file: File; alt: string }) => Promise<Image>;
 }
 
 export class ImagesService implements IImagesService {
@@ -33,11 +33,11 @@ export class ImagesService implements IImagesService {
 		return this.repository.findByIds(ids);
 	}
 
-	async create({ image, alt }: { image: File; alt: string }) {
+	async create({ file, alt }: { file: File; alt: string }) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { public_id, width, height, secure_url } =
 			await this.cloudinaryService.upload({
-				image,
+				image: file,
 			});
 
 		const payload = {

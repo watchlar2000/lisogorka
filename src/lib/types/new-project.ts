@@ -1,8 +1,11 @@
-export type ProjectImageData = {
-	id: number;
-	url: string;
+export type ImageData = {
 	alt: string;
 	file: File | null;
+};
+
+export type ProjectImageData = ImageData & {
+	id: number;
+	url: string;
 };
 
 export type FormImageState = {
@@ -14,13 +17,8 @@ export type FormImageState = {
 	values: FormImageInputValues;
 };
 
-export type FormImageInputValues = {
-	file: File | null;
-	alt: string;
+export type FormImageInputValues = ImageData & {
 	url: string;
 };
 
-export type OnSaveFormImageCallback = (params: {
-	alt: string;
-	file: File | null;
-}) => boolean;
+export type OnSaveFormImageCallback = (params: ImageData) => boolean;
