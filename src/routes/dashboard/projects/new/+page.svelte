@@ -54,6 +54,7 @@
 		id: 0,
 		isCoverImage: false,
 		url: '',
+		alt: '',
 	});
 
 	const openImageModal = async ({
@@ -66,6 +67,7 @@
 		selectedImage.id = image?.id ?? 0;
 		selectedImage.isCoverImage = isCoverImage;
 		selectedImage.url = image?.url ?? '';
+		selectedImage.alt = image?.alt ?? '';
 		selectedImage = { ...selectedImage };
 
 		imageModalForm.values.file = image?.file ?? null;
@@ -138,8 +140,6 @@
 
 			return true;
 		};
-
-	$inspect(projectState.coverImage);
 </script>
 
 {#snippet imagePreview()}
@@ -174,25 +174,27 @@
 
 		{#if !projectState.coverImage}
 			<button
-				class="button"
+				class="button button-action"
 				type="button"
 				onclick={() => openImageModal({ image: null, isCoverImage: true })}
 				>+ Add cover image</button
 			>
 		{:else}
-			<div class="image">
-				<button
-					class="button"
-					type="button"
-					onclick={() =>
-						openImageModal({
-							image: projectState.coverImage,
-							isCoverImage: true,
-						})}
-				>
-					Edit
-				</button>
+			<div class="flow image-card">
 				<img src={projectState?.coverImage.url} alt="" />
+				<div class="image-card__controls">
+					<button
+						class="button button-control"
+						type="button"
+						onclick={() =>
+							openImageModal({
+								image: projectState.coverImage,
+								isCoverImage: true,
+							})}
+					>
+						Edit
+					</button>
+				</div>
 			</div>
 		{/if}
 	</div>
@@ -207,7 +209,8 @@
 			{...$trigger}
 			use:trigger
 			aria-label="Category"
-			class="button button__select"
+			class="button"
+			data-button-type="select"
 		>
 			{$selectedLabel || 'Select a category'}
 		</button>
@@ -229,9 +232,9 @@
 		{/if}
 	</div>
 	<div class="flow">
-		<span class="label">images:</span>
+		<span class="label">Images:</span>
 		<button
-			class="button"
+			class="button button-action"
 			type="button"
 			onclick={() => openImageModal({ image: null })}>+ Add image</button
 		>
@@ -240,18 +243,25 @@
 				<ul role="list" class="auto-grid image-list">
 					{#each projectState.images as image}
 						<li class="image-list__item">
-							<img src={image.url} alt="" />
-							<div class="cluster controls">
-								<button
-									type="button"
-									class="button"
-									onclick={() => openImageModal({ image })}
-								>
-									Edit
-								</button>
-								<button type="button" class="button" onclick={() => {}}>
-									Delete
-								</button>
+							<div class="flow image-card">
+								<img src={image.url} alt="" />
+								<div class="cluster image-card__controls">
+									<button
+										class="button button-control"
+										type="button"
+										onclick={() => openImageModal({ image })}
+									>
+										Edit
+									</button>
+									<button
+										class="button button-control"
+										data-button-type="delete"
+										type="button"
+										onclick={() => {}}
+									>
+										Delete
+									</button>
+								</div>
 							</div>
 						</li>
 					{/each}
@@ -292,14 +302,56 @@
 		border-radius: calc(var(--radius-m) / 1.5);
 	}
 
-	/* .select__menu--item:focus-visible,
-	.select__menu--item:hover,
-	.select__menu--item:active {
-		background-color: var(--color-mid-shade);
-	} */
+	.image-card {
+		--flow-space: var(--space-xs);
+		--gutter: var(--space-s);
 
-	/* .button__select {
-		--button-bg: var(--color-surface-bg);
-		--button-text: currentColor;
-	} */
+		display: inline-block;
+		padding: var(--space-2xs);
+		border-radius: var(--radius-m);
+		background-color: var(--color-global-bg);
+	}
+
+	.image-card img {
+		height: 15ch;
+		width: auto;
+		object-fit: cover;
+		margin-inline: auto;
+		border-radius: calc(var(--radius-m) * 0.5);
+	}
+
+	.button-control {
+		font-size: var(--text-size-lede);
+		background-color: var(--color-surface-bg);
+		color: var(--color-global-text);
+	}
+
+	.button-control[data-button-type='delete'] {
+		--focus-color: red;
+
+		background-color: red;
+	}
+
+	.button-action {
+		font-size: var(--text-size-meta);
+		font-weight: var(--font-medium);
+		background-color: var(--color-surface-text-interact);
+	}
+
+	[data-button-type='select'] {
+		--focus-color: var(--color-global-text);
+
+		color: var(--color-global-text);
+		background-color: var(--color-global-bg);
+		border: var(--stroke-solid);
+	}
+
+	.image-list {
+		--auto-grid-gap: var(--space-s);
+		--auto-grid-min-size: 18ch;
+	}
+
+	.image-list .image-card {
+		width: 100%;
+	}
 </style>

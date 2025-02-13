@@ -6,6 +6,10 @@ import {
 } from '$lib/server/auth/cookie';
 import { type Handle } from '@sveltejs/kit';
 
+/*
+TODO: add rate limiting
+*/
+
 export const handle: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get(COOKIE.SESSION) ?? null;
 
