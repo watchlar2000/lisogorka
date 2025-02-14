@@ -70,13 +70,13 @@
 					<!-- <div class="cluster"> -->
 					<div class="prose card__meta flow">
 						<img src={p.coverImage?.url} alt="" class="card__cover" />
-						<p class="card__title">{p.title}</p>
+						<p class="card__title"><a href="projects/{p.slug}">{p.title}</a></p>
 						<p>{parseDate(p.createdAt)}</p>
 						<p class="card__meta--label">
 							{p.isFeatured ? 'active' : 'disabled'}
 						</p>
 					</div>
-					<button class="cluster button button__edit"
+					<a href="projects/edit/{p.slug}"
 						><svg
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"
@@ -94,7 +94,7 @@
 							/><path d="m15 5 4 4" /></svg
 						>
 						<span class="">Edit</span>
-					</button>
+					</a>
 				</li>
 			{/each}
 		</ul>
@@ -139,12 +139,12 @@
 		border-radius: calc(var(--radius-m) / 1.5);
 	}
 
-	.button__edit {
+	/* .button__edit {
 		--cluster-horizontal-alignment: center;
 		--gutter: var(--space-2xs);
 		--button-bg: var(--color-surface-text-interact);
 
 		width: 100%;
 		font-size: var(--text-size-lede);
-	}
+	} */
 </style>
