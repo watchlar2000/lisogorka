@@ -1,5 +1,5 @@
+import { config } from '$lib/server/api/configs/config';
 import { v2 as cloudinary } from 'cloudinary';
-import { config } from '../api/configs/config';
 
 const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
 	config.envs;

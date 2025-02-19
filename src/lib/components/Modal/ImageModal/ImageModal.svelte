@@ -1,65 +1,80 @@
 <script lang="ts">
 	import Modal from '$lib/components/Modal/Modal.svelte';
-	import type { FormInputValues, ImageModalProps } from './types';
+	import { createFormState } from '$lib/utils/createFormState.svelte';
+	import { getUrlFromImageFile } from '$lib/utils/getUrlFromImageFile';
+	import { UploadImageSchema } from '$lib/validationSchema/images';
+
+	type ImageModalProps = {
+		id?: number;
+		url?: string;
+		alt?: string;
+		file?: File;
+		onSaveCallback: (params: {
+			id: number;
+			url: string;
+			alt: string;
+			file?: File;
+		}) => void;
+	};
+
+	const {
+		id = 0,
+		url = '',
+		file = undefined,
+		alt = '',
+		onSaveCallback,
+	}: ImageModalProps = $props();
+
+	$effect(() => {
+		resetDefaultDataValues({ file, alt });
+	});
+
+	const { formState, register, resetFormState, resetDefaultDataValues } =
+		createFormState({
+			defaultDataValues: { file, alt },
+			zodSchema: UploadImageSchema,
+		});
 
 	let modal: Modal;
 	let inputFile: HTMLInputElement;
+	let files = $state();
+	let currentUrl = $derived(
+		url.length ? url : getUrlFromImageFile(formState.data.file ?? new Blob()),
+	);
+
+	$effect(() => {
+		if (inputFile && files) {
+			const [uploadedFile] = files as FileList;
+			formState.data.file = uploadedFile;
+		}
+	});
 
 	export const open = () => {
 		modal.open();
 	};
 
-	const { onSave, form }: ImageModalProps = $props();
-
-	const formInputValues: FormInputValues = $state({
-		file: null,
-		alt: '',
-		url: '',
-	});
-
-	$effect(() => {
-		formInputValues.file = form.values.file;
-		formInputValues.alt = form.values.alt;
-		formInputValues.url = form.values.url;
-	});
+	const close = () => {
+		resetForm();
+		modal.close();
+	};
 
 	const handleSubmit = (e: SubmitEvent) => {
 		e.preventDefault();
-		const fd = new FormData(e?.currentTarget as HTMLFormElement);
-		const fileFromInput = fd.get('file') as File;
-		const file = fileFromInput.size ? fileFromInput : form.values.file;
-		const alt = String(fd.get('alt'));
-		const isValid = onSave({
-			alt: alt,
-			file: file,
+
+		if (!formState.valid) return;
+
+		onSaveCallback({
+			id,
+			...formState.data,
+			url: currentUrl,
 		});
-		if (!isValid) return;
-		modal.close();
-		formInputValues.url = '';
-		formInputValues.alt = '';
+
+		close();
 	};
 
-	const getUrlFromImageFile = (file: File) => {
-		const isImage = file.type.startsWith('image');
-
-		if (!isImage) return '';
-
-		return URL.createObjectURL(file);
-	};
-
-	const handleInputFileChange = (
-		e: Event & {
-			currentTarget: EventTarget & HTMLInputElement;
-		},
-	): string | void => {
-		if (e.currentTarget.files) {
-			const file = e.currentTarget.files[0];
-			formInputValues.url = getUrlFromImageFile(file);
-		}
-	};
-
-	export const resetForm = () => {
-		if (inputFile) inputFile.value = '';
+	const resetForm = () => {
+		resetFormState();
+		inputFile.value = '';
 	};
 </script>
 
@@ -68,41 +83,43 @@
 {/snippet}
 
 {#snippet content()}
-	<form onsubmit={handleSubmit} id="imageForm" class="prose">
-		{#if formInputValues.url}
+	<form onsubmit={handleSubmit} id="imageForm" class="flow form">
+		{#if currentUrl}
 			<div class="image__preview">
-				<img src={formInputValues.url} alt="" />
+				<img src={currentUrl} alt="" />
 			</div>
 		{/if}
-		<label for="file" class="">
-			<span class="label">Select image:</span>
+		<div class="flow">
+			<label for="file">Select image:</label>
 			<input
-				aria-invalid={form.errors.file ? true : undefined}
 				type="file"
 				accept="image/*"
 				id="file"
 				name="file"
+				{...register('file', { required: true })}
 				bind:this={inputFile}
-				onchange={handleInputFileChange}
+				bind:files
 			/>
-		</label>
-		{#if form.errors.file}
-			<span class="invalid">{form.errors.file}</span>
-		{/if}
-		<label for="alt">
-			<span class="label">Alternative text:</span>
+			{#if formState.errors.file}<p class="invalid">
+					{formState.errors.file}
+				</p>
+			{/if}
+		</div>
+		<div class="flow">
+			<label for="alt"> Alternative text:</label>
 			<input
-				aria-invalid={form.errors.alt ? true : undefined}
 				type="text"
 				id="alt"
 				name="alt"
 				placeholder="Describe what is seen in the picture..."
-				bind:value={formInputValues.alt}
+				{...register('alt', { required: true })}
+				bind:value={formState.data.alt}
 			/>
-		</label>
-		{#if form.errors.alt}
-			<span class="invalid">{form.errors.alt}</span>
-		{/if}
+			{#if formState.errors.alt}<p class="invalid">
+					{formState.errors.alt}
+				</p>
+			{/if}
+		</div>
 	</form>
 {/snippet}
 
@@ -114,13 +131,21 @@
 
 <Modal
 	bind:this={modal}
-	onCloseCallback={resetForm}
 	{header}
 	{content}
 	{controls}
+	onCloseCallback={resetForm}
 />
 
 <style>
+	.form > div {
+		--flow-space: var(--space-xs);
+	}
+
+	label {
+		font-weight: var(--font-medium);
+		font-size: var(--text-size-meta);
+	}
 	.modal__header {
 		font-size: var(--text-size-heading-4);
 		font-weight: var(--font-medium);

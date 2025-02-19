@@ -1,49 +1,80 @@
-import { routing } from '$lib/server/api/routing';
-import type { Category } from '$lib/server/api/types/types';
-import type { Actions } from '@sveltejs/kit';
-import { prepareImages } from './utils';
+import { projectInsertSchema } from '$lib/server/api/projects/projects.types';
+import { validateWithZodV2 } from '$lib/utils/validateWIthZod';
+import { fail, type Actions } from '@sveltejs/kit';
 
 export const actions: Actions = {
 	default: async (event) => {
 		const fd = await event.request.formData();
 
-		try {
-			const newCoverImagePaylod = {
-				file: fd.get('coverImageFile') as File,
-				alt: String(fd.get('coverImageAlt')),
-			};
-			const newCoverImage = await routing.images.create(newCoverImagePaylod);
+		const { errors, data } = validateWithZodV2({
+			data: Object.fromEntries(fd),
+			schema: projectInsertSchema,
+		});
 
-			const newProjectPayload = {
-				title: String(fd.get('title')),
-				description: String(fd.get('description')),
-				coverImageId: newCoverImage.id,
-				category: String(fd.get('category')) as Category,
-				isFeatured: true,
-			};
-			const newProject = await routing.projects.create(newProjectPayload);
+		console.log(data, errors);
 
-			const imagesList = prepareImages(fd);
-			const imagesPromises = imagesList.map((image) => {
-				const payload = {
-					file: image.file as File,
-					alt: image.alt,
-				};
-				return routing.images.create(payload);
-			});
-
-			const imagesPromisesResult = await Promise.all(imagesPromises);
-
-			for await (const image of imagesPromisesResult) {
-				routing.projectsToImagesService.createRelation({
-					projectId: newProject.id,
-					imageId: image.id,
-				});
-			}
-
-			console.log('New project created successfully');
-		} catch (error) {
-			console.log(error);
+		if (errors) {
+			return fail(400, { errors });
 		}
+
+		// const coverImagePaylod = {
+		// 	file: fd.get('coverImageFile') as File,
+		// 	alt: String(fd.get('coverImageAlt')),
+		// };
+
+		// const projectMetaPayload = {
+		// 	title: String(fd.get('title')),
+		// 	description: String(fd.get('description')),
+		// 	category: String(fd.get('category')) as Category,
+		// };
+
+		// const { success: projectSuccess, errors: projectErrors } = validateWithZod({
+		// 	schema: projectInsertSchema,
+		// 	data: projectMetaPayload,
+		// });
+
+		// const { success: coverImageSuccess, errors: coverImageErrors } =
+		// 	validateWithZod({
+		// 		schema: UploadImageSchema,
+		// 		data: coverImagePaylod,
+		// 	});
+
+		// if (!projectSuccess || !coverImageSuccess) {
+		// 	return fail(400, { errors: { ...projectErrors, ...coverImageErrors } });
+		// }
+
+		// try {
+		// 	const newCoverImage = await routing.images.create(coverImagePaylod);
+
+		// 	const newProjectPayload = {
+		// 		...projectMetaPayload,
+		// 		coverImageId: newCoverImage.id,
+		// 		isFeatured: true,
+		// 	};
+		// 	const newProject = await routing.projects.create(newProjectPayload);
+
+		// 	const imagesList = prepareImages(fd);
+		// 	const imagesPromises = imagesList.map((image) => {
+		// 		const payload = {
+		// 			file: image.file as File,
+		// 			alt: image.alt,
+		// 		};
+		// 		return routing.images.create(payload);
+		// 	});
+
+		// 	const imagesPromisesResult = await Promise.all(imagesPromises);
+
+		// 	for await (const image of imagesPromisesResult) {
+		// 		routing.projectsToImagesService.createRelation({
+		// 			projectId: newProject.id,
+		// 			imageId: image.id,
+		// 		});
+		// 	}
+
+		// 	console.log('New project created successfully');
+		// 	return { success: true };
+		// } catch (error) {
+		// 	console.log(error);
+		// }
 	},
 };

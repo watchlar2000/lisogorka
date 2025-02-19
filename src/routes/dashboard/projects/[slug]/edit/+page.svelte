@@ -7,24 +7,24 @@
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
 	import type { SubmitFunction } from '@sveltejs/kit';
 
-	const { form } = $props();
+	const { form, data } = $props();
 
 	let modal: ImageModal;
-	const images = $state([]);
+	const images = $state([...data.project.images]);
 
 	const openModal = () => {
 		modal.open();
 	};
 
 	const defaultCategory = CATEGORY.BACKGROUND_PAINTING;
-	const projectInitValues = {
-		title: '',
-		description: '',
-		category: defaultCategory,
-	};
+	const projectInitValues = $state({
+		title: data.project.title ?? '',
+		description: data.project.description ?? '',
+		category: data.project.category ?? defaultCategory,
+	});
 
 	const { formState, register } = createFormState({
-		defaultDataValues: { ...projectInitValues },
+		defaultDataValues: projectInitValues,
 		zodSchema: ProjectFormInputSchema,
 	});
 
@@ -76,6 +76,7 @@
 			id="title"
 			name="title"
 			{...register('title', { required: true })}
+			bind:value={formState.data.title}
 		/>
 		{#if formState.errors.title || form?.errors.title}<p class="invalid">
 				{formState.errors.title ?? form?.errors.title}
@@ -88,6 +89,7 @@
 			type="text"
 			id="description"
 			name="description"
+			bind:value={formState.data.description}
 			{...register('description')}
 		/>
 	</div>
@@ -99,11 +101,10 @@
 			{...register('category', { required: true })}
 		>
 			{#each categories as category}
-				{#if category === defaultCategory}
-					<option value={defaultCategory} selected>{defaultCategory}</option>
-				{:else}
-					<option value={category}>{category}</option>
-				{/if}
+				<option
+					value={category}
+					selected={category === projectInitValues.category}>{category}</option
+				>
 			{/each}
 		</select>
 		{#if formState.errors.category || form?.errors.category}<p class="invalid">

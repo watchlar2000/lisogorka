@@ -1,17 +1,19 @@
 <script lang="ts">
 	import type { Snippet } from 'svelte';
 
+	type ModalProps = {
+		header: Snippet;
+		content: Snippet;
+		controls: Snippet;
+		onCloseCallback?: () => void;
+	};
+
 	const {
 		header,
 		content,
 		controls,
 		onCloseCallback = () => {},
-	}: {
-		header: Snippet;
-		content: Snippet;
-		controls: Snippet;
-		onCloseCallback: () => void;
-	} = $props();
+	}: ModalProps = $props();
 	let dialog: HTMLDialogElement;
 
 	export const open = () => {
@@ -20,7 +22,9 @@
 
 	export const close = () => {
 		dialog.close();
-		onCloseCallback();
+		if (onCloseCallback) {
+			onCloseCallback();
+		}
 	};
 </script>
 
@@ -52,7 +56,7 @@
 	</div>
 </dialog>
 
-<style lang="scss">
+<style>
 	dialog {
 		--dialog-width: 40ch;
 

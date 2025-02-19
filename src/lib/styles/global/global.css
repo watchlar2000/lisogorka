@@ -127,7 +127,7 @@ svg[role='img'][width][height] {
 
 /* There's a .flow composition, but this prevents forms from having to have that applied where markup is harder to control in certain systems. It still uses the --flow-space variables though to make managing space easier */
 form > * + * {
-	margin-top: var(--flow-space, 1rem);
+	margin-top: var(--flow-space, 0.5rem);
 }
 
 :is(input, select, textarea) {
@@ -142,8 +142,6 @@ form > * + * {
 	padding: 0.5em 0.8em;
 	border-radius: var(--radius-m);
 	border: var(--stroke-solid);
-	/* background: var(--color-dark-glare); */
-	/* color: var(--color-light); */
 	color: var(--color-surface-text-interact);
 	width: 100%;
 }
@@ -162,16 +160,10 @@ label {
 	font-weight: var(--font-medium);
 }
 
-/* label::after {
-	content: '\A';
-	white-space: pre;
-} */
-
 /* Usually label wraps checkbox and radio buttons, so we give ourselves more layout and text-flow control with flex */
 label:has(input) {
 	display: flex;
 	flex-direction: column;
-	/* align-items: baseline; */
 	gap: var(--space-s);
 	font-weight: var(--font-normal);
 }
@@ -194,11 +186,15 @@ label input:disabled + * {
 	cursor: not-allowed;
 }
 
-span.invalid {
+.invalid {
+	display: block;
+	width: max-content;
 	font-size: var(--text-size-lede);
-	color: rgb(194, 82, 82);
+	background-color: rgb(255, 169, 169);
+	padding: 0.25em 1em;
+	border-radius: var(--radius-m);
 }
 
-input[data-inavlid='true'] {
-	border-color: rgb(194, 82, 82);
+input[data-invalid='true'] {
+	border-color: rgb(255, 169, 169);
 }

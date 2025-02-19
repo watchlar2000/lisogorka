@@ -1,5 +1,5 @@
+import { STATUS_CODE } from '$lib/constants';
 import { error } from '@sveltejs/kit';
-import { STATUS_CODE } from './statusCodes';
 
 export const TooManyRequests = (message: string = 'Too many requests') => {
 	return error(STATUS_CODE.TOO_MANY_REQUESTS, { message });

@@ -76,7 +76,7 @@
 							{p.isFeatured ? 'active' : 'disabled'}
 						</p>
 					</div>
-					<a href="projects/edit/{p.slug}"
+					<a href="projects/{p.slug}/edit"
 						><svg
 							aria-hidden="true"
 							xmlns="http://www.w3.org/2000/svg"

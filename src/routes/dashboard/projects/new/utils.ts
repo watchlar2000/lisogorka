@@ -1,7 +1,5 @@
-import type { ImageData } from '$lib/types/new-project';
-
 export const prepareImages = (formData: FormData) => {
-	const images: ImageData[] = [];
+	const images = [];
 	for (const [key, value] of formData.entries()) {
 		const isImage = key.startsWith('image');
 
