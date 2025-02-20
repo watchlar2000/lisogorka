@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { parseDate } from '$lib/utils/parseDate.js';
+	import { formatDate } from '$lib/utils/formatDate';
 
 	const { data } = $props();
 
@@ -71,7 +71,7 @@
 					<div class="prose card__meta flow">
 						<img src={p.coverImage?.url} alt="" class="card__cover" />
 						<p class="card__title"><a href="projects/{p.slug}">{p.title}</a></p>
-						<p>{parseDate(p.createdAt)}</p>
+						<p>{formatDate(p.createdAt)}</p>
 						<p class="card__meta--label">
 							{p.isFeatured ? 'active' : 'disabled'}
 						</p>

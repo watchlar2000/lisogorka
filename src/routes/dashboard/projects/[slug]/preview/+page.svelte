@@ -1,5 +1,5 @@
 <script>
-	import { parseDate } from '$lib/utils/parseDate';
+	import { formatDate } from '$lib/utils/formatDate';
 
 	const { data } = $props();
 	const project = $derived(data.project);
@@ -9,7 +9,7 @@
 	<div class="flow prose article__content">
 		<div class="repel">
 			<button type="button" class="button">Edit</button>
-			<p><span>Last updated at:</span> {parseDate(project.updatedAt)}</p>
+			<p><span>Last updated at:</span> {formatDate(project.updatedAt)}</p>
 		</div>
 		<h2>{project.title}</h2>
 		<p>
