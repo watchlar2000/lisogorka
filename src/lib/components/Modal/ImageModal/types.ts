@@ -1,13 +1,12 @@
-import type {
-	FormImageInputValues,
-	FormImageState,
-} from '$lib/types/new-project';
-import type { Snippet } from 'svelte';
-
-export type ImageModalProps = {
-	form: FormImageState;
-	onSave: (params: { alt: string; file: File | null }) => boolean;
-	imagePreview: Snippet;
+export type ImageModalData = {
+	id: number;
+	url: string;
+	alt: string;
+	file?: File;
 };
 
-export type FormInputValues = FormImageInputValues;
+export type ImageModalSaveParams = ImageModalData;
+
+export type ImageModalProps = Partial<ImageModalData> & {
+	onSaveCallback: (params: ImageModalSaveParams) => void;
+};

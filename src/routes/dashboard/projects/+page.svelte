@@ -6,57 +6,6 @@
 	const projects = $derived(data.projects);
 </script>
 
-<!-- <CldUploadWidget
-	uploadPreset="lisogorka"
-	let:open
-	let:isLoading
-	onSuccess={(data) => console.log(data)}
-	options={{
-		showAdvancedOptions: false,
-		uploadPreset: 'lisogorka',
-		cropping: false,
-		multiple: false,
-		showCompletedButton: false,
-		sources: ['local'],
-		defaultSource: 'local',
-		styles: {
-			palette: {
-				window: '#ffffff',
-				sourceBg: '#f4f4f5',
-				windowBorder: '#90a0b3',
-				tabIcon: '#000000',
-				inactiveTabIcon: '#555a5f',
-				menuIcons: '#555a5f',
-				link: '#0433ff',
-				action: '#339933',
-				inProgress: '#0433ff',
-				complete: '#339933',
-				error: '#cc0000',
-				textDark: '#000000',
-				textLight: '#fcfffd',
-			},
-			fonts: {
-				default: null,
-				'sans-serif': {
-					url: null,
-					active: true,
-				},
-			},
-		},
-	}}
->
-	<button on:click={() => open()} disabled={isLoading}>
-		Open the widget
-	</button>
-</CldUploadWidget>
-
-<CldImage
-	src="https://res.cloudinary.com/dezfqozcv/image/upload/v1713639479/cld-sample-5.jpg"
-	alt="Turtle"
-	width={960}
-	height={600}
-/> -->
-
 <div class="flow">
 	<div class="repel">
 		<h6 class="title"><span>🏗️</span> Projects</h6>
@@ -70,7 +19,9 @@
 					<!-- <div class="cluster"> -->
 					<div class="prose card__meta flow">
 						<img src={p.coverImage?.url} alt="" class="card__cover" />
-						<p class="card__title"><a href="projects/{p.slug}">{p.title}</a></p>
+						<p class="card__title">
+							<a href="projects/{p.slug}">{p.title}</a>
+						</p>
 						<p>{formatDate(p.createdAt)}</p>
 						<p class="card__meta--label">
 							{p.isFeatured ? 'active' : 'disabled'}
@@ -138,13 +89,4 @@
 		object-fit: cover;
 		border-radius: calc(var(--radius-m) / 1.5);
 	}
-
-	/* .button__edit {
-		--cluster-horizontal-alignment: center;
-		--gutter: var(--space-2xs);
-		--button-bg: var(--color-surface-text-interact);
-
-		width: 100%;
-		font-size: var(--text-size-lede);
-	} */
 </style>

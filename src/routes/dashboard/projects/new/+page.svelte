@@ -2,33 +2,52 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
+	import type {
+		ImageModalData,
+		ImageModalSaveParams,
+	} from '$lib/components/Modal/ImageModal/types.js';
 	import { categories, CATEGORY, SUCCESS } from '$lib/constants';
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
 	import type { SubmitFunction } from '@sveltejs/kit';
+	import { dndzone } from 'svelte-dnd-action';
+	import { flip } from 'svelte/animate';
+
+	const flipDurationMs = 200;
+	function handleSort(e: CustomEvent) {
+		items = [...e.detail.items];
+	}
 
 	const { form } = $props();
 
 	let modal: ImageModal;
-	const images = $state([]);
+	let items = $state<ImageModalData[]>([]);
 
 	const openModal = () => {
 		modal.open();
 	};
 
 	const defaultCategory = CATEGORY.BACKGROUND_PAINTING;
-	const projectInitValues = {
+	const projectInitValues = $state({
+		id: 0,
 		title: '',
 		description: '',
 		category: defaultCategory,
-	};
+	});
 
 	const { formState, register } = createFormState({
 		defaultDataValues: { ...projectInitValues },
 		zodSchema: ProjectFormInputSchema,
 	});
 
-	const handleEnhance: SubmitFunction = () => {
+	$inspect(form?.errors);
+
+	const handleEnhance: SubmitFunction = ({ formData }) => {
+		for (const image of items) {
+			formData.append('file', image.file as File);
+			formData.append('alt', image.alt);
+		}
+
 		return async ({ result }) => {
 			if (result.type === SUCCESS) {
 				await invalidateAll();
@@ -38,19 +57,28 @@
 		};
 	};
 
-	const onSaveCallback = (params) => {
-		const id = !params.id ? Math.random() : params.id;
-		images.push({ ...params, id });
+	const onSaveCallback = (params: ImageModalSaveParams) => {
+		if (params.id !== 0) {
+			const updatedImages = items.map((i) => {
+				if (i.id === params.id) {
+					return { ...i, ...params };
+				}
+				return i;
+			});
+			items = [...updatedImages];
+		} else {
+			items.push({ ...params, id: Math.random() });
+		}
 	};
 
 	let selectedImageId = $state(0);
 	const selectedImageModalData = $derived(
-		images
+		items
 			.filter((image) => image.id === selectedImageId)
-			?.map((image) => ({
-				id: image.id,
-				url: image.url,
-				alt: image.alt,
+			?.map(({ id, url, alt }) => ({
+				id,
+				url,
+				alt,
 				file: undefined,
 			}))[0],
 	);
@@ -73,12 +101,11 @@
 		<label for="title">Title:</label>
 		<input
 			type="text"
-			id="title"
-			name="title"
+			bind:value={formState.data.title}
 			{...register('title', { required: true })}
 		/>
-		{#if formState.errors.title || form?.errors.title}<p class="invalid">
-				{formState.errors.title ?? form?.errors.title}
+		{#if formState.errors.title || form?.errors?.title}<p class="invalid">
+				{formState.errors.title || form?.errors?.title}
 			</p>
 		{/if}
 	</div>
@@ -86,18 +113,13 @@
 		<label for="description">Description:</label>
 		<input
 			type="text"
-			id="description"
-			name="description"
+			bind:value={formState.data.description}
 			{...register('description')}
 		/>
 	</div>
 	<div class="flow">
 		<label for="category">Category:</label>
-		<select
-			id="category"
-			name="category"
-			{...register('category', { required: true })}
-		>
+		<select {...register('category', { required: true })}>
 			{#each categories as category}
 				{#if category === defaultCategory}
 					<option value={defaultCategory} selected>{defaultCategory}</option>
@@ -106,8 +128,8 @@
 				{/if}
 			{/each}
 		</select>
-		{#if formState.errors.category || form?.errors.category}<p class="invalid">
-				{formState.errors.category ?? form?.errors.category}
+		{#if formState.errors.category}<p class="invalid">
+				{formState.errors.category}
 			</p>
 		{/if}
 	</div>
@@ -115,6 +137,10 @@
 		<p>
 			<label for="title">Images:</label>
 		</p>
+		{#if form?.errors?.images}<p class="invalid">
+				{form?.errors?.images}
+			</p>
+		{/if}
 		<button
 			class="button button-action"
 			type="button"
@@ -123,11 +149,20 @@
 				openModal();
 			}}>+ Add image</button
 		>
-		{#if images.length}
+		{#if items.length}
 			<div>
-				<ul role="list" class="auto-grid image-list">
-					{#each images as image}
-						<li class="image-list__item">
+				<ul
+					role="list"
+					class="auto-grid image-list"
+					use:dndzone={{ items, flipDurationMs }}
+					onconsider={handleSort}
+					onfinalize={handleSort}
+				>
+					{#each items as image (image.id)}
+						<li
+							class="image-list__item"
+							animate:flip={{ duration: flipDurationMs }}
+						>
 							<div class="flow image-card">
 								<img src={image?.url} alt="" />
 								<div class="cluster image-card__controls">
@@ -163,6 +198,18 @@
 		<button type="submit" class="button">Save</button>
 	</div>
 </form>
+
+<!-- <section
+	use:dndzone={{ items, flipDurationMs }}
+	onconsider={handleSort}
+	onfinalize={handleSort}
+>
+	{#each items as item (item.id)}
+		<div animate:flip={{ duration: flipDurationMs }}>
+			{item.title}
+		</div>
+	{/each}
+</section> -->
 
 <style>
 	.form > div {

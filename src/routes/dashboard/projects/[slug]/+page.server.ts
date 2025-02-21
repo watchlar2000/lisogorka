@@ -1,5 +1,5 @@
 import { routing } from '$lib/server/api/routing';
-import type { PageServerLoad } from '../$types';
+import type { PageServerLoad } from './$types';
 
 export const load: PageServerLoad = async ({ params }) => {
 	const { slug } = params;

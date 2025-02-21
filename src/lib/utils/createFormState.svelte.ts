@@ -11,8 +11,8 @@ type Options = {
 };
 
 type FormStateParams<U extends ZodObject<ZodRawShape>> = {
-	zodSchema: U;
-	defaultDataValues: Partial<z.infer<U>>;
+	zodSchema: U | (() => U);
+	defaultDataValues: Partial<z.infer<U>> & { id: number };
 };
 
 export const createFormState = <U extends ZodObject<ZodRawShape>>({
@@ -26,19 +26,33 @@ export const createFormState = <U extends ZodObject<ZodRawShape>>({
 	});
 	const touchedFields = new Set<keyof z.infer<U>>();
 
-	$effect(() => {
-		formState.valid = Object.keys(formState.errors).length === 0;
-	});
+	const validate = (name?: keyof z.infer<U>) => {
+		const schema = typeof zodSchema === 'function' ? zodSchema() : zodSchema;
 
-	const validate = (name: keyof z.infer<U>) => {
-		const value = formState.data[name];
-		const fieldSchema = zodSchema.shape[name as string];
-		const { success, error } = fieldSchema.safeParse(value);
-
-		if (!success) {
-			formState.errors[name] = error.flatten().formErrors.join(', ');
+		if (!name) {
+			for (const key of Object.keys(schema.shape) as (keyof z.infer<U>)[]) {
+				validate(key);
+			}
 		} else {
-			delete formState.errors?.[name];
+			const value = formState.data[name];
+
+			const fieldSchema = schema.shape[name as string];
+			const { success, error } = fieldSchema.safeParse(value);
+
+			if (!success) {
+				formState.errors[name] = error.flatten().formErrors.join(', ');
+			} else {
+				delete formState.errors?.[name];
+			}
+		}
+	};
+
+	const handleSubmit = (callback: () => void) => {
+		validate();
+		formState.valid = Object.keys(formState.errors).length === 0;
+
+		if (formState.valid) {
+			callback();
 		}
 	};
 
@@ -54,8 +68,10 @@ export const createFormState = <U extends ZodObject<ZodRawShape>>({
 			},
 			['aria-invalid']: !!formState.errors[name],
 			['aria-describedby']: formState.errors[name] ?? undefined,
-			required: options?.required ?? false,
+			required: options?.required ?? undefined,
 			autofocus: !!formState.errors[name],
+			id: name,
+			name: name,
 		};
 	};
 
@@ -66,9 +82,17 @@ export const createFormState = <U extends ZodObject<ZodRawShape>>({
 		touchedFields.clear();
 	};
 
-	const resetDefaultDataValues = (defaultDataValues: Partial<z.infer<U>>) => {
-		formState.data = { ...defaultDataValues };
+	const resetDefaultDataValues = (
+		values: Partial<z.infer<U>> & { id: number },
+	) => {
+		formState.data = { ...values };
 	};
 
-	return { register, formState, resetFormState, resetDefaultDataValues };
+	return {
+		register,
+		formState,
+		resetFormState,
+		resetDefaultDataValues,
+		handleSubmit,
+	};
 };

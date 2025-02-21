@@ -9,6 +9,7 @@ export const projectInsertSchema = createInsertSchema(projects, {
 	title: ProjectFormInputSchema.shape.title,
 	slug: z.string().optional(),
 	category: ProjectFormInputSchema.shape.category,
+	coverImageId: z.number().optional(),
 });
 
 export type Project = zType.infer<typeof projectSelectSchema>;

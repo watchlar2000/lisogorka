@@ -2,6 +2,10 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
+	import type {
+		ImageModalData,
+		ImageModalSaveParams,
+	} from '$lib/components/Modal/ImageModal/types.js';
 	import { categories, CATEGORY, SUCCESS } from '$lib/constants';
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
@@ -9,8 +13,17 @@
 
 	const { form, data } = $props();
 
+	const imagesMapped = $state(
+		data.project.images.map(({ id, url, alt }) => ({
+			id,
+			url,
+			alt,
+			file: undefined,
+		})),
+	);
+
 	let modal: ImageModal;
-	const images = $state([...data.project.images]);
+	const images = $state<ImageModalData[]>([...imagesMapped]);
 
 	const openModal = () => {
 		modal.open();
@@ -18,6 +31,7 @@
 
 	const defaultCategory = CATEGORY.BACKGROUND_PAINTING;
 	const projectInitValues = $state({
+		id: data.project.id ?? 0,
 		title: data.project.title ?? '',
 		description: data.project.description ?? '',
 		category: data.project.category ?? defaultCategory,
@@ -38,7 +52,7 @@
 		};
 	};
 
-	const onSaveCallback = (params) => {
+	const onSaveCallback = (params: ImageModalSaveParams) => {
 		const id = !params.id ? Math.random() : params.id;
 		images.push({ ...params, id });
 	};
@@ -63,6 +77,7 @@
 	alt={selectedImageModalData?.alt}
 	url={selectedImageModalData?.url}
 />
+
 <form
 	method="POST"
 	use:enhance={handleEnhance}
@@ -73,8 +88,6 @@
 		<label for="title">Title:</label>
 		<input
 			type="text"
-			id="title"
-			name="title"
 			{...register('title', { required: true })}
 			bind:value={formState.data.title}
 		/>
@@ -87,19 +100,13 @@
 		<label for="description">Description:</label>
 		<input
 			type="text"
-			id="description"
-			name="description"
 			bind:value={formState.data.description}
 			{...register('description')}
 		/>
 	</div>
 	<div class="flow">
 		<label for="category">Category:</label>
-		<select
-			id="category"
-			name="category"
-			{...register('category', { required: true })}
-		>
+		<select {...register('category', { required: true })}>
 			{#each categories as category}
 				<option
 					value={category}

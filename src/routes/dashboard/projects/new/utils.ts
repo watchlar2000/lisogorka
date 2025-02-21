@@ -1,14 +1,22 @@
-export const prepareImages = (formData: FormData) => {
-	const images = [];
-	for (const [key, value] of formData.entries()) {
-		const isImage = key.startsWith('image');
+import { validateWithZod } from '$lib/utils/validateWIthZod';
+import { UploadImageValidationSchema } from '$lib/validationSchema/images';
 
-		if (!isImage) continue;
+export const validateImages = <T>(imagesList: T[]) => {
+	if (imagesList.length === 0) return { errors: null };
 
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const [_, type, i] = key.split('-');
-		const index = Number(i);
-		images[index] = { ...images[index], [type]: value };
-	}
-	return images;
+	const errors = imagesList
+		.map((image, index) => {
+			const { errors } = validateWithZod({
+				data: image,
+				schema: UploadImageValidationSchema(),
+			});
+			if (errors) {
+				return { index, ...errors };
+			} else {
+				return null;
+			}
+		})
+		.filter((image) => !!image);
+
+	return { errors };
 };

@@ -2,20 +2,8 @@
 	import Modal from '$lib/components/Modal/Modal.svelte';
 	import { createFormState } from '$lib/utils/createFormState.svelte';
 	import { getUrlFromImageFile } from '$lib/utils/getUrlFromImageFile';
-	import { UploadImageSchema } from '$lib/validationSchema/images';
-
-	type ImageModalProps = {
-		id?: number;
-		url?: string;
-		alt?: string;
-		file?: File;
-		onSaveCallback: (params: {
-			id: number;
-			url: string;
-			alt: string;
-			file?: File;
-		}) => void;
-	};
+	import { UploadImageValidationSchema } from '$lib/validationSchema/images';
+	import type { ImageModalProps } from './types';
 
 	const {
 		id = 0,
@@ -26,20 +14,27 @@
 	}: ImageModalProps = $props();
 
 	$effect(() => {
-		resetDefaultDataValues({ file, alt });
+		resetDefaultDataValues({ id, file, alt });
 	});
 
-	const { formState, register, resetFormState, resetDefaultDataValues } =
+	const {
+		formState,
+		register,
+		resetDefaultDataValues,
+		handleSubmit,
+		resetFormState,
+	} = $derived(
 		createFormState({
-			defaultDataValues: { file, alt },
-			zodSchema: UploadImageSchema,
-		});
+			defaultDataValues: { id, file, alt },
+			zodSchema: UploadImageValidationSchema(!!id),
+		}),
+	);
 
 	let modal: Modal;
 	let inputFile: HTMLInputElement;
-	let files = $state();
+	let files = $state<FileList>();
 	let currentUrl = $derived(
-		url.length ? url : getUrlFromImageFile(formState.data.file ?? new Blob()),
+		formState.data.file ? getUrlFromImageFile(formState.data.file) : url,
 	);
 
 	$effect(() => {
@@ -54,26 +49,30 @@
 	};
 
 	const close = () => {
-		resetForm();
+		resetFileInput();
+		resetFormState();
 		modal.close();
 	};
 
-	const handleSubmit = (e: SubmitEvent) => {
+	const onSubmit = (e: SubmitEvent) => {
 		e.preventDefault();
 
-		if (!formState.valid) return;
+		const callback = () => {
+			onSaveCallback({
+				id,
+				alt: formState.data.alt,
+				file: formState.data.file,
+				url: formState.data.file
+					? getUrlFromImageFile(formState.data.file)
+					: currentUrl,
+			});
+			close();
+		};
 
-		onSaveCallback({
-			id,
-			...formState.data,
-			url: currentUrl,
-		});
-
-		close();
+		handleSubmit(callback);
 	};
 
-	const resetForm = () => {
-		resetFormState();
+	const resetFileInput = () => {
 		inputFile.value = '';
 	};
 </script>
@@ -83,7 +82,7 @@
 {/snippet}
 
 {#snippet content()}
-	<form onsubmit={handleSubmit} id="imageForm" class="flow form">
+	<form onsubmit={onSubmit} id="imageForm" class="flow form">
 		{#if currentUrl}
 			<div class="image__preview">
 				<img src={currentUrl} alt="" />
@@ -94,11 +93,9 @@
 			<input
 				type="file"
 				accept="image/*"
-				id="file"
-				name="file"
-				{...register('file', { required: true })}
-				bind:this={inputFile}
 				bind:files
+				bind:this={inputFile}
+				{...register('file')}
 			/>
 			{#if formState.errors.file}<p class="invalid">
 					{formState.errors.file}
@@ -109,8 +106,6 @@
 			<label for="alt"> Alternative text:</label>
 			<input
 				type="text"
-				id="alt"
-				name="alt"
 				placeholder="Describe what is seen in the picture..."
 				{...register('alt', { required: true })}
 				bind:value={formState.data.alt}
@@ -134,7 +129,7 @@
 	{header}
 	{content}
 	{controls}
-	onCloseCallback={resetForm}
+	onCloseCallback={resetFileInput}
 />
 
 <style>
