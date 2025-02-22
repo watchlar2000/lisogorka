@@ -22,7 +22,7 @@ export const CATEGORY = {
 	BACKGROUND_PAINTING: 'background-painting',
 	VISUAL_DEVELOPMENT: 'visual-development',
 	PLAYGROUND: 'playground',
-} as const;
+};
 
 export const categories = [
 	'background-painting',
