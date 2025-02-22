@@ -6,18 +6,19 @@
 		ImageModalData,
 		ImageModalSaveParams,
 	} from '$lib/components/Modal/ImageModal/types.js';
+	import Button from '$lib/components/Ui/Button.svelte';
 	import { categories, CATEGORY, SUCCESS } from '$lib/constants';
 	import type { Category } from '$lib/types';
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import FormImagesList from './FormImagesList.svelte';
-	import FormInput from './FormInput.svelte';
-	import FormSelect from './FormSelect.svelte';
+	import FormInput from './InputField.svelte';
+	import FormSelect from './SelectField.svelte';
 
-	function handleSort(e: CustomEvent) {
+	const handleSort = (e: CustomEvent) => {
 		items = [...e.detail.items];
-	}
+	};
 
 	const { form } = $props();
 
@@ -113,27 +114,35 @@
 	class="flow form"
 	enctype="multipart/form-data"
 >
-	<FormInput
-		title={'title'}
-		bind:value={formState.data.title}
-		placeholder="Digital serenity..."
-		{error}
-		{...register('title', { required: true })}
-	/>
-	<FormInput
-		title="description"
-		bind:value={formState.data.description!}
-		placeholder="Lorem ipsum dolor sit amet..."
-		{error}
-		{...register('description')}
-	/>
-	<FormSelect
-		title="category"
-		selectedValue={formState.data.category}
-		options={[...categories]}
-		{error}
-		{...register('category', { required: true })}
-	/>
+	<div class="flow">
+		<FormInput
+			type="text"
+			title="title"
+			bind:value={formState.data.title}
+			placeholder="Digital serenity..."
+			{error}
+			{...register('title', { required: true })}
+		/>
+	</div>
+	<div class="flow">
+		<FormInput
+			type="text"
+			title="description"
+			bind:value={formState.data.description!}
+			placeholder="Lorem ipsum dolor sit amet..."
+			{error}
+			{...register('description')}
+		/>
+	</div>
+	<div class="flow">
+		<FormSelect
+			title="category"
+			selectedValue={formState.data.category}
+			options={[...categories]}
+			{error}
+			{...register('category', { required: true })}
+		/>
+	</div>
 	<div class="flow">
 		<p><span class="label">Images:</span></p>
 		{#if form?.errors?.images}
@@ -163,11 +172,14 @@
 
 	<hr />
 	<div>
-		<button type="submit" class="button">Save</button>
+		<Button type="submit">Save</Button>
 	</div>
 </form>
 
 <style>
+	.form div {
+		--flow-space: var(--space-xs);
+	}
 	.button-action {
 		font-size: var(--text-size-meta);
 		font-weight: var(--font-medium);

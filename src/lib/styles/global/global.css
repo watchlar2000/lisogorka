@@ -160,6 +160,11 @@ label {
 	font-weight: var(--font-medium);
 }
 
+.label {
+	font-weight: var(--font-medium);
+	font-size: var(--text-size-meta);
+}
+
 /* Usually label wraps checkbox and radio buttons, so we give ourselves more layout and text-flow control with flex */
 label:has(input) {
 	display: flex;
