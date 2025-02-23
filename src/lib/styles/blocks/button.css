@@ -5,6 +5,7 @@
 	--button-y-padding: 0.6em;
 	--button-gutter: 0.5ch;
 	--focus-color: var(--button-bg);
+	--cluster-horizontal-alignment: center;
 
 	display: inline-flex;
 	gap: var(--button-gutter);
@@ -34,13 +35,19 @@
 }
 
 [data-variant-type='secondary'] {
-	--button-bg: var(--color-surface-bg);
-	--button-text: var(--color-global-text);
+	--button-bg: var(--color-surface-bg-interact);
+	--button-text: var(--color-surface-text-interact);
+	--focus-color: var(--color-surface-text);
 }
 
 [data-variant-type='destructive'] {
 	--button-bg: var(--color-danger);
 	--button-text: var(--color-global-bg);
+}
+
+[data-variant-type='ghost'] {
+	--button-bg: ;
+	--button-text: var(--color-global-text);
 }
 
 [data-variant-type='outline'] {

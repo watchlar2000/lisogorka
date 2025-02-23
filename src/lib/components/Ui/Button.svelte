@@ -6,11 +6,19 @@
 	type ButtonProps = {
 		children: Snippet;
 		type?: 'button' | 'submit' | 'reset';
-		variant?: 'regular' | 'primary' | 'secondary' | 'destructive' | 'outline';
+		variant?:
+			| 'regular'
+			| 'primary'
+			| 'secondary'
+			| 'destructive'
+			| 'outline'
+			| 'ghost';
 		size?: 'small' | 'regular' | 'large' | 'medium';
 		class?: string;
 		disabled?: boolean;
 		loading?: boolean;
+		as?: 'a';
+		href?: string;
 		onclick?: () => void;
 	} & HTMLButtonAttributes;
 
@@ -23,28 +31,39 @@
 		disabled = false,
 		loading = false,
 		children,
-		...rest
+		as,
+		href = '',
+		...attrs
 	}: ButtonProps = $props();
 </script>
 
-<button
-	{type}
-	class="button {className}"
-	{onclick}
-	disabled={disabled || loading}
-	data-variant-type={variant}
-	data-font-size={size}
-	{...rest}
->
-	{#if loading}
-		<div class="cluster">
-			<Loader class="spinner" aria-hidden={true} />
-			<span>Processing</span>
-		</div>
-	{:else}
-		{@render children()}
-	{/if}
-</button>
+{#if as === 'a'}
+	<a
+		{href}
+		class="button cluster {className}"
+		data-variant-type={variant}
+		data-font-size={size}>{@render children()}</a
+	>
+{:else}
+	<button
+		{type}
+		class="button cluster {className}"
+		{onclick}
+		disabled={disabled || loading}
+		data-variant-type={variant}
+		data-font-size={size}
+		{...attrs}
+	>
+		{#if loading}
+			<div class="cluster">
+				<Loader class="spinner" aria-hidden={true} />
+				<span>Processing</span>
+			</div>
+		{:else}
+			{@render children()}
+		{/if}
+	</button>
+{/if}
 
 <style>
 	.cluster {

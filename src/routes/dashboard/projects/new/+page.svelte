@@ -12,6 +12,7 @@
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
 	import type { SubmitFunction } from '@sveltejs/kit';
+	import { ImagePlus, Save } from 'lucide-svelte';
 	import FormImagesList from './FormImagesList.svelte';
 	import FormInput from './InputField.svelte';
 	import FormSelect from './SelectField.svelte';
@@ -155,7 +156,9 @@
 				{form?.errors?.images}
 			</p>
 		{/if}
-		<Button onclick={handleAddImage}>+ Add image</Button>
+		<Button onclick={handleAddImage}
+			><ImagePlus aria-hidden="true" /> Add image</Button
+		>
 		{#if items.length}
 			<div>
 				<FormImagesList
@@ -170,7 +173,9 @@
 
 	<hr />
 	<div>
-		<Button type="submit" size="medium" variant="primary">Save</Button>
+		<Button type="submit" size="medium" variant="primary"
+			><Save aria-hidden="true" />Save</Button
+		>
 	</div>
 </form>
 

@@ -7,7 +7,12 @@
 
 <div class="container flow">
 	<header class="header wrapper repel">
-		<h2 class="title"><a href="/dashboard">Dashboard</a></h2>
+		<h2 class="title">
+			<Button as="a" href="/dashboard" variant="ghost" size="regular"
+				>Dashboard</Button
+			>
+		</h2>
+
 		<div class="cluster">
 			<form method="POST" action="logout?/logout" use:enhance>
 				<Button variant="secondary" size="small">Logout</Button>
@@ -39,13 +44,6 @@
 		border-radius: var(--radius-m);
 	}
 
-	.title {
-		color: var(--color-surface-text-interact);
-		font-size: var(--text-size-meta);
-		text-transform: uppercase;
-		letter-spacing: var(--kerning-uppercase);
-	}
-
 	.content {
 		flex-grow: 1;
 		display: flex;
@@ -55,5 +53,9 @@
 
 	.wrapper[data-wrapper-type='inner'] {
 		flex-grow: 1;
+	}
+
+	.title {
+		text-transform: uppercase;
 	}
 </style>
