@@ -91,6 +91,11 @@
 	const removeImage = (id: number) => {
 		console.log('removing image ', id);
 	};
+
+	const handleAddImage = () => {
+		selectedImageId = 0;
+		openModal();
+	};
 </script>
 
 {#snippet error(field: keyof typeof formState.errors)}
@@ -150,14 +155,7 @@
 				{form?.errors?.images}
 			</p>
 		{/if}
-		<button
-			class="button button-action"
-			type="button"
-			onclick={() => {
-				selectedImageId = 0;
-				openModal();
-			}}>+ Add image</button
-		>
+		<Button onclick={handleAddImage}>+ Add image</Button>
 		{#if items.length}
 			<div>
 				<FormImagesList
@@ -172,17 +170,12 @@
 
 	<hr />
 	<div>
-		<Button type="submit">Save</Button>
+		<Button type="submit" size="medium" variant="primary">Save</Button>
 	</div>
 </form>
 
 <style>
 	.form div {
 		--flow-space: var(--space-xs);
-	}
-	.button-action {
-		font-size: var(--text-size-meta);
-		font-weight: var(--font-medium);
-		background-color: var(--color-surface-text-interact);
 	}
 </style>

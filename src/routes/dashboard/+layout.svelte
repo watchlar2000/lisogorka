@@ -1,5 +1,6 @@
 <script>
 	import { enhance } from '$app/forms';
+	import Button from '$lib/components/Ui/Button.svelte';
 
 	let { children } = $props();
 </script>
@@ -9,7 +10,7 @@
 		<h2 class="title"><a href="/dashboard">Dashboard</a></h2>
 		<div class="cluster">
 			<form method="POST" action="logout?/logout" use:enhance>
-				<button class="button button-logout">Logout</button>
+				<Button variant="secondary" size="small">Logout</Button>
 			</form>
 		</div>
 	</header>
@@ -36,13 +37,6 @@
 	.wrapper[data-wrapper-type='inner'] {
 		background-color: #fefefe;
 		border-radius: var(--radius-m);
-	}
-
-	.button-logout {
-		--button-bg: var(--color-surface-bg);
-		--button-text: var(--color-global-text);
-
-		font-size: var(--text-size-lede);
 	}
 
 	.title {

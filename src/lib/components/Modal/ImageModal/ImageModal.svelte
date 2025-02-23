@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Modal from '$lib/components/Modal/Modal.svelte';
+	import Button from '$lib/components/Ui/Button.svelte';
 	import { createFormState } from '$lib/utils/createFormState.svelte';
 	import { getUrlFromImageFile } from '$lib/utils/getUrlFromImageFile';
 	import { UploadImageValidationSchema } from '$lib/validationSchema/images';
@@ -120,7 +121,8 @@
 
 {#snippet controls()}
 	<div class="cluster commands">
-		<button type="submit" class="button" form="imageForm">Save</button>
+		<!-- <button type="submit" class="button" form="imageForm">Save</button> -->
+		<Button variant="primary" type="submit" form="imageForm">Save</Button>
 	</div>
 {/snippet}
 

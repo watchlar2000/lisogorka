@@ -1,5 +1,5 @@
 .button {
-	--button-bg: var(--color-primary);
+	--button-bg: var(--color-surface-text-interact);
 	--button-text: var(--color-global-bg);
 	--button-x-padding: 1.5em;
 	--button-y-padding: 0.6em;
@@ -17,7 +17,6 @@
 	background: var(--button-bg);
 	color: var(--button-text);
 	padding: var(--button-y-padding) var(--button-x-padding);
-	/* text-transform: uppercase; */
 	letter-spacing: var(--kerning-uppercase);
 	text-decoration: none;
 	font-family: var(--font-base);
@@ -28,4 +27,45 @@
 .button:disabled {
 	opacity: 0.3;
 	cursor: not-allowed;
+}
+
+[data-variant-type='primary'] {
+	--button-bg: var(--color-primary);
+}
+
+[data-variant-type='secondary'] {
+	--button-bg: var(--color-surface-bg);
+	--button-text: var(--color-global-text);
+}
+
+[data-variant-type='destructive'] {
+	--button-bg: var(--color-danger);
+	--button-text: var(--color-global-bg);
+}
+
+[data-variant-type='outline'] {
+	--button-bg: var(--color-global-bg);
+	--button-text: var(--color-global-text);
+
+	border: var(--stroke-solid);
+}
+
+[data-variant-type='outline']:focus-visible {
+	outline-color: currentColor;
+}
+
+[data-font-size='small'] {
+	font-size: var(--text-size-lede);
+}
+
+[data-font-size='regular'] {
+	font-size: var(--text-size-meta);
+}
+
+[data-font-size='medium'] {
+	font-size: var(--step-0);
+}
+
+[data-font-size='large'] {
+	font-size: var(--text-size-base);
 }
