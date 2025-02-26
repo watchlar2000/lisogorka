@@ -1,34 +1,35 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import InputField from '$lib/components/InputField.svelte';
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
 	import type {
 		ImageModalData,
 		ImageModalSaveParams,
 	} from '$lib/components/Modal/ImageModal/types.js';
+	import ProjectDescriptionField from '$lib/components/ProjectDescriptionField.svelte';
+	import SelectField from '$lib/components/SelectField.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
 	import { categories, CATEGORY, SUCCESS } from '$lib/constants';
 	import type { Category } from '$lib/types';
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
+	import { InternalError } from '$lib/utils/exceptions';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
-	import type { SubmitFunction } from '@sveltejs/kit';
+	import { type SubmitFunction } from '@sveltejs/kit';
 	import { ImagePlus, Save } from 'lucide-svelte';
-	import FormImagesList from './FormImagesList.svelte';
-	import FormInput from './InputField.svelte';
-	import FormSelect from './SelectField.svelte';
+	import FormImagesList from '../../../../lib/components/FormImagesList.svelte';
+	import type { PageProps } from './$types';
+	import { handleDeleteImage, handleSubmitImage } from './utils';
 
 	const handleSort = (e: CustomEvent) => {
 		items = [...e.detail.items];
 	};
 
-	const { form } = $props();
+	const { form }: PageProps = $props();
 
+	let loading = $state(false);
 	let modal: ImageModal;
 	let items = $state<ImageModalData[]>([]);
-
-	const openModal = () => {
-		modal.open();
-	};
 
 	const defaultCategory = CATEGORY.BACKGROUND_PAINTING;
 	const projectInitValues = $state({
@@ -43,10 +44,9 @@
 		zodSchema: ProjectFormInputSchema,
 	});
 
-	const handleEnhance: SubmitFunction = ({ formData }) => {
+	const submitProjectForm: SubmitFunction = ({ formData }) => {
 		for (const image of items) {
-			formData.append('file', image.file as File);
-			formData.append('alt', image.alt);
+			formData.append('imageId', String(image.id));
 		}
 
 		return async ({ result }) => {
@@ -58,39 +58,61 @@
 		};
 	};
 
-	const onSaveCallback = (params: ImageModalSaveParams) => {
-		if (params.id !== 0) {
-			const updatedImages = items.map((i) => {
-				if (i.id === params.id) {
-					return { ...i, ...params };
-				}
-				return i;
-			});
-			items = [...updatedImages];
-		} else {
-			items.push({ ...params, id: Math.random() });
+	const onSaveImageCallback = async (params: ImageModalSaveParams) => {
+		const { id, alt, file } = params;
+		const action = !id ? '?/uploadImage' : '?/editImage';
+		loading = true;
+		const imagePayload = {
+			id: Number(id),
+			alt,
+			file,
+		};
+
+		const { image: uploadedImage } = await handleSubmitImage({
+			payload: imagePayload,
+			options: { action },
+		});
+
+		if (!uploadedImage) {
+			return InternalError('Something went wrong with the uploaded image');
 		}
+
+		if (!id) {
+			items = [...items, uploadedImage];
+		} else {
+			items = items.map((image) =>
+				image.id === uploadedImage.id ? { ...image, ...uploadedImage } : image,
+			);
+		}
+
+		loading = false;
+		modal.close();
 	};
 
 	let selectedImageId = $state(0);
 	const selectedImageModalData = $derived(
-		items
-			.filter((image) => image.id === selectedImageId)
-			?.map(({ id, url, alt }) => ({
-				id,
-				url,
-				alt,
-				file: undefined,
-			}))[0],
+		items.find((image) => image.id === selectedImageId),
 	);
+
+	const openModal = () => {
+		modal.open();
+	};
 
 	const editImage = (id: number) => {
 		selectedImageId = id;
 		openModal();
 	};
 
-	const removeImage = (id: number) => {
-		console.log('removing image ', id);
+	const removeImage = async (id: number) => {
+		console.log(id);
+		await handleDeleteImage({
+			payload: { id },
+			options: {
+				action: '?/removeImage',
+			},
+		});
+		const filteredItems = items.filter((image) => image.id !== id);
+		items = [...filteredItems];
 	};
 
 	const handleAddImage = () => {
@@ -99,66 +121,53 @@
 	};
 </script>
 
-{#snippet error(field: keyof typeof formState.errors)}
-	{#if formState.errors?.[field] || form?.errors?.[field]}
-		<p class="invalid">
-			{formState.errors?.[field] || form?.errors?.[field]}
-		</p>
-	{/if}
-{/snippet}
-
 <ImageModal
 	bind:this={modal}
-	{onSaveCallback}
+	onSaveCallback={onSaveImageCallback}
 	id={selectedImageModalData?.id}
 	alt={selectedImageModalData?.alt}
 	url={selectedImageModalData?.url}
+	file={selectedImageModalData?.file}
+	{loading}
 />
 <form
 	method="POST"
-	use:enhance={handleEnhance}
+	action="?/createProject"
+	use:enhance={submitProjectForm}
 	class="flow form"
 	enctype="multipart/form-data"
+	id="createProject"
 >
 	<div class="flow">
-		<FormInput
+		<InputField
 			type="text"
 			title="title"
 			bind:value={formState.data.title}
 			placeholder="Digital serenity..."
-			{error}
 			{...register('title', { required: true })}
+			error={formState.errors.title}
 		/>
 	</div>
 	<div class="flow">
-		<FormInput
-			type="text"
-			title="description"
-			bind:value={formState.data.description!}
-			placeholder="Lorem ipsum dolor sit amet..."
-			{error}
-			{...register('description')}
-		/>
-	</div>
-	<div class="flow">
-		<FormSelect
+		<SelectField
 			title="category"
 			selectedValue={formState.data.category}
 			options={[...categories]}
-			{error}
 			{...register('category', { required: true })}
 		/>
 	</div>
 	<div class="flow">
-		<p><span class="label">Images:</span></p>
-		{#if form?.errors?.images}
-			<p class="invalid">
-				{form?.errors?.images}
-			</p>
-		{/if}
-		<Button onclick={handleAddImage}
-			><ImagePlus aria-hidden="true" /> Add image</Button
-		>
+		<div class="repel" class:invalid={form?.images}>
+			<span class="label">Images:</span>
+			{#if form?.images}
+				<span>
+					{form?.images}
+				</span>
+			{/if}
+		</div>
+		<Button onclick={handleAddImage}>
+			<ImagePlus aria-hidden="true" /> Add image
+		</Button>
 		{#if items.length}
 			<div>
 				<FormImagesList
@@ -170,17 +179,15 @@
 			</div>
 		{/if}
 	</div>
+	<hr />
+	<div class="flow">
+		<ProjectDescriptionField source={projectInitValues.description} />
+	</div>
 
 	<hr />
 	<div>
-		<Button type="submit" size="medium" variant="primary"
-			><Save aria-hidden="true" />Save</Button
-		>
+		<Button type="submit" size="medium" variant="primary">
+			<Save aria-hidden="true" /> Save
+		</Button>
 	</div>
 </form>
-
-<style>
-	.form div {
-		--flow-space: var(--space-xs);
-	}
-</style>

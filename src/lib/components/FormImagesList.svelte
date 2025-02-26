@@ -1,10 +1,10 @@
 <script lang="ts">
 	import { Edit, Trash } from 'lucide-svelte';
 	import { dndzone } from 'svelte-dnd-action';
-	import { flip } from 'svelte/animate';
+	import Button from './Ui/Button.svelte';
 
 	type FormImagesListProps = {
-		items: ({ id: number; url: string } & Record<string, unknown>)[];
+		items: Record<string, string>[];
 		handleSort: (e: CustomEvent) => void;
 		edit: (id: number) => void;
 		remove: (id: number) => void;
@@ -23,36 +23,39 @@
 <ul
 	role="list"
 	class="auto-grid image-list"
-	use:dndzone={{ items, flipDurationMs }}
+	use:dndzone={{
+		items,
+		flipDurationMs,
+	}}
 	onconsider={handleSort}
 	onfinalize={handleSort}
 >
 	{#each items as image (image.id)}
-		<li class="image-list__item" animate:flip={{ duration: flipDurationMs }}>
+		<li class="image-list__item">
 			<div class="flow image-card">
-				<img src={image?.url} alt="" />
+				<img src={image.url} alt={image.alt} />
 				<div class="cluster image-card__controls">
-					<button
-						class="button button-control"
+					<Button
+						variant="regular"
 						type="button"
 						onclick={() => {
 							edit(image.id);
 						}}
+						><Edit aria-hidden="true" /><span class="visually-hidden"
+							>Edit image {image.title}</span
+						></Button
 					>
-						<span class="visually-hidden">Edit</span>
-						<Edit />
-					</button>
-					<button
-						class="button button-control"
-						data-button-type="delete"
+
+					<Button
+						variant="destructive"
 						type="button"
 						onclick={() => {
 							remove(image.id);
 						}}
+						><Trash aria-hidden="true" /><span class="visually-hidden"
+							>Delete image {image.title}</span
+						></Button
 					>
-						<span class="visually-hidden">Delete</span>
-						<Trash />
-					</button>
 				</div>
 			</div>
 		</li>
@@ -76,18 +79,6 @@
 		object-fit: cover;
 		margin-inline: auto;
 		border-radius: calc(var(--radius-m) * 0.5);
-	}
-
-	.button-control {
-		font-size: var(--text-size-lede);
-		background-color: var(--color-surface-bg);
-		color: var(--color-global-text);
-	}
-
-	.button-control[data-button-type='delete'] {
-		--focus-color: red;
-
-		background-color: red;
 	}
 
 	.image-list {

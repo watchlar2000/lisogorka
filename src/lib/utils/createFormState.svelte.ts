@@ -76,7 +76,7 @@ export const createFormState = <U extends ZodObject<ZodRawShape>>({
 	};
 
 	const resetFormState = () => {
-		formState.data = { ...defaultDataValues };
+		formState.data = {};
 		formState.errors = {};
 		formState.valid = false;
 		touchedFields.clear();

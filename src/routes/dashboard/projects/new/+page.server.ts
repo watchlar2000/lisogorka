@@ -2,11 +2,11 @@ import { projectInsertSchema } from '$lib/server/api/projects/projects.types';
 import { routing } from '$lib/server/api/routing';
 import type { Category } from '$lib/types';
 import { validateWithZod } from '$lib/utils/validateWIthZod';
+import { UploadImageValidationSchema } from '$lib/validationSchema/images';
 import { fail, type Actions } from '@sveltejs/kit';
-import { validateImages } from './utils';
 
 export const actions: Actions = {
-	default: async (event) => {
+	createProject: async (event) => {
 		const fd = await event.request.formData();
 
 		const projectMetaPayload = {
@@ -15,64 +15,38 @@ export const actions: Actions = {
 			category: String(fd.get('category')) as Category,
 		};
 
-		const { errors } = validateWithZod({
+		const { errors: projectMetaErrors } = validateWithZod({
 			data: projectMetaPayload,
 			schema: projectInsertSchema,
 		});
 
-		const files = fd.getAll('file');
-		const alts = fd.getAll('alt');
+		const imageIdsList = fd.getAll('imageId');
 
-		const imagesList = files.map((file, idx) => ({
-			file,
-			alt: alts[idx],
-		}));
+		const noImagesError = {
+			images: !imageIdsList?.length ? ['Upload at least one image'] : undefined,
+		};
 
-		const noImagesError =
-			imagesList.length === 0 ? { images: 'Please add images' } : {};
-
-		const { errors: imageErrors } = validateImages(imagesList);
-
-		if (errors || !imagesList.length || !!imageErrors?.length) {
-			// TODO: think on ways how to display image errors in UI
-			const isImagesValid = imageErrors?.length
-				? {
-						images: `Something wrong with image(s) ${JSON.stringify(Object.values(imageErrors))}`,
-					}
-				: {};
+		if (projectMetaErrors || noImagesError) {
 			return fail(400, {
-				errors: { ...errors, ...noImagesError, ...isImagesValid },
+				...projectMetaErrors,
+				...noImagesError,
 			});
 		}
 
 		try {
-			const coverImagePayload = {
-				file: files[0] as File,
-				alt: String(alts[0]),
-			};
-			const newCoverImage = await routing.images.create(coverImagePayload);
+			const coverImageId = Number(imageIdsList[0]);
 
 			const newProjectPayload = {
 				...projectMetaPayload,
-				coverImageId: newCoverImage.id,
+				coverImageId,
 				isFeatured: true,
 			};
 			const newProject = await routing.projects.create(newProjectPayload);
 
-			const imagesPromises = imagesList.map((image) => {
-				const payload = {
-					file: image.file as File,
-					alt: String(image.alt),
-				};
-				return routing.images.create(payload);
-			});
-
-			const imagesPromisesResult = await Promise.all(imagesPromises);
-
-			for await (const image of imagesPromisesResult) {
+			for await (const imageId of imageIdsList) {
 				routing.projectsToImagesService.createRelation({
 					projectId: newProject.id,
-					imageId: image.id,
+					imageId: Number(imageId),
 				});
 			}
 
@@ -81,5 +55,77 @@ export const actions: Actions = {
 		} catch (error) {
 			console.log(error);
 		}
+	},
+	uploadImage: async (event) => {
+		const fd = await event.request.formData();
+		const file = fd.get('file');
+		const alt = fd.get('alt');
+
+		const imagePayload = {
+			file: file as File,
+			alt: String(alt),
+		};
+
+		const { errors } = validateWithZod({
+			data: imagePayload,
+			schema: UploadImageValidationSchema(),
+		});
+
+		if (errors) {
+			return fail(400, { ...errors });
+		}
+
+		const uploadedImage = await routing.images.create(imagePayload);
+
+		return {
+			success: true,
+			image: uploadedImage,
+		};
+	},
+	editImage: async (event) => {
+		const fd = await event.request.formData();
+
+		const id = Number(fd.get('id'));
+		const file = fd.get('file');
+		const alt = String(fd.get('alt'));
+
+		if (!id) {
+			return fail(400, { id: ['Image ID is required'] });
+		}
+
+		const imagePayload = {
+			alt: String(alt),
+			...(file && { file: file as File }),
+		};
+
+		const { errors } = validateWithZod({
+			data: imagePayload,
+			schema: UploadImageValidationSchema(true),
+		});
+
+		if (errors) return fail(400, { ...errors });
+
+		const updatedImage = await routing.images.update(id, imagePayload);
+
+		return {
+			success: true,
+			image: updatedImage,
+		};
+	},
+	removeImage: async (event) => {
+		const fd = await event.request.formData();
+		const id = Number(fd.get('id'));
+
+		if (!id) {
+			return fail(400, { id: ['Image ID is required'] });
+		}
+
+		const removedImage = await routing.images.delete(id);
+		console.log('removing image');
+
+		return {
+			success: true,
+			image: removedImage,
+		};
 	},
 };

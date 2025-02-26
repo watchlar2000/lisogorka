@@ -2,11 +2,18 @@ import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 import { type IImagesRepository } from './images.repository';
 import { type Image } from './images.types';
 
+type UpdateImageParams = {
+	file: File;
+	alt: string;
+};
+
 export interface IImagesService {
 	listAll: () => Promise<Image[]>;
 	findById: (id: number) => Promise<Image>;
 	findByIds(ids: number[]): Promise<Image[]>;
-	create: (payload: { file: File; alt: string }) => Promise<Image>;
+	create: (payload: UpdateImageParams) => Promise<Image>;
+	update: (id: number, payload: Partial<UpdateImageParams>) => Promise<Image>;
+	delete: (id: number) => Promise<Image>;
 }
 
 export class ImagesService implements IImagesService {
@@ -33,7 +40,7 @@ export class ImagesService implements IImagesService {
 		return this.repository.findByIds(ids);
 	}
 
-	async create({ file, alt }: { file: File; alt: string }) {
+	async create({ file, alt }: UpdateImageParams) {
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		const { public_id, width, height, secure_url } =
 			await this.cloudinaryService.upload({
@@ -47,22 +54,29 @@ export class ImagesService implements IImagesService {
 			height,
 		};
 
-		// const {
-		// 	success,
-		// 	data: values,
-		// 	error,
-		// } = imageInsertSchema.safeParse(payload);
-
-		// if (!success) {
-		// 	const { fieldErrors } = error.flatten();
-		// 	const errorMessage = Object.entries(fieldErrors)
-		// 		.map(([field, errors]) =>
-		// 			errors ? `${field}: ${errors.join(', ')}` : field,
-		// 		)
-		// 		.join('\n  ');
-		// 	throw new Error(errorMessage);
-		// }
-
 		return await this.repository.create(payload);
+	}
+	async update(id: number, { file, alt }: Partial<UpdateImageParams>) {
+		const cloudinaryImage = file
+			? await this.cloudinaryService.upload({
+					image: file,
+				})
+			: null;
+
+		const payload = {
+			alt,
+			...(cloudinaryImage && {
+				url: cloudinaryImage.secure_url,
+				width: cloudinaryImage.width,
+				height: cloudinaryImage.height,
+			}),
+		};
+
+		return this.repository.update(id, payload);
+	}
+
+	async delete(id: number) {
+		// TODO: remove image from cloudinary
+		return this.repository.delete(id);
 	}
 }

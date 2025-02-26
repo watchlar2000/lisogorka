@@ -1,22 +1,18 @@
-<script lang="ts" module>
-	type T = string;
-</script>
-
 <script lang="ts" generics="T extends string">
 	import { capitalizeFirstLetter } from '$lib/utils/capitalizeFirstLetter';
-	import type { Snippet } from 'svelte';
+	import type { HTMLInputAttributes } from 'svelte/elements';
 
 	type InputFieldProps = {
 		type: 'text' | 'email' | 'password';
-		title: T;
+		title: string;
 		value: string;
-		placeholder: string;
-		error: Snippet<[T]>;
+		error?: string;
+		placeholder?: string;
 		class?: {
 			labelClass?: string;
 			inputClass?: string;
 		};
-	};
+	} & HTMLInputAttributes;
 
 	let {
 		type,
@@ -31,8 +27,19 @@
 	const { labelClass = '', inputClass = '' } = $derived(className ?? {});
 </script>
 
-<label for={title} class="label {labelClass}"
-	>{capitalizeFirstLetter(title)}:</label
->
-<input {type} bind:value {...rest} class={inputClass} {placeholder} />
-{@render error(title)}
+<div class="repel" class:invalid={error}>
+	<label for={title} class="label {labelClass}"
+		>{capitalizeFirstLetter(title)}:</label
+	>
+	{#if error}
+		<span>{error}</span>
+	{/if}
+</div>
+<input
+	{type}
+	bind:value
+	{...rest}
+	class={inputClass}
+	data-invalid={error ? true : undefined}
+	{placeholder}
+/>

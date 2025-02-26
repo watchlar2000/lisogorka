@@ -1,22 +1,60 @@
-import { validateWithZod } from '$lib/utils/validateWIthZod';
-import { UploadImageValidationSchema } from '$lib/validationSchema/images';
+import type { Image } from '$lib/server/api/images/images.types';
+import { sendRequest } from '$lib/utils/sendRequest';
 
-export const validateImages = <T>(imagesList: T[]) => {
-	if (imagesList.length === 0) return { errors: null };
+type HandleSubmit<T> = {
+	payload: T;
+	options: { action: string };
+};
 
-	const errors = imagesList
-		.map((image, index) => {
-			const { errors } = validateWithZod({
-				data: image,
-				schema: UploadImageValidationSchema(),
-			});
-			if (errors) {
-				return { index, ...errors };
-			} else {
-				return null;
-			}
-		})
-		.filter((image) => !!image);
+type SubmitImagePayload = {
+	id: number;
+	alt: string;
+	file?: File;
+};
 
-	return { errors };
+type ImageId = { id: number };
+
+type HandleSubmitImage = HandleSubmit<SubmitImagePayload>;
+type HandleDeleteImage = HandleSubmit<ImageId>;
+
+export const handleSubmitImage = async ({
+	payload,
+	options,
+}: HandleSubmitImage) => {
+	const fd = new FormData();
+	const { id, alt, file } = payload;
+	const { action } = options;
+	fd.append('id', String(id));
+	fd.append('alt', alt);
+
+	if (file) {
+		fd.append('file', file);
+	}
+
+	const { result } = await sendRequest({
+		body: fd,
+		options: { action, method: 'POST' },
+	});
+
+	if (!result) return { image: null };
+
+	return { image: result.data?.image as Image };
+};
+
+export const handleDeleteImage = async ({
+	payload,
+	options,
+}: HandleDeleteImage) => {
+	const fd = new FormData();
+	const { id } = payload;
+	const { action } = options;
+	fd.append('id', String(id));
+	const { result } = await sendRequest({
+		body: fd,
+		options: { action, method: 'POST' },
+	});
+
+	if (!result) return { image: null };
+
+	return { image: result.data?.image as Image };
 };

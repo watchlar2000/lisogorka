@@ -192,14 +192,12 @@ label input:disabled + * {
 }
 
 .invalid {
-	display: block;
-	width: max-content;
+	--gutter: var(--space-2xs);
+
+	color: var(--color-danger);
 	font-size: var(--text-size-lede);
-	background-color: rgb(255, 169, 169);
-	padding: 0.25em 1em;
-	border-radius: var(--radius-m);
 }
 
 input[data-invalid='true'] {
-	border-color: rgb(255, 169, 169);
+	border-color: var(--color-danger);
 }
