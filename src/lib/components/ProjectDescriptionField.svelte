@@ -1,20 +1,19 @@
 <script lang="ts">
 	import Button from '$lib/components/Ui/Button.svelte';
-	import DOMPurify from 'dompurify';
-	import { marked } from 'marked';
+	import { sanitizeMarkdown } from '$lib/utils/marked';
 
-	type ProjectDescriptionFiledProps = {
+	type ProjectDescriptionFieldProps = {
 		source: string;
 	};
 
-	let { source = $bindable() }: ProjectDescriptionFiledProps = $props();
+	let { source = $bindable() }: ProjectDescriptionFieldProps = $props();
 
 	const tabs = [
-		{ id: 'tab-1', title: 'Description' },
-		{ id: 'tab-2', title: 'Preview' },
+		{ id: 'description', title: 'Description' },
+		{ id: 'preview', title: 'Preview' },
 	];
 
-	let activeTab = $state(tabs[0].id);
+	let activeTab = $state(tabs[1].id);
 </script>
 
 {#snippet description()}
@@ -25,22 +24,20 @@
 	{#if !markdown.trim().length}
 		<p>No description provided yet...</p>
 	{/if}
-	<div class="wrapper article__content">
-		<artice class="wrapper flow">
-			{@html DOMPurify.sanitize(marked(markdown) as string)}
-		</artice>
-	</div>
+	<article class="flow article-content">
+		{@html sanitizeMarkdown(markdown)}
+	</article>
 {/snippet}
 
-{#snippet tab(tabId: string)}
-	{#if tabId === 'tab-1'}
+{#snippet tab(currentTabId: string)}
+	{#if currentTabId === 'description'}
 		{@render description()}
 	{:else}
 		{@render preview(source)}
 	{/if}
 {/snippet}
 
-<div class="prose flow">
+<div class="flow">
 	<ul role="list" class="list cluster">
 		{#each tabs as tab (tab.id)}
 			<li>
@@ -56,15 +53,5 @@
 			</li>
 		{/each}
 	</ul>
-	<div>
-		{@render tab(activeTab)}
-	</div>
+	{@render tab(activeTab)}
 </div>
-
-<style>
-	.article__content {
-		--wrapper-max-width: 50ch;
-
-		margin-inline: auto;
-	}
-</style>

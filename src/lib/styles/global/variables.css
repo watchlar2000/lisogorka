@@ -11,11 +11,6 @@
 	--step-5: clamp(2.0273rem, 1.4342rem + 2.9656vw, 3.7325rem);
 
 	/* @link https://utopia.fyi/space/calculator?c=320,18,1.2,1240,20,1.25,5,2,&s=0.75|0.5|2|3|4,1.5|2|3|4|6,l-3xl&g=s%2Cl%2Cxl%2C12,l,xl,12 */
-	/* --space-5xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
-	--space-4xs: clamp(0.875rem, 0.8533rem + 0.1087vw, 0.9375rem);
-	--space-3xs: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
-	--space-2xs: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
-	--space-xs: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem); */
 	--space-3xs: clamp(0.3125rem, 0.269rem + 0.2174vw, 0.4375rem);
 	--space-2xs: clamp(0.5625rem, 0.4755rem + 0.4348vw, 0.8125rem);
 	--space-xs: clamp(0.875rem, 0.7446rem + 0.6522vw, 1.1rem);
@@ -73,6 +68,7 @@
 	--space-gutter-s: var(--space-s);
 	--space-gutter-l: var(--space-l);
 	--space-regions: var(--space-xl);
+	--size-text-max-width: 44ch;
 	--size-wrapper-max-width: 1035px;
 	--color-global-bg: var(--color-light);
 	--color-global-text: var(--color-dark);

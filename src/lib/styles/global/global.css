@@ -16,7 +16,7 @@ body {
 
 h1 {
 	font-size: var(--step-5);
-	max-width: 20ch;
+	max-width: 25ch;
 }
 
 h2 {
