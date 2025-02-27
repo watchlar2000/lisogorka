@@ -12,9 +12,10 @@
 		exploring new things.
 	</p>
 	<p>
-		You can reach out to me via <a href="mailto:"
-			>iryna.lisogor.artwrk@gmail.com</a
-		>. Resume available upon request.
+		You can reach out to me via <a href="mailto:">
+			iryna.lisogor.artwrk@gmail.com
+		</a>
+		. Resume available upon request.
 	</p>
 </div>
 

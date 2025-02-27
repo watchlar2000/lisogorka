@@ -2,6 +2,8 @@
 	"useTabs": true,
 	"singleQuote": true,
 	"trailingComma": "all",
+	"bracketSameLine": false,
+	"htmlWhitespaceSensitivity": "ignore",
 	"tabWidth": 2,
 	"printWidth": 80,
 	"plugins": ["prettier-plugin-svelte"],

@@ -1,9 +1,11 @@
 <div class="wrapper flow sign-in">
 	<h3>Sign In to continue*</h3>
 	<p class="prose">
-		*If you are not the owner of this website, please go back to the <a href="/"
-			>main page</a
+		*If you are not the owner of this website, please go back to the <a
+			href="/"
 		>
+			main page
+		</a>
 	</p>
 	<a href="/login/google" class="sign-in__link button cluster">
 		<svg

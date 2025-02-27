@@ -25,9 +25,9 @@
 </script>
 
 <div class="repel" class:invalid={error}>
-	<label for={title} class="label {labelClass}"
-		>{capitalizeFirstLetter(title)}</label
-	>
+	<label for={title} class="label {labelClass}">
+		{capitalizeFirstLetter(title)}
+	</label>
 	{#if error}
 		<span>{error}</span>
 	{/if}

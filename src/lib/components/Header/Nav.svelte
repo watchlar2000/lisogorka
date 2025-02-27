@@ -43,8 +43,10 @@
 					stroke-width="1.5"
 					stroke-linecap="round"
 					stroke-linejoin="round"
-					class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg
+					class="lucide lucide-chevron-down"
 				>
+					<path d="m6 9 6 6 6-6" />
+				</svg>
 			</button>
 			<!-- svelte-ignore element_invalid_self_closing_tag -->
 			<div {...$overlay} use:overlay />
@@ -56,13 +58,14 @@
 				transition:fly={{ duration: 150, y: -10 }}
 			>
 				<li {...$item} use:item>
-					<a href="/visual-development" class="menu__item">Visual development</a
-					>
+					<a href="/visual-development" class="menu__item">
+						Visual development
+					</a>
 				</li>
 				<li {...$item} use:item>
-					<a href="/background-painting" class="menu__item"
-						>Background painting</a
-					>
+					<a href="/background-painting" class="menu__item">
+						Background painting
+					</a>
 				</li>
 			</ul>
 		</li>
@@ -70,13 +73,19 @@
 			<a
 				href="/playground"
 				aria-current={isCurrentPage('/playground')}
-				class="menu__item">Playground</a
+				class="menu__item"
 			>
+				Playground
+			</a>
 		</li>
 		<li>
-			<a href="/about" aria-current={isCurrentPage('/about')} class="menu__item"
-				>About</a
+			<a
+				href="/about"
+				aria-current={isCurrentPage('/about')}
+				class="menu__item"
 			>
+				About
+			</a>
 		</li>
 	</ul>
 </nav>

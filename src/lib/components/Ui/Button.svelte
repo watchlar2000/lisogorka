@@ -42,8 +42,10 @@
 		{href}
 		class="button cluster {className}"
 		data-variant-type={variant}
-		data-font-size={size}>{@render children()}</a
+		data-font-size={size}
 	>
+		{@render children()}
+	</a>
 {:else}
 	<button
 		{type}

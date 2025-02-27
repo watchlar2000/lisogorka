@@ -8,9 +8,9 @@
 <div class="container flow">
 	<header class="header wrapper repel">
 		<h2 class="title">
-			<Button as="a" href="/dashboard" variant="ghost" size="regular"
-				>Dashboard</Button
-			>
+			<Button as="a" href="/dashboard" variant="ghost" size="regular">
+				Dashboard
+			</Button>
 		</h2>
 
 		<div class="cluster">

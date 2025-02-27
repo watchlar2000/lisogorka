@@ -49,8 +49,10 @@
 					size="small"
 					onclick={() => {
 						activeTab = tab.id;
-					}}>{tab.title}</Button
+					}}
 				>
+					{tab.title}
+				</Button>
 			</li>
 		{/each}
 	</ul>
