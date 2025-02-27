@@ -1,10 +1,12 @@
 <script lang="ts">
 	import { formatDate } from '$lib/utils/formatDate';
-	import { marked } from 'marked';
+	import { sanitizeMarkdown } from '$lib/utils/marked.js';
 
 	const { data } = $props();
 	const project = $derived(data.project);
-	const projectDescription = $derived(marked(project?.description as string));
+	const description = $derived(
+		sanitizeMarkdown(project?.description as string),
+	);
 </script>
 
 <article class="flow">
@@ -14,7 +16,7 @@
 			<p><span>Last updated at:</span> {formatDate(project.updatedAt)}</p>
 		</div>
 		<h2>{project.title}</h2>
-		{@html projectDescription}
+		{@html description}
 	</div>
 </article>
 

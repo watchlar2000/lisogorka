@@ -1,10 +1,11 @@
 <script lang="ts">
-	import { Edit, Trash } from 'lucide-svelte';
+	import type { Image } from '$lib/types/images';
+	import { Clipboard, Edit, Trash } from 'lucide-svelte';
 	import { dndzone } from 'svelte-dnd-action';
 	import Button from './Ui/Button.svelte';
 
 	type FormImagesListProps = {
-		items: Record<string, string>[];
+		items: Image[];
 		handleSort: (e: CustomEvent) => void;
 		edit: (id: number) => void;
 		remove: (id: number) => void;
@@ -18,6 +19,23 @@
 		remove,
 		flipDurationMs = 200,
 	}: FormImagesListProps = $props();
+
+	const copyImageToClipboard = ({
+		url,
+		alt,
+		width,
+		height,
+	}: Omit<Image, 'id'>) => {
+		const imgTag = `<img src="${url}" alt="${alt}" width="${width}" height="${height}" loading="lazy">`;
+		navigator.clipboard.writeText(imgTag);
+	};
+
+	const extractImageMeta = (image: Image) => ({
+		url: image.url,
+		alt: image.alt,
+		width: image.width,
+		height: image.height,
+	});
 </script>
 
 <ul
@@ -33,7 +51,18 @@
 	{#each items as image (image.id)}
 		<li class="image-list__item">
 			<div class="flow image-card">
-				<img src={image.url} alt={image.alt} />
+				<div>
+					<img src={image.url} alt={image.alt} />
+					<Button
+						type="button"
+						variant="outline"
+						size="small"
+						onclick={() => copyImageToClipboard(extractImageMeta(image))}
+					>
+						<Clipboard aria-hidden />
+						<span class="visually-hidden">Copy image tag to clipboard</span>
+					</Button>
+				</div>
 				<div class="cluster image-card__controls">
 					<Button
 						variant="regular"
@@ -41,10 +70,10 @@
 						onclick={() => {
 							edit(image.id);
 						}}
-						><Edit aria-hidden="true" /><span class="visually-hidden"
-							>Edit image {image.title}</span
-						></Button
 					>
+						<Edit aria-hidden="true" />
+						<span class="visually-hidden">Edit image {image.alt}</span>
+					</Button>
 
 					<Button
 						variant="destructive"
@@ -52,10 +81,10 @@
 						onclick={() => {
 							remove(image.id);
 						}}
-						><Trash aria-hidden="true" /><span class="visually-hidden"
-							>Delete image {image.title}</span
-						></Button
 					>
+						<Trash aria-hidden="true" />
+						<span class="visually-hidden">Delete image {image.alt}</span>
+					</Button>
 				</div>
 			</div>
 		</li>

@@ -10,22 +10,21 @@
 	const {
 		id = 0,
 		url = '',
-		file = undefined,
 		alt = '',
 		onSaveCallback,
 		loading = false,
 	}: ImageModalProps = $props();
 
 	let mode = $derived(id === 0 ? MODE_CREATE : MODE_EDIT);
-	$inspect({ id, url, file, alt });
+
 	$effect(() => {
-		resetDefaultDataValues({ id, file, alt });
+		resetDefaultDataValues({ id, alt, file: undefined });
 	});
 
 	const { formState, register, resetDefaultDataValues, handleSubmit } =
 		$derived(
 			createFormState({
-				defaultDataValues: { id, file, alt },
+				defaultDataValues: { id, alt, file: undefined },
 				zodSchema: UploadImageValidationSchema(!!id),
 			}),
 		);
@@ -106,7 +105,7 @@
 		</div>
 		<div class="flow">
 			<div class="repel" class:invalid={formState.errors.alt}>
-				<label for="alt"> Alternative text:</label>
+				<label for="alt">Alternative text:</label>
 				{#if formState.errors.alt}
 					<span>
 						{formState.errors.alt}

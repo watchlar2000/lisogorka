@@ -3,15 +3,13 @@
 	import { invalidateAll } from '$app/navigation';
 	import InputField from '$lib/components/InputField.svelte';
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
-	import type {
-		ImageModalData,
-		ImageModalSaveParams,
-	} from '$lib/components/Modal/ImageModal/types.js';
+	import type { ImageModalSaveParams } from '$lib/components/Modal/ImageModal/types.js';
 	import ProjectDescriptionField from '$lib/components/ProjectDescriptionField.svelte';
 	import SelectField from '$lib/components/SelectField.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
 	import { categories, CATEGORY, SUCCESS } from '$lib/constants';
 	import type { Category } from '$lib/types';
+	import type { Image } from '$lib/types/images';
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
 	import { InternalError } from '$lib/utils/exceptions';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
@@ -29,7 +27,7 @@
 
 	let loading = $state(false);
 	let modal: ImageModal;
-	let items = $state<ImageModalData[]>([]);
+	let items = $state<Image[]>([]);
 
 	const defaultCategory = CATEGORY.BACKGROUND_PAINTING;
 	const projectInitValues = $state({
@@ -104,7 +102,6 @@
 	};
 
 	const removeImage = async (id: number) => {
-		console.log(id);
 		await handleDeleteImage({
 			payload: { id },
 			options: {
@@ -127,7 +124,6 @@
 	id={selectedImageModalData?.id}
 	alt={selectedImageModalData?.alt}
 	url={selectedImageModalData?.url}
-	file={selectedImageModalData?.file}
 	{loading}
 />
 <form
