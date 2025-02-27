@@ -4,7 +4,7 @@
 	--button-x-padding: 1.5em;
 	--button-y-padding: 0.6em;
 	--button-gutter: 0.5ch;
-	--focus-color: var(--button-bg);
+	/* --focus-color: var(--button-bg); */
 	--cluster-horizontal-alignment: center;
 
 	display: inline-flex;
@@ -23,6 +23,9 @@
 	font-family: var(--font-base);
 	font-size: var(--step-0);
 	font-weight: var(--font-medium);
+	transition:
+		color,
+		background-color 0.125s ease-in;
 }
 
 .button:disabled {
@@ -37,7 +40,7 @@
 [data-variant-type='secondary'] {
 	--button-bg: var(--color-surface-bg-interact);
 	--button-text: var(--color-surface-text-interact);
-	--focus-color: var(--color-surface-text);
+	/* --focus-color: var(--color-surface-text); */
 }
 
 [data-variant-type='destructive'] {
@@ -51,10 +54,22 @@
 }
 
 [data-variant-type='outline'] {
-	--button-bg: var(--color-global-bg);
+	--button-bg: ;
 	--button-text: var(--color-global-text);
 
 	border: var(--stroke-solid);
+}
+
+[data-variant-type='outline']:hover {
+	--button-bg: red;
+}
+
+[data-variant-type='outline']:focus {
+	--button-bg: blue;
+}
+
+[data-variant-type='outline']:active {
+	background-color: yellow;
 }
 
 [data-variant-type='outline']:focus-visible {

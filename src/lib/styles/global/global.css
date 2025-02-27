@@ -16,17 +16,17 @@ body {
 
 h1 {
 	font-size: var(--step-5);
-	max-width: 25ch;
+	max-width: var(--size-text-max-width);
 }
 
 h2 {
 	font-size: var(--step-4);
-	max-width: 35ch;
+	max-width: var(--size-text-max-width);
 }
 
 h3 {
 	font-size: var(--step-3);
-	max-width: 35ch;
+	max-width: var(--size-text-max-width);
 }
 
 :is(h1, h2, h3) {

@@ -133,7 +133,7 @@ picture {
 }
 
 img:not([alt]) {
-	filter: blur(6px);
+	filter: blur(4px);
 }
 
 :where(input, button, textarea, select) {

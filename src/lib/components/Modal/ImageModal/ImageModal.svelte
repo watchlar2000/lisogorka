@@ -33,7 +33,9 @@
 	let inputFile: HTMLInputElement;
 	let files = $state<FileList>();
 	let currentUrl = $derived(
-		formState.data.file ? getUrlFromImageFile(formState.data.file) : url,
+		formState.data.file && !formState.errors.file
+			? getUrlFromImageFile(formState.data.file)
+			: url,
 	);
 
 	$effect(() => {

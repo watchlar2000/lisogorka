@@ -44,6 +44,7 @@
 	--color-light: #efefef;
 	--color-light-shade: ;
 	--color-blue: #1a8fe3;
+	--color-purple: #ae01ff;
 	--color-blue-glare: #c2e3ff;
 	--color-danger: #d4351c;
 
@@ -68,7 +69,7 @@
 	--space-gutter-s: var(--space-s);
 	--space-gutter-l: var(--space-l);
 	--space-regions: var(--space-xl);
-	--size-text-max-width: 44ch;
+	--size-text-max-width: 44rem;
 	--size-wrapper-max-width: 1035px;
 	--color-global-bg: var(--color-light);
 	--color-global-text: var(--color-dark);

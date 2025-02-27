@@ -11,7 +11,7 @@
 <div class="flow">
 	<div class="repel">
 		<h6 class="title">Projects</h6>
-		<Button as="a" href="/dashboard/projects/new" variant="primary">
+		<Button as="a" href="/dashboard/projects/new" variant="outline">
 			<PackagePlusIcon aria-hidden="true" /> New project
 		</Button>
 	</div>
@@ -21,21 +21,29 @@
 			{#each projects as p}
 				<li class="card repel">
 					<div class="card__meta flow">
-						<img src={p.coverImage?.url} alt="" class="card__cover" />
+						<div class="card__cover">
+							<img src={p.coverImage?.url} alt="" />
+							<div class="card__controls">
+								<Button as="a" href="projects/{p.slug}/edit" variant="primary">
+									<Edit aria-hidden="true" />
+									<span class="visually-hidden">Edit project</span>
+								</Button>
+							</div>
+						</div>
 						<p class="card__title">
 							<a href="projects/{p.slug}">{p.title}</a>
 						</p>
 						<p class="card__meta--label">
 							{p.isFeatured ? 'Active' : 'Disabled'}
 						</p>
-						<p class="card__meta--updated">
-							Last update: {formatDate(p.createdAt)}
-						</p>
-					</div>
-					<div class="card__controls cluster">
-						<Button as="a" href="projects/{p.slug}/edit" variant="secondary">
-							<Edit aria-hidden="true" /> Edit project
-						</Button>
+						<div>
+							<p class="card__meta--updated">
+								Created: {formatDate(p.createdAt)}
+							</p>
+							<p class="card__meta--updated">
+								Last updated: {formatDate(p.updatedAt)}
+							</p>
+						</div>
 					</div>
 				</li>
 			{/each}
@@ -83,15 +91,20 @@
 	}
 
 	.card__cover {
-		aspect-ratio: 1.5;
+		position: relative;
+	}
+
+	.card__cover img {
+		aspect-ratio: 16/9;
 		width: 100%;
-		height: auto;
+		height: 25ch;
 		object-fit: cover;
 		border-radius: calc(var(--radius-m) / 1.5);
 	}
 
 	.card__controls {
-		margin-top: auto;
-		justify-self: flex-end;
+		position: absolute;
+		top: var(--space-2xs);
+		left: var(--space-2xs);
 	}
 </style>

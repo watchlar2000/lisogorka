@@ -24,7 +24,7 @@
 	{#if !markdown.trim().length}
 		<p>No description provided yet...</p>
 	{/if}
-	<article class="flow article-content">
+	<article class="flow prose">
 		{@html sanitizeMarkdown(markdown)}
 	</article>
 {/snippet}

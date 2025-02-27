@@ -10,7 +10,7 @@
 </script>
 
 <article class="flow">
-	<div class="flow prose article__content">
+	<div class="flow">
 		<div class="repel">
 			<button type="button" class="button">Edit</button>
 			<p>
@@ -18,18 +18,9 @@
 				{formatDate(project.updatedAt)}
 			</p>
 		</div>
-		<h2>{project.title}</h2>
-		{@html description}
+		<article class="prose">
+			<h1>{project.title}</h1>
+			{@html description}
+		</article>
 	</div>
 </article>
-
-<style>
-	.article__content {
-		--wrapper-max-width: 50ch;
-	}
-
-	.prose {
-		display: grid;
-		place-content: center;
-	}
-</style>
