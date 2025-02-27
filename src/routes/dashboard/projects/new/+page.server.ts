@@ -1,3 +1,4 @@
+import { STATUS_CODE } from '$lib/constants';
 import { projectInsertSchema } from '$lib/server/api/projects/projects.types';
 import { routing } from '$lib/server/api/routing';
 import type { Category } from '$lib/types';
@@ -8,52 +9,49 @@ import { fail, type Actions } from '@sveltejs/kit';
 export const actions: Actions = {
 	createProject: async (event) => {
 		const fd = await event.request.formData();
-
 		const projectMetaPayload = {
 			title: String(fd.get('title')),
 			description: String(fd.get('description')),
 			category: String(fd.get('category')) as Category,
 		};
-
 		const { errors: projectMetaErrors } = validateWithZod({
 			data: projectMetaPayload,
 			schema: projectInsertSchema,
 		});
+		const imageIdsList = fd.getAll('imageId').map(Number);
 
-		const imageIdsList = fd.getAll('imageId');
-
-		const noImagesError = {
-			images: !imageIdsList?.length ? ['Upload at least one image'] : undefined,
-		};
-
-		if (projectMetaErrors || noImagesError) {
-			return fail(400, {
+		if (projectMetaErrors || !imageIdsList.length) {
+			return fail(STATUS_CODE.BAD_REQUEST, {
 				...projectMetaErrors,
-				...noImagesError,
+				images: !imageIdsList.length
+					? ['Upload at least one image']
+					: undefined,
 			});
 		}
 
 		try {
-			const coverImageId = Number(imageIdsList[0]);
-
+			const coverImageId = imageIdsList[0];
 			const newProjectPayload = {
 				...projectMetaPayload,
 				coverImageId,
 				isFeatured: true,
 			};
 			const newProject = await routing.projects.create(newProjectPayload);
-
-			for await (const imageId of imageIdsList) {
-				routing.projectsToImagesService.createRelation({
-					projectId: newProject.id,
-					imageId: Number(imageId),
-				});
-			}
-
-			console.log('New project created successfully');
+			await Promise.all(
+				imageIdsList.map((imageId) =>
+					routing.projectsToImagesService.createRelation({
+						projectId: newProject.id,
+						imageId,
+					}),
+				),
+			);
+			console.log(':white_check_mark: New project created successfully');
 			return { success: true };
 		} catch (error) {
 			console.log(error);
+			return fail(STATUS_CODE.INTERNAL_SERVER_ERROR, {
+				errors: 'Failed to create project.',
+			});
 		}
 	},
 	uploadImage: async (event) => {

@@ -1,15 +1,10 @@
-<script>
+<script lang="ts">
 	import { formatDate } from '$lib/utils/formatDate';
-	import { markedWithSanitization } from '$lib/utils/marked';
-	import DOMPurify from 'dompurify';
+	import { marked } from 'marked';
 
 	const { data } = $props();
 	const project = $derived(data.project);
-
-	const description = $derived(() => {
-		if (!project.description) return '';
-		return String(markedWithSanitization(project.description));
-	});
+	const projectDescription = $derived(marked(project?.description as string));
 </script>
 
 <article class="flow">
@@ -19,7 +14,7 @@
 			<p><span>Last updated at:</span> {formatDate(project.updatedAt)}</p>
 		</div>
 		<h2>{project.title}</h2>
-		{@html DOMPurify.sanitize(description())}
+		{@html projectDescription}
 	</div>
 </article>
 
