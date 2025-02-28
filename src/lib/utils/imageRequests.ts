@@ -1,12 +1,12 @@
 import type { Image } from '$lib/server/api/images/images.types';
 import { sendRequest } from '$lib/utils/sendRequest';
 
-type HandleSubmit<T> = {
+type SendRequest<T> = {
 	payload: T;
 	options: { action: string };
 };
 
-type SubmitImagePayload = {
+type SendImagePayload = {
 	id: number;
 	alt: string;
 	file?: File;
@@ -14,13 +14,10 @@ type SubmitImagePayload = {
 
 type ImageId = { id: number };
 
-type HandleSubmitImage = HandleSubmit<SubmitImagePayload>;
-type HandleDeleteImage = HandleSubmit<ImageId>;
+type SubmitImageParams = SendRequest<SendImagePayload>;
+type RemoveImageParams = SendRequest<ImageId>;
 
-export const handleSubmitImage = async ({
-	payload,
-	options,
-}: HandleSubmitImage) => {
+export const submitImage = async ({ payload, options }: SubmitImageParams) => {
 	const fd = new FormData();
 	const { id, alt, file } = payload;
 	const { action } = options;
@@ -41,10 +38,7 @@ export const handleSubmitImage = async ({
 	return { image: result.data?.image as Image };
 };
 
-export const handleDeleteImage = async ({
-	payload,
-	options,
-}: HandleDeleteImage) => {
+export const removeImage = async ({ payload, options }: RemoveImageParams) => {
 	const fd = new FormData();
 	const { id } = payload;
 	const { action } = options;

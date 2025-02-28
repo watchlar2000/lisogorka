@@ -13,7 +13,7 @@
 		{ id: 'preview', title: 'Preview' },
 	];
 
-	let activeTab = $state(tabs[1].id);
+	let activeTab = $state(tabs[0].id);
 </script>
 
 {#snippet description()}

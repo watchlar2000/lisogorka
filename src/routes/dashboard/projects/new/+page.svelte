@@ -12,12 +12,12 @@
 	import type { Image } from '$lib/types/images';
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
 	import { InternalError } from '$lib/utils/exceptions';
+	import { removeImage, submitImage } from '$lib/utils/imageRequests';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
 	import { type SubmitFunction } from '@sveltejs/kit';
 	import { ImagePlus, Save } from 'lucide-svelte';
 	import FormImagesList from '../../../../lib/components/FormImagesList.svelte';
 	import type { PageProps } from './$types';
-	import { handleDeleteImage, handleSubmitImage } from './utils';
 
 	const handleSort = (e: CustomEvent) => {
 		items = [...e.detail.items];
@@ -33,49 +33,7 @@
 	const projectInitValues = $state({
 		id: 0,
 		title: '',
-		description: `
-Marked - Markdown Parser
-========================
-
-[Marked] lets you convert [Markdown] into HTML.  Markdown is a simple text format whose goal is to be very easy to read and write, even when not converted to HTML.  This demo page will let you type anything you like and see how it gets converted.  Live.  No more waiting around.
-
-<img src="https://res.cloudinary.com/dezfqozcv/image/upload/v1740686460/project-images/um1chd2jcswkpxwtkjnr.jpg" alt="asdasdasd" width="1264" height="1108" loading="lazy">
-
-<img src="https://res.cloudinary.com/dezfqozcv/image/upload/v1740686460/project-images/um1chd2jcswkpxwtkjnr.jpg" alt="asdasdasd" width="50%" height="auto" loading="lazy">
-
-How To Use The Demo
--------------------
-
-1. Type in stuff on the left.
-2. See the live updates on the right.
-
-That's it.  Pretty simple.  There's also a drop-down option above to switch between various views:
-
-- **Preview:**  A live display of the generated HTML as it would render in a browser.
-- **HTML Source:**  The generated HTML before your browser makes it pretty.
-- **Lexer Data:**  What [marked] uses internally, in case you like gory stuff like this.
-- **Quick Reference:**  A brief run-down of how to format things using markdown.
-
-Why Markdown?
--------------
-
-It's easy.  It's not overly bloated, unlike HTML.  Also, as the creator of [markdown] says,
-
-> The overriding design goal for Markdown's
-> formatting syntax is to make it as readable
-> as possible. The idea is that a
-> Markdown-formatted document should be
-> publishable as-is, as plain text, without
-> looking like it's been marked up with tags
-> or formatting instructions.
-
-Ready to start writing?  Either start changing stuff on the left or
-[clear everything](/demo/?text=) with a simple click.
-
-[Marked]: https://github.com/markedjs/marked/
-[Markdown]: http://daringfireball.net/projects/markdown/
-
-    `,
+		description: '',
 		category: defaultCategory as Category,
 	});
 
@@ -108,7 +66,7 @@ Ready to start writing?  Either start changing stuff on the left or
 			file,
 		};
 
-		const { image: uploadedImage } = await handleSubmitImage({
+		const { image: uploadedImage } = await submitImage({
 			payload: imagePayload,
 			options: { action },
 		});
@@ -138,20 +96,19 @@ Ready to start writing?  Either start changing stuff on the left or
 		modal.open();
 	};
 
-	const editImage = (id: number) => {
+	const handleEditImage = (id: number) => {
 		selectedImageId = id;
 		openModal();
 	};
 
-	const removeImage = async (id: number) => {
-		await handleDeleteImage({
+	const handleRemoveImage = async (id: number) => {
+		await removeImage({
 			payload: { id },
 			options: {
 				action: '?/removeImage',
 			},
 		});
-		const filteredItems = items.filter((image) => image.id !== id);
-		items = [...filteredItems];
+		items = items.filter((image) => image.id !== id);
 	};
 
 	const handleAddImage = () => {
@@ -211,8 +168,8 @@ Ready to start writing?  Either start changing stuff on the left or
 				<FormImagesList
 					{items}
 					{handleSort}
-					edit={editImage}
-					remove={removeImage}
+					edit={handleEditImage}
+					remove={handleRemoveImage}
 				/>
 			</div>
 		{/if}
