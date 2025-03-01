@@ -12,7 +12,7 @@
 	import type { Image } from '$lib/types/images';
 	import { createFormState } from '$lib/utils/createFormState.svelte';
 	import { InternalError } from '$lib/utils/exceptions';
-	import { submitImage } from '$lib/utils/imageRequests';
+	import { removeImage, submitImage } from '$lib/utils/imageRequests';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { ImagePlus, Save } from 'lucide-svelte';
@@ -27,7 +27,7 @@
 	const imagesList = [
 		...data.project.images.filter(({ id }) => id === data.project.coverImageId),
 		...data.project.images.filter(({ id }) => id !== data.project.coverImageId),
-	].map(({ id, url, alt }) => ({ id, url, alt }));
+	];
 
 	let loading = $state(false);
 	let modal: ImageModal;
@@ -49,8 +49,6 @@
 			return [undefined, ...newImages];
 		}
 	});
-
-	$inspect(newImageIdsList());
 
 	const projectInitValues = $state({
 		id: data.project.id,
@@ -112,27 +110,28 @@
 		modal.open();
 	};
 
-	const editImage = (id: number) => {
+	const handleEditImage = (id: number) => {
 		selectedImageId = id;
 		openModal();
 	};
 
-	const removeImage = async (id: number) => {
-		console.log(id);
-		// await handleDeleteImage({
-		// 	payload: { id },
-		// 	options: {
-		// 		action: '?/removeImage',
-		// 	},
-		// });
-		// const filteredItems = items.filter((image) => image.id !== id);
-		// items = [...filteredItems];
+	const handleRemoveImage = async (id: number) => {
+		await removeImage({
+			payload: { id },
+			options: {
+				action: '?/removeImage',
+			},
+		});
+		const filteredItems = items.filter((image) => image.id !== id);
+		items = [...filteredItems];
 	};
 
 	const handleAddImage = () => {
 		selectedImageId = 0;
 		openModal();
 	};
+
+	const imageCount = $derived(items.length + 1);
 </script>
 
 <ImageModal
@@ -172,7 +171,7 @@
 	</div>
 	<div class="flow">
 		<div class="repel" class:invalid={form?.images}>
-			<span class="label">Images:</span>
+			<span class="label">Images ({imageCount}):</span>
 			{#if form?.images}
 				<span>
 					{form?.images}
@@ -187,8 +186,8 @@
 				<FormImagesList
 					{items}
 					{handleSort}
-					edit={editImage}
-					remove={removeImage}
+					edit={handleEditImage}
+					remove={handleRemoveImage}
 				/>
 			</div>
 		{/if}
