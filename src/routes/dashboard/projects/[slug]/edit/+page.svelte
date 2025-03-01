@@ -1,14 +1,18 @@
 <script lang="ts">
-	import { enhance } from '$app/forms';
+	import { applyAction, enhance } from '$app/forms';
+	import { invalidateAll } from '$app/navigation';
 	import FormImagesList from '$lib/components/FormImagesList.svelte';
 	import InputField from '$lib/components/InputField.svelte';
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
+	import type { ImageModalSaveParams } from '$lib/components/Modal/ImageModal/types';
 	import ProjectDescriptionField from '$lib/components/ProjectDescriptionField.svelte';
 	import SelectField from '$lib/components/SelectField.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
-	import { categories } from '$lib/constants';
+	import { categories, SUCCESS } from '$lib/constants';
 	import type { Image } from '$lib/types/images';
 	import { createFormState } from '$lib/utils/createFormState.svelte';
+	import { InternalError } from '$lib/utils/exceptions';
+	import { submitImage } from '$lib/utils/imageRequests';
 	import { ProjectFormInputSchema } from '$lib/validationSchema/projects';
 	import type { SubmitFunction } from '@sveltejs/kit';
 	import { ImagePlus, Save } from 'lucide-svelte';
@@ -29,6 +33,25 @@
 	let modal: ImageModal;
 	let items = $state<Image[]>(imagesList);
 
+	const newImageIdsList = $derived(() => {
+		const currentCoverImageId = data.project.coverImageId;
+		const currentImageIds = data.project.images.map(({ id }) => id);
+
+		const existingCoverImage = currentCoverImageId === items[0].id;
+		const newImages = items
+			.filter(({ id }) => !currentImageIds.includes(id))
+			.map((image) => image.id);
+
+		if (!existingCoverImage) {
+			const newCoverImageId = items[0].id;
+			return new Set([newCoverImageId, ...newImages]);
+		} else {
+			return [undefined, ...newImages];
+		}
+	});
+
+	$inspect(newImageIdsList());
+
 	const projectInitValues = $state({
 		id: data.project.id,
 		title: data.project.title,
@@ -42,43 +65,42 @@
 	});
 
 	const submitProjectForm: SubmitFunction = ({ formData }) => {
-		console.log({ formData });
-		// for (const image of items) {
-		// 	formData.append('imageId', String(image.id));
-		// }
-		// return async ({ result }) => {
-		// 	if (result.type === SUCCESS) {
-		// 		await invalidateAll();
-		// 	}
-		// 	await applyAction(result);
-		// };
+		for (const id of newImageIdsList()) {
+			formData.append('imageId', String(id));
+		}
+		return async ({ result }) => {
+			if (result.type === SUCCESS) {
+				await invalidateAll();
+			}
+			await applyAction(result);
+		};
 	};
 
-	const onSaveImageCallback = async () => {
-		// const { id, alt, file } = params;
-		// const action = !id ? '?/uploadImage' : '?/editImage';
-		// loading = true;
-		// const imagePayload = {
-		// 	id: Number(id),
-		// 	alt,
-		// 	file,
-		// };
-		// const { image: uploadedImage } = await handleSubmitImage({
-		// 	payload: imagePayload,
-		// 	options: { action },
-		// });
-		// if (!uploadedImage) {
-		// 	return InternalError('Something went wrong with the uploaded image');
-		// }
-		// if (!id) {
-		// 	items = [...items, uploadedImage];
-		// } else {
-		// 	items = items.map((image) =>
-		// 		image.id === uploadedImage.id ? { ...image, ...uploadedImage } : image,
-		// 	);
-		// }
-		// loading = false;
-		// modal.close();
+	const onSaveImageCallback = async (params: ImageModalSaveParams) => {
+		const { id, alt, file } = params;
+		const action = !id ? '?/uploadImage' : '?/editImage';
+		loading = true;
+		const imagePayload = {
+			id: Number(id),
+			alt,
+			file,
+		};
+		const { image: uploadedImage } = await submitImage({
+			payload: imagePayload,
+			options: { action },
+		});
+		if (!uploadedImage) {
+			return InternalError('Something went wrong with the uploaded image');
+		}
+		if (!id) {
+			items = [...items, uploadedImage];
+		} else {
+			items = items.map((image) =>
+				image.id === uploadedImage.id ? { ...image, ...uploadedImage } : image,
+			);
+		}
+		loading = false;
+		modal.close();
 	};
 
 	let selectedImageId = $state(0);

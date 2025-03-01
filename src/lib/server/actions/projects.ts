@@ -51,3 +51,62 @@ export const createProjectAction = async (event: ActionRequestEvent) => {
 		});
 	}
 };
+
+export const editProjectAction = async (event: ActionRequestEvent) => {
+	const fd = await event.request.formData();
+	const projectId = Number(fd.get('id'));
+
+	if (!projectId)
+		return fail(STATUS_CODE.BAD_REQUEST, {
+			errors: ['Project ID is required'],
+		});
+
+	const projectMetaPayload = {
+		title: String(fd.get('title')),
+		description: String(fd.get('description')),
+		category: String(fd.get('category')) as Category,
+	};
+	const { errors: projectMetaErrors } = validateWithZod({
+		data: projectMetaPayload,
+		schema: projectInsertSchema,
+	});
+	const imageIdsList = fd.getAll('imageId').map(Number);
+
+	if (projectMetaErrors || !imageIdsList.length) {
+		return fail(STATUS_CODE.BAD_REQUEST, {
+			...projectMetaErrors,
+			images: !imageIdsList.length ? ['Upload at least one image'] : undefined,
+		});
+	}
+
+	const [coverImageId] = imageIdsList;
+
+	try {
+		const editProjectPayload = {
+			...projectMetaPayload,
+			isFeatured: true,
+			coverImageId: coverImageId,
+		};
+		const updatedProject = await routing.projects.update(
+			projectId,
+			editProjectPayload,
+		);
+		await Promise.all(
+			imageIdsList
+				.filter((i) => i)
+				.map((imageId) =>
+					routing.projectsToImagesService.createRelation({
+						projectId: updatedProject.id,
+						imageId,
+					}),
+				),
+		);
+		console.log('Project updated successfully');
+		return { success: true };
+	} catch (error) {
+		console.log(error);
+		return fail(STATUS_CODE.INTERNAL_SERVER_ERROR, {
+			errors: 'Failed to create project.',
+		});
+	}
+};
