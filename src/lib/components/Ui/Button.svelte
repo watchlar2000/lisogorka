@@ -1,7 +1,10 @@
 <script lang="ts">
 	import { Loader } from 'lucide-svelte';
 	import type { Snippet } from 'svelte';
-	import type { HTMLButtonAttributes } from 'svelte/elements';
+	import type {
+		HTMLAnchorAttributes,
+		HTMLButtonAttributes,
+	} from 'svelte/elements';
 
 	type ButtonProps = {
 		children: Snippet;
@@ -19,10 +22,12 @@
 		loading?: boolean;
 		as?: 'a';
 		href?: string;
+		node?: Node;
 		onclick?: () => void;
-	} & HTMLButtonAttributes;
+	} & HTMLButtonAttributes &
+		HTMLAnchorAttributes;
 
-	const {
+	let {
 		type = 'button',
 		variant = 'regular',
 		size = 'regular',
@@ -33,6 +38,7 @@
 		children,
 		as,
 		href = '',
+		node = $bindable(),
 		...attrs
 	}: ButtonProps = $props();
 </script>
@@ -43,6 +49,8 @@
 		class="button cluster {className}"
 		data-variant-type={variant}
 		data-font-size={size}
+		{...attrs}
+		bind:this={node}
 	>
 		{@render children()}
 	</a>
@@ -55,6 +63,7 @@
 		data-variant-type={variant}
 		data-font-size={size}
 		{...attrs}
+		bind:this={node}
 	>
 		{#if loading}
 			<div class="cluster">

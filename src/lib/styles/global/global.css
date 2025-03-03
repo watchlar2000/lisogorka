@@ -80,7 +80,7 @@ ol ::marker {
 }
 
 :focus-visible {
-	outline: 3px solid var(--focus-color, currentColor);
+	outline: 4px solid var(--focus-color, var(--color-purple));
 	outline-offset: var(--focus-offset, 0.25rem);
 	border-radius: var(--radius-s);
 }
