@@ -17,10 +17,10 @@
 
 <style>
 	.projects__list {
-		--auto-grid-min-size: clamp(25rem, 30vw, 30%);
+		--auto-grid-min-size: clamp(13rem, 30vw, 30%);
 		--auto-grid-gap: var(--gutter);
 
-		width: 100%;
+		min-width: 100%;
 	}
 
 	.projects__list li a {

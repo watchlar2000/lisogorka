@@ -188,21 +188,22 @@
 	}
 
 	.dropdown-menu {
-		--gutter: var(--space-2xs);
+		--_padding: var(--space-2xs);
+		--gutter: var(--_padding);
 
-		background-color: #fefefe;
-		border-radius: calc(var(--radius-l) * 0.6);
-		box-shadow: 0px 0px 20px 16px rgba(17, 17, 26, 0.05);
+		background-color: var(--color-light);
+		border-radius: var(--radius-m);
+		box-shadow: var(--shadow-xl);
 		z-index: 9999;
 		position: absolute;
-		top: 4rem;
+		top: 5ch;
 		left: 50%;
 		transform: translateX(-50%);
+		padding: var(--_padding);
 	}
 
 	.dropdown-menu li {
 		min-width: 20ch;
 		border-radius: var(--radius-m);
-		padding: var(--space-2xs);
 	}
 </style>

@@ -1,17 +1,22 @@
 <script>
 	import { enhance } from '$app/forms';
+	import Footer from '$lib/components/Footer.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
 
 	let { children } = $props();
 </script>
 
-<div class="container flow">
+<div class="container">
 	<header class="header wrapper repel">
-		<h2 class="title">
-			<Button as="a" href="/dashboard" variant="ghost" size="regular">
-				Dashboard
-			</Button>
-		</h2>
+		<Button
+			as="a"
+			href="/dashboard"
+			variant="ghost"
+			class="header-logo"
+			tabindex={-1}
+		>
+			Dashboard
+		</Button>
 
 		<div class="cluster">
 			<form method="POST" action="logout?/logout" use:enhance>
@@ -24,15 +29,17 @@
 			{@render children()}
 		</div>
 	</div>
+	<Footer />
 </div>
 
 <style>
 	.container {
+		--flow-space: var(--space-regions);
+
 		display: flex;
 		flex-direction: column;
-		width: 100%;
 		min-height: 100%;
-		padding-bottom: var(--space-l);
+		/* background-image: var(--gradient-accent); */
 	}
 
 	.container > * {
@@ -53,9 +60,22 @@
 
 	.wrapper[data-wrapper-type='inner'] {
 		flex-grow: 1;
+		box-shadow: var(--shadow-xl);
 	}
 
-	.title {
+	.header {
+		padding-block: var(--space-m);
+	}
+
+	:global(.header-logo.cluster) {
+		--cluster-direction: column;
+		--gutter: var(--space-2xs);
+		--align-items: flex-start;
+
 		text-transform: uppercase;
+	}
+
+	:global(.header-logo) {
+		color: var(--color-dark-tint);
 	}
 </style>

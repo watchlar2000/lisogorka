@@ -63,7 +63,7 @@
 	}
 
 	.card {
-		background: var(--color-global-bg);
+		background: var(--color-light-shade);
 		border-radius: var(--radius-m);
 		overflow: hidden;
 		height: 100%;
@@ -79,6 +79,8 @@
 	}
 
 	.card-meta {
+		--flow-space: var(--space-2xs);
+
 		font-size: var(--text-size-meta);
 		padding: var(--space-s);
 		color: var(--color-surface-text-interact);

@@ -1,6 +1,10 @@
 body {
-	background: var(--color-global-bg);
 	color: var(--color-global-text);
+	background-color: var(--color-dark-muted);
+	background-image: var(--gradient-light);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 	font-size: var(--step-1);
 	font-family: var(--font-base);
 	line-height: var(--leading);
@@ -62,13 +66,20 @@ ol ::marker {
 }
 
 :is(a[aria-current='page']) {
-	background-color: var(--color-primary);
+	text-decoration: underline;
+	text-underline-offset: 0.2lh;
+	text-decoration-thickness: 0.2ex;
+	text-decoration-color: currentColor;
+}
+
+:is(a[aria-current='page']):hover {
+	text-decoration-color: currentColor;
 }
 
 :is(a) {
 	text-underline-offset: 0.15lh;
 	text-decoration-thickness: 0.2ex;
-	transition: color 0.1s ease;
+	transition: color 0.1s ease-in;
 }
 
 :is(a):hover {
@@ -98,8 +109,7 @@ ol ::marker {
 }
 
 ::selection {
-	color: var(--color-light);
-	background: var(--color-dark);
+	background: var(--color-primary);
 }
 
 hr {
