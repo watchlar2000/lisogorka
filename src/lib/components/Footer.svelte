@@ -11,7 +11,7 @@
 					<li><a href="/">Home</a></li>
 					<li><a href="/background-painting">Background painting</a></li>
 					<li><a href="/visual-development">Visual development</a></li>
-					<li><a href="/plaground">Playground</a></li>
+					<li><a href="/playground">Playground</a></li>
 					<li><a href="/about">About</a></li>
 				</ul>
 			</div>
