@@ -160,7 +160,7 @@
 				</span>
 			{/if}
 		</div>
-		<Button onclick={handleAddImage}>
+		<Button onclick={handleAddImage} variant="outline">
 			<ImagePlus aria-hidden="true" /> Add image
 		</Button>
 		{#if items.length}
@@ -186,9 +186,3 @@
 		</Button>
 	</div>
 </form>
-
-<style>
-	form {
-		/* --flow-space: ; */
-	}
-</style>

@@ -34,8 +34,6 @@
 
 <style>
 	.container {
-		--flow-space: var(--space-regions);
-
 		display: flex;
 		flex-direction: column;
 		min-height: 100%;
@@ -47,7 +45,10 @@
 	}
 
 	.wrapper[data-wrapper-type='inner'] {
-		background-color: #fefefe;
+		background-image: var(--gradient-light);
+		background-size: cover;
+		background-repeat: no-repeat;
+		background-attachment: fixed;
 		border-radius: var(--radius-m);
 	}
 
@@ -60,7 +61,7 @@
 
 	.wrapper[data-wrapper-type='inner'] {
 		flex-grow: 1;
-		box-shadow: var(--shadow-xl);
+		box-shadow: var(--shadow-s);
 	}
 
 	.header {

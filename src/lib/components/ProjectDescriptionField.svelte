@@ -42,8 +42,7 @@
 		{#each tabs as tab (tab.id)}
 			<li>
 				<Button
-					variant={activeTab === tab.id ? 'regular' : 'secondary'}
-					size="small"
+					variant={activeTab === tab.id ? 'outline' : 'secondary'}
 					onclick={() => {
 						activeTab = tab.id;
 					}}
