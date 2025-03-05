@@ -1,5 +1,15 @@
+<script>
+	import { cubicOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
+</script>
+
 <div class="prose flow">
-	<enhanced:img src="./about.jpeg" alt="" class="avatar" />
+	<enhanced:img
+		src="./about.jpeg"
+		alt=""
+		class="avatar"
+		in:fade={{ duration: 250, easing: cubicOut }}
+	/>
 	<h2>Hi!</h2>
 	<p>
 		I'm Ira, an illustrator based in Kyiv, Ukraine, with a passion for creating
