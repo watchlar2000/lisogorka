@@ -4,6 +4,8 @@
 	import { clickOutside } from '$lib/directives/clickOutside';
 	import { ChevronDown } from 'lucide-svelte';
 	import { tick } from 'svelte';
+	import { cubicOut } from 'svelte/easing';
+	import { fly } from 'svelte/transition';
 	import Button from '../Ui/Button.svelte';
 
 	let showDropdown = $state(false);
@@ -24,10 +26,21 @@
 		await tick();
 	};
 
+	const focusCurrentOrFirstDropdownItem = (items: HTMLAnchorElement[]) => {
+		const currentPageItem = items.find(
+			(item) => item.getAttribute('aria-current') === PAGE,
+		);
+		if (currentPageItem) {
+			currentPageItem.focus();
+		} else if (items.length > 0) {
+			items[0].focus();
+		}
+	};
+
 	const openDropdown = async () => {
 		await showDropdownMenu();
 		dropdownItems = getDropdownItems();
-		focusFirstDropdownItem(dropdownItems);
+		focusCurrentOrFirstDropdownItem(dropdownItems);
 	};
 
 	const closeDropdown = () => {
@@ -49,11 +62,11 @@
 		return [...nodes];
 	};
 
-	const focusFirstDropdownItem = (items: HTMLAnchorElement[]) => {
-		if (items.length > 0) {
-			items[0].focus();
-		}
-	};
+	// const focusFirstDropdownItem = (items: HTMLAnchorElement[]) => {
+	// 	if (items.length > 0) {
+	// 		items[0].focus();
+	// 	}
+	// };
 
 	const handleKeydown = async (event: KeyboardEvent) => {
 		const { key } = event;
@@ -104,8 +117,9 @@
 				as="a"
 				href="/"
 				variant="ghost"
-				size="medium"
+				size="small"
 				aria-current={isCurrentPage('/')}
+				class="nav-item"
 			>
 				Home
 			</Button>
@@ -117,7 +131,8 @@
 				aria-controls="work-options"
 				bind:node={dropdownButton}
 				variant="ghost"
-				size="medium"
+				size="small"
+				class="dropdown-button nav-item"
 			>
 				Works
 				<ChevronDown aria-hidden="true" />
@@ -127,18 +142,20 @@
 				<ul
 					id="work-options"
 					role="list"
-					class="cluster dropdown-menu"
+					class="dropdown-menu"
 					bind:this={dropdownMenu}
 					onkeydown={handleKeydown}
 					onclick={handleSubMenuClick}
+					transition:fly={{ y: -10, duration: 125, easing: cubicOut }}
 				>
 					<li data-menu-item>
 						<Button
 							as="a"
 							href="/visual-development"
 							variant="ghost"
-							size="medium"
+							size="small"
 							aria-current={isCurrentPage('/visual-development')}
+							class="dropdown-item nav-item"
 						>
 							Visual development
 						</Button>
@@ -148,8 +165,9 @@
 							as="a"
 							href="/background-painting"
 							variant="ghost"
-							size="medium"
+							size="small"
 							aria-current={isCurrentPage('/background-painting')}
+							class="dropdown-item nav-item"
 						>
 							Background painting
 						</Button>
@@ -163,7 +181,8 @@
 				href="/playground"
 				aria-current={isCurrentPage('/playground')}
 				variant="ghost"
-				size="medium"
+				size="small"
+				class="nav-item"
 			>
 				Playground
 			</Button>
@@ -174,7 +193,8 @@
 				href="/about"
 				aria-current={isCurrentPage('/about')}
 				variant="ghost"
-				size="medium"
+				size="small"
+				class="nav-item"
 			>
 				About
 			</Button>
@@ -183,6 +203,10 @@
 </nav>
 
 <style>
+	nav .cluster {
+		--gutter: 0;
+	}
+
 	.dropdown {
 		position: relative;
 	}
@@ -191,19 +215,32 @@
 		--_padding: var(--space-2xs);
 		--gutter: var(--_padding);
 
+		padding: var(--_padding);
 		background-color: var(--color-light);
 		border-radius: var(--radius-m);
 		box-shadow: var(--shadow-xl);
 		z-index: 9999;
 		position: absolute;
-		top: 5ch;
 		left: 50%;
 		transform: translateX(-50%);
-		padding: var(--_padding);
+		width: max-content;
 	}
 
 	.dropdown-menu li {
-		min-width: 20ch;
 		border-radius: var(--radius-m);
+	}
+
+	:global(.dropdown-button svg) {
+		height: 1lh;
+		transition: transform 0.125s ease;
+	}
+
+	:global(.dropdown-button[aria-expanded='true'] svg) {
+		transform: rotate(180deg);
+	}
+
+	:global(.nav-item):focus-visible {
+		outline: none;
+		background-image: var(--gradient-accent);
 	}
 </style>
