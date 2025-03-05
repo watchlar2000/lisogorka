@@ -6,28 +6,19 @@
 	let { children } = $props();
 </script>
 
-<div class="container">
-	<header class="header wrapper repel">
-		<Button
-			as="a"
-			href="/dashboard"
-			variant="ghost"
-			class="header-logo"
-			tabindex={-1}
-		>
-			Dashboard
-		</Button>
-
-		<div class="cluster">
-			<form method="POST" action="logout?/logout" use:enhance>
-				<Button variant="secondary" size="small">Logout</Button>
-			</form>
+<div class="container flow">
+	<header class="header">
+		<div class="wrapper repel">
+			<a href="/dashboard" class="header-logo">Dashboard</a>
+			<div class="cluster">
+				<form method="POST" action="logout?/logout" use:enhance>
+					<Button variant="secondary" size="small">Logout</Button>
+				</form>
+			</div>
 		</div>
 	</header>
 	<div class="wrapper content">
-		<div class="wrapper" data-wrapper-type="inner">
-			{@render children()}
-		</div>
+		{@render children()}
 	</div>
 	<Footer />
 </div>
@@ -37,19 +28,11 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100%;
-		/* background-image: var(--gradient-accent); */
+		background-image: var(--gradient-accent);
 	}
 
 	.container > * {
 		width: 100%;
-	}
-
-	.wrapper[data-wrapper-type='inner'] {
-		background-image: var(--gradient-light);
-		background-size: cover;
-		background-repeat: no-repeat;
-		background-attachment: fixed;
-		border-radius: var(--radius-m);
 	}
 
 	.content {
@@ -57,26 +40,18 @@
 		display: flex;
 		flex-direction: column;
 		font-family: var(--font-display);
-	}
-
-	.wrapper[data-wrapper-type='inner'] {
-		flex-grow: 1;
-		box-shadow: var(--shadow-s);
+		width: 100%;
 	}
 
 	.header {
 		padding-block: var(--space-m);
+		background-color: var(--color-light-muted);
 	}
 
-	:global(.header-logo.cluster) {
-		--cluster-direction: column;
-		--gutter: var(--space-2xs);
-		--align-items: flex-start;
-
-		text-transform: uppercase;
-	}
-
-	:global(.header-logo) {
+	.header-logo {
 		color: var(--color-dark-tint);
+		text-transform: uppercase;
+		text-decoration: none;
+		font-size: var(--text-size-meta);
 	}
 </style>

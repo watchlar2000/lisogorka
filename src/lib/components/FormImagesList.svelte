@@ -60,7 +60,7 @@
 					<div class="card-actions">
 						<Button
 							type="button"
-							variant="outline"
+							variant="primary"
 							size="small"
 							onclick={() => copyImageToClipboard(extractImageMeta(image))}
 							class="copy-button"
@@ -95,7 +95,7 @@
 							<span class="visually-hidden">Edit</span>
 						</Button>
 						<Button
-							variant="destructive"
+							variant="secondary"
 							type="button"
 							size="small"
 							onclick={() => {
@@ -118,12 +118,11 @@
 		--auto-grid-min-size: 20rem;
 	}
 	.card {
-		/* --flow-space: var(--space-2xs); */
-
-		/* padding: var(--space-s); */
+		padding: var(--space-s);
+		background: var(--color-light-muted);
 		border-radius: var(--radius-m);
-		background-color: var(--color-global-bg);
 		overflow: hidden;
+		color: var(--color-global-text-tint);
 	}
 	.card-header {
 		position: relative;
@@ -153,7 +152,6 @@
 	.card-meta {
 		font-size: var(--text-size-meta);
 		padding: var(--space-s);
-		color: var(--color-surface-text-interact);
 	}
 
 	.card-image {

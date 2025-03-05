@@ -16,11 +16,11 @@
 		border-radius: var(--radius-m);
 		font-size: var(--font-size-lede);
 		font-weight: var(--font-regular);
-		color: var(--color-global-bg);
-		background-color: rgb(187, 146, 214);
+		color: var(--color-light);
+		background-color: var(--color-blue-muted);
 	}
 
 	.label[data-active='true'] {
-		background-color: var(--color-primary);
+		background-color: var(--color-blue-tint);
 	}
 </style>

@@ -91,7 +91,7 @@ ol ::marker {
 }
 
 :focus-visible {
-	outline: 4px solid var(--focus-color, var(--color-purple));
+	outline: 4px solid var(--focus-color, var(--color-blue));
 	outline-offset: var(--focus-offset, 0.25rem);
 	border-radius: var(--radius-s);
 }
@@ -109,7 +109,8 @@ ol ::marker {
 }
 
 ::selection {
-	background: var(--color-primary);
+	background: var(--color-dark);
+	color: var(--color-light);
 }
 
 hr {
@@ -142,6 +143,7 @@ form > * + * {
 
 :is(input, select, textarea) {
 	accent-color: var(--color-primary);
+	background-color: var(--color-light-muted);
 }
 
 :is(

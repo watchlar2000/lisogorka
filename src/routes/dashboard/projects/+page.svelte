@@ -16,44 +16,47 @@
 		</Button>
 	</div>
 	<hr />
-
-	<ul role="list" class="auto-grid cards-list">
-		{#each projects as p}
-			<li class="card">
-				<img src={p.coverImage?.url} alt="" class="card-image" />
-				<div class="flow card-meta">
-					<div class="card-title">
-						<a href="projects/{p.slug}">{p.title}</a>
+	<div>
+		<ul role="list" class="auto-grid cards-list">
+			{#each projects as p}
+				<li class="card">
+					<div class={!p.isFeatured ? 'muted' : ''}>
+						<img src={p.coverImage?.url} alt="" class="card-image" />
 					</div>
-					<Badge
-						label={p.isFeatured ? 'Active' : 'Disabled'}
-						isActive={p.isFeatured}
-					/>
-					<div>
-						<ul role="list">
-							<li>
-								Created: {formatDate(p.createdAt)}
-							</li>
-							<li>
-								Last updated: {formatDate(p.updatedAt)}
-							</li>
-						</ul>
+					<div class="flow card-meta">
+						<div class="card-title">
+							<a href="projects/{p.slug}">{p.title}</a>
+						</div>
+						<Badge
+							label={p.isFeatured ? 'Active' : 'Disabled'}
+							isActive={p.isFeatured}
+						/>
+						<div>
+							<ul role="list">
+								<li>
+									Created: {formatDate(p.createdAt)}
+								</li>
+								<li>
+									Last updated: {formatDate(p.updatedAt)}
+								</li>
+							</ul>
+						</div>
+						<div class="">
+							<Button
+								as="a"
+								href="projects/{p.slug}/edit"
+								variant="secondary"
+								size="medium"
+							>
+								<Edit aria-hidden="true" />
+								<span class="">Edit</span>
+							</Button>
+						</div>
 					</div>
-					<div class="">
-						<Button
-							as="a"
-							href="projects/{p.slug}/edit"
-							variant="secondary"
-							size="medium"
-						>
-							<Edit aria-hidden="true" />
-							<span class="">Edit</span>
-						</Button>
-					</div>
-				</div>
-			</li>
-		{/each}
-	</ul>
+				</li>
+			{/each}
+		</ul>
+	</div>
 </div>
 
 <style>
@@ -91,5 +94,14 @@
 		width: 100%;
 		height: auto;
 		object-fit: cover;
+	}
+
+	.muted {
+		transition: opacity 0.1s ease;
+		opacity: 0.25;
+	}
+
+	.card:hover .muted {
+		opacity: 1;
 	}
 </style>
