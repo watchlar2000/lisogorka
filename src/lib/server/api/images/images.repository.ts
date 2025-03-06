@@ -7,7 +7,9 @@ export interface IImagesRepository {
 	listAll(): Promise<Image[]>;
 	findById(id: number): Promise<Image>;
 	findByIds(ids: number[]): Promise<Image[]>;
-	create(data: NewImage): Promise<Image>;
+	create(payload: NewImage): Promise<Image>;
+	update(id: number, payload: Partial<Image>): Promise<Image>;
+	delete(id: number): Promise<Image>;
 }
 
 export class ImagesRepository implements IImagesRepository {
@@ -35,7 +37,24 @@ export class ImagesRepository implements IImagesRepository {
 	}
 
 	async create(payload: NewImage) {
-		const [image] = await this.db.insert(images).values(payload);
+		const [image] = await this.db.insert(images).values(payload).returning();
+		return image;
+	}
+
+	async update(id: number, payload: Partial<Image>) {
+		const [image] = await this.db
+			.update(images)
+			.set(payload)
+			.where(eq(images.id, id))
+			.returning();
+		return image;
+	}
+
+	async delete(id: number) {
+		const [image] = await this.db
+			.delete(images)
+			.where(eq(images.id, id))
+			.returning();
 		return image;
 	}
 }

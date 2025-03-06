@@ -1,3 +1,4 @@
+import { ALLOWED_GOOGLE_EMAIL } from '$env/static/private';
 import { Unauthorized } from '$lib/utils/exceptions';
 import { sha256 } from '@oslojs/crypto/sha2';
 import {
@@ -106,7 +107,7 @@ export class AuthService {
 			const name = claimsParser.getString('name');
 			const email = claimsParser.getString('email');
 
-			if (email === 'xpanda4@gmail.com') {
+			if (email !== ALLOWED_GOOGLE_EMAIL) {
 				Unauthorized();
 			}
 
@@ -128,12 +129,9 @@ export class AuthService {
 			};
 		} catch (error) {
 			console.error(`Error: ${error}`);
-			throw Error(
-				'Something went wrong during authentication. Please try one more time.',
-			);
-			// return new Response('Something went wrong. Please try one more time.', {
-			// 	status: 400,
-			// });
+			return new Response('Something went wrong. Please try one more time.', {
+				status: 400,
+			});
 		}
 	}
 }

@@ -1,3 +1,4 @@
+import { cloudinaryService } from '../cloudinary/cloudinary.service';
 import { DrizzleService } from './database/drizzle.service';
 import { ImagesRepository } from './images/images.repository';
 import { ImagesService } from './images/images.service';
@@ -13,7 +14,10 @@ import { serviceFactory } from './utils/serviceFactory';
 
 const drizzleFactory = serviceFactory(DrizzleService.db);
 const projectService = drizzleFactory(ProjectsRepository, ProjectsService);
-const imageService = drizzleFactory(ImagesRepository, ImagesService);
+
+const imagesRepository = new ImagesRepository(DrizzleService.db);
+const imageService = new ImagesService(imagesRepository, cloudinaryService);
+
 const projectsToImagesRepository = new ProjectsToImagesRepository(
 	DrizzleService.db,
 );

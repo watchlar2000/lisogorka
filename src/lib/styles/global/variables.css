@@ -11,11 +11,9 @@
 	--step-5: clamp(2.0273rem, 1.4342rem + 2.9656vw, 3.7325rem);
 
 	/* @link https://utopia.fyi/space/calculator?c=320,18,1.2,1240,20,1.25,5,2,&s=0.75|0.5|2|3|4,1.5|2|3|4|6,l-3xl&g=s%2Cl%2Cxl%2C12,l,xl,12 */
-	--space-5xs: clamp(0.5625rem, 0.5408rem + 0.1087vw, 0.625rem);
-	--space-4xs: clamp(0.875rem, 0.8533rem + 0.1087vw, 0.9375rem);
-	--space-3xs: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
-	--space-2xs: clamp(3.375rem, 3.2446rem + 0.6522vw, 3.75rem);
-	--space-xs: clamp(4.5rem, 4.3261rem + 0.8696vw, 5rem);
+	--space-3xs: clamp(0.3125rem, 0.269rem + 0.2174vw, 0.4375rem);
+	--space-2xs: clamp(0.5625rem, 0.4755rem + 0.4348vw, 0.8125rem);
+	--space-xs: clamp(0.875rem, 0.7446rem + 0.6522vw, 1.1rem);
 	--space-s: clamp(1.125rem, 1.0815rem + 0.2174vw, 1.25rem);
 	--space-m: clamp(1.6875rem, 1.6223rem + 0.3261vw, 1.875rem);
 	--space-l: clamp(2.25rem, 2.163rem + 0.4348vw, 2.5rem);
@@ -38,15 +36,107 @@
 	/* Custom pairs */
 	--space-l-3xl: clamp(2.25rem, 0.4239rem + 9.1304vw, 7.5rem);
 
+	/* Base colors */
+	--color-dark-rgb: 37, 37, 37;
+	--color-light-rgb: 240, 240, 240;
+
+	/* Accent colors */
+	--color-blue-rgb: 26, 110, 200; /* #1a8fe3 */
+	--color-purple-rgb: 175, 130, 100; /* #ae01ff */
+	--color-red-rgb: 212, 53, 28; /* #d4351c */
+
+	--opacity-default: 1;
+	--opacity-hover: 0.85;
+	--opacity-active: 0.95;
+	--opacity-focus: 0.9;
+	--opacity-disabled: 0.5;
+	--opacity-outline-focus: 0.3;
+
+	--color-dark: rgba(var(--color-dark-rgb), var(--opacity-default));
+	--color-light: rgba(var(--color-light-rgb), var(--opacity-default));
+	--color-blue: rgba(var(--color-blue-rgb), var(--opacity-default));
+	--color-purple: rgba(var(--color-purple-rgb), var(--opacity-default));
+	--color-danger: rgba(var(--color-red-rgb), var(--opacity-default));
+
+	/* Variations */
+	--color-dark-tint: rgba(var(--color-dark-rgb), 0.8);
+	--color-dark-soft: rgba(var(--color-dark-rgb), 0.5);
+	--color-dark-muted: rgba(var(--color-dark-rgb), 0.2);
+
+	--color-light-tint: rgba(var(--color-light-rgb), 0.8);
+	--color-light-muted: rgba(var(--color-light-rgb), 0.3);
+
+	--color-blue-tint: rgba(var(--color-blue-rgb), 0.8);
+	--color-blue-soft: rgba(var(--color-blue-rgb), 0.5);
+	--color-blue-muted: rgba(var(--color-blue-rgb), 0.2);
+
+	--color-purple-tint: rgba(var(--color-purple-rgb), 0.8);
+	--color-purple-soft: rgba(var(--color-purple-rgb), 0.5);
+	--color-purple-muted: rgba(var(--color-purple-rgb), 0.2);
+
+	--gradient-light: linear-gradient(
+		35deg,
+		var(--color-light-muted),
+		var(--color-light)
+	);
+	--gradient-dark: linear-gradient(
+		135deg,
+		var(--color-dark),
+		var(--color-dark-muted)
+	);
+	--gradient-accent: linear-gradient(
+		135deg,
+		var(--color-blue-muted),
+		var(--color-purple-muted)
+	);
+	--gradient-accent-tint: linear-gradient(
+		135deg,
+		var(--color-blue-tint),
+		var(--color-purple-muted)
+	);
+
+	/* Global UI Colors */
+	--color-global-bg: var(--color-light);
+	--color-global-text: var(--color-dark);
+	--color-global-text-tint: var(--color-dark-tint);
+	--color-global-border: var(--color-dark-muted);
+	--color-global-accent: var(--color-blue);
+	--color-global-gradient: var(--gradient-light);
+
+	/* Components */
+
+	--color-link: var(--color-blue);
+	--color-link-hover: rgba(var(--color-blue-rgb), var(--opacity-hover));
+
+	--color-border-primary: var(--color-dark-muted);
+	--color-border-light: var(--color-light-muted);
+
+	/* Shadows */
+
+	--shadow-s: 0px 2px 6px rgba(var(--color-dark-rgb), 0.05);
+	--shadow-m: 0px 4px 12px rgba(var(--color-dark-rgb), 0.08);
+	--shadow-l: 0px 6px 18px rgba(var(--color-dark-rgb), 0.12);
+	--shadow-xl: 0px 8px 24px rgba(var(--color-dark-rgb), 0.15);
+
+	/*------------*/
+
+	--color-dark-glare: rgba(var(--color-dark-rgb), 0.8);
+	--color-mid: rgba(var(--color-dark-rgb), 0.5);
+	--color-mid-shade: rgba(var(--color-dark-rgb), 0.2);
+	--color-light-glare: rgba(var(--color-light-rgb), 0.8);
+	--color-light-shade: rgba(var(--color-light-rgb), 0.3);
+
 	/* Colors */
-	--color-dark: #252525;
-	--color-dark-glare: #363636;
+	/* --color-dark: #262626;
+	--color-dark-glare: #545454;
 	--color-mid: #c9c9c9;
 	--color-mid-shade: #dedede;
-	--color-light: #efefef;
-	--color-light-shade: ;
-	--color-blue: #1a8fe3;
-	--color-blue-glare: #eef6fd;
+	--color-light: rgb(240, 240, 240); */
+	/* --color-light-shade: ; */
+	/* --color-blue: #1a8fe3; */
+	/* --color-purple: #ae01ff; */
+	/* --color-blue-glare: #c2e3ff; */
+	/* --color-danger: rgb(212, 53, 28); */
 
 	--leading: 1.5;
 	--leading-fine: 1.1;
@@ -69,13 +159,14 @@
 	--space-gutter-s: var(--space-s);
 	--space-gutter-l: var(--space-l);
 	--space-regions: var(--space-xl);
-	--size-wrapper-max-width: 1035px;
-	--color-global-bg: var(--color-light);
-	--color-global-text: var(--color-dark);
+	--size-text-max-width: 44rem;
+	--wrapper-max-width: 1360px;
+	/* --color-global-bg: var(--color-light-glare); */
+	/* --color-global-text: var(--color-dark); */
 	--color-surface-bg: var(--color-mid);
 	--color-surface-bg-interact: var(--color-mid-shade);
 	--color-surface-text: var(--color-dark);
-	--color-surface-text-interact: var(--color-dark);
+	--color-surface-text-interact: var(--color-dark-glare);
 	--color-primary: var(--color-blue);
 	--font-base: 'Urbanist', sans-serif;
 	--font-display: 'Ubuntu', sans-serif;
@@ -91,9 +182,11 @@
 	--transition-movement: 200ms linear;
 	--transition-fade: 300ms ease;
 	--transition-bounce: 500ms cubic-bezier(0.5, 0.05, 0.2, 1.5);
-	--stroke: 2px dashed var(--color-mid, var(--color-dark));
-	--stroke-solid: 2px solid var(--color-mid, var(--color-dark));
-	--radius-s: 0.2rem;
-	--radius-m: 0.75rem;
-	--radius-l: 2.5rem;
+	--stroke: 3px dashed var(--color-stroke, var(--color-surface-bg));
+	--stroke-solid: 3px solid
+		var(--color-stroke, var(--color-surface-text-interact));
+	--base-radius: 0px;
+	--radius-s: calc(var(--base-radius) * 1);
+	--radius-m: calc(var(--base-radius) * 5);
+	--radius-l: calc(var(--base-radius) * 12.5);
 }

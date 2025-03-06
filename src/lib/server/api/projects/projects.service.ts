@@ -45,7 +45,7 @@ export class ProjectsService implements IProjectsService {
 		return found;
 	}
 
-	async create(payload: NewProject & { slug?: string }) {
+	async create(payload: NewProject) {
 		const {
 			success,
 			data: values,
@@ -68,7 +68,7 @@ export class ProjectsService implements IProjectsService {
 		});
 	}
 
-	async update(id: number, payload: NewProject & { slug?: string }) {
+	async update(id: number, payload: NewProject) {
 		const {
 			success,
 			data: values,

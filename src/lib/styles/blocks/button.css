@@ -1,10 +1,12 @@
 .button {
-	--button-bg: var(--color-primary);
-	--button-text: var(--color-dark);
+	--_opacity-state: var(--opacity-state, var(--opacity-default));
+
+	--button-bg: rgba(var(--color-dark-rgb), var(--_opacity-state));
+	--button-text: var(--color-light);
 	--button-x-padding: 1.5em;
 	--button-y-padding: 0.6em;
 	--button-gutter: 0.5ch;
-	--focus-color: var(--button-bg, var(--color-primary));
+	--cluster-horizontal-alignment: center;
 
 	display: inline-flex;
 	gap: var(--button-gutter);
@@ -17,9 +19,18 @@
 	background: var(--button-bg);
 	color: var(--button-text);
 	padding: var(--button-y-padding) var(--button-x-padding);
-	text-transform: uppercase;
 	letter-spacing: var(--kerning-uppercase);
 	text-decoration: none;
+	font-family: var(--font-base);
 	font-size: var(--step-0);
 	font-weight: var(--font-medium);
+	transition:
+		color 0.1s ease-in,
+		background-color 0.1s ease-in,
+		border-color 0.1s ease-in;
+}
+
+.button:disabled {
+	opacity: 0.3;
+	cursor: not-allowed;
 }

@@ -1,151 +1,246 @@
 <script lang="ts">
 	import { page } from '$app/state';
 	import { PAGE } from '$lib/constants';
-	import { createDropdownMenu } from '@melt-ui/svelte';
+	import { clickOutside } from '$lib/directives/clickOutside';
+	import { ChevronDown } from 'lucide-svelte';
+	import { tick } from 'svelte';
+	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
+	import Button from '../Ui/Button.svelte';
 
-	const {
-		elements: { trigger, menu, item, overlay },
-	} = createDropdownMenu({
-		preventScroll: false,
-		loop: true,
-		positioning: {
-			gutter: 0,
-			placement: 'bottom',
-		},
-	});
+	let showDropdown = $state(false);
+	let dropdownButton = $state<HTMLElement>();
+	let dropdownMenu = $state<HTMLElement>();
+	let dropdownItems = $state<HTMLAnchorElement[]>([]);
+
+	const toggleDropdown = () => {
+		if (showDropdown) {
+			closeDropdown();
+		} else {
+			openDropdown();
+		}
+	};
+
+	const showDropdownMenu = async () => {
+		showDropdown = true;
+		await tick();
+	};
+
+	const focusCurrentOrFirstDropdownItem = (items: HTMLAnchorElement[]) => {
+		const currentPageItem = items.find(
+			(item) => item.getAttribute('aria-current') === PAGE,
+		);
+		if (currentPageItem) {
+			currentPageItem.focus();
+		} else if (items.length > 0) {
+			items[0].focus();
+		}
+	};
+
+	const openDropdown = async () => {
+		await showDropdownMenu();
+		dropdownItems = getDropdownItems();
+		focusCurrentOrFirstDropdownItem(dropdownItems);
+	};
+
+	const closeDropdown = () => {
+		showDropdown = false;
+	};
+
+	const closeDropdownAndFocus = () => {
+		closeDropdown();
+
+		if (dropdownButton) {
+			dropdownButton.focus();
+		}
+	};
+
+	const getDropdownItems = (): HTMLAnchorElement[] => {
+		const nodes = dropdownMenu?.querySelectorAll(
+			'a',
+		) as unknown as HTMLAnchorElement[];
+		return [...nodes];
+	};
+
+	// const focusFirstDropdownItem = (items: HTMLAnchorElement[]) => {
+	// 	if (items.length > 0) {
+	// 		items[0].focus();
+	// 	}
+	// };
+
+	const handleKeydown = async (event: KeyboardEvent) => {
+		const { key } = event;
+		const currentIndex = dropdownItems.indexOf(
+			document.activeElement as HTMLAnchorElement,
+		);
+
+		const moveFocus = (step: number) => {
+			event.preventDefault();
+			const nextIndex =
+				(currentIndex + step + dropdownItems.length) % dropdownItems.length;
+			dropdownItems[nextIndex]?.focus();
+		};
+
+		switch (key) {
+			case 'Escape':
+				closeDropdownAndFocus();
+				break;
+			case 'ArrowDown':
+				moveFocus(1);
+				break;
+			case 'ArrowUp':
+				moveFocus(-1);
+				break;
+			case 'Tab':
+				moveFocus(event.shiftKey ? -1 : 1);
+				break;
+		}
+	};
+
+	const handleSubMenuClick = (event: MouseEvent) => {
+		if (
+			event.target instanceof Element &&
+			event.target.closest('.dropdown-menu')
+		) {
+			closeDropdown();
+		}
+	};
 
 	const isCurrentPage = (path: string) =>
 		page.url.pathname === path ? PAGE : undefined;
 </script>
 
-<nav aria-label="Primary" class="nav">
+<nav aria-label="Primary Navigation">
 	<ul class="cluster" role="list">
 		<li>
-			<a href="/" aria-current={isCurrentPage('/')} class="menu__item">Home</a>
+			<Button
+				as="a"
+				href="/"
+				variant="ghost"
+				size="small"
+				aria-current={isCurrentPage('/')}
+				class="nav-item"
+			>
+				Home
+			</Button>
 		</li>
-		<li>
-			<button
-				type="button"
-				{...$trigger}
-				use:trigger
-				aria-label="Open works menu"
-				class="menu__item button dropdown__button"
+		<li class="dropdown" use:clickOutside={closeDropdown}>
+			<Button
+				onclick={toggleDropdown}
+				aria-expanded={showDropdown}
+				aria-controls="work-options"
+				bind:node={dropdownButton}
+				variant="ghost"
+				size="small"
+				class="dropdown-button nav-item"
 			>
 				Works
-				<svg
-					aria-hidden="true"
-					focusable="false"
-					xmlns="http://www.w3.org/2000/svg"
-					viewBox="0 0 24 24"
-					fill="none"
-					stroke="currentColor"
-					stroke-width="2"
-					stroke-linecap="round"
-					stroke-linejoin="round"
-					class="lucide lucide-chevron-down"><path d="m6 9 6 6 6-6" /></svg
+				<ChevronDown aria-hidden="true" />
+			</Button>
+			<!-- svelte-ignore a11y_no_noninteractive_element_interactions -->
+			{#if showDropdown}
+				<ul
+					id="work-options"
+					role="list"
+					class="dropdown-menu"
+					bind:this={dropdownMenu}
+					onkeydown={handleKeydown}
+					onclick={handleSubMenuClick}
+					transition:fly={{ y: -10, duration: 125, easing: cubicOut }}
 				>
-			</button>
-			<!-- svelte-ignore element_invalid_self_closing_tag -->
-			<div {...$overlay} use:overlay />
-			<ul
-				{...$menu}
-				use:menu
-				class="cluster dropdown__menu"
-				role="list"
-				transition:fly={{ duration: 150, y: -10 }}
-			>
-				<li {...$item} use:item>
-					<a href="/visual-development" class="menu__item">Visual development</a
-					>
-				</li>
-				<li {...$item} use:item>
-					<a href="/background-painting" class="menu__item"
-						>Background painting</a
-					>
-				</li>
-			</ul>
+					<li data-menu-item>
+						<Button
+							as="a"
+							href="/visual-development"
+							variant="ghost"
+							size="small"
+							aria-current={isCurrentPage('/visual-development')}
+							class="dropdown-item nav-item"
+						>
+							Visual development
+						</Button>
+					</li>
+					<li data-menu-item>
+						<Button
+							as="a"
+							href="/background-painting"
+							variant="ghost"
+							size="small"
+							aria-current={isCurrentPage('/background-painting')}
+							class="dropdown-item nav-item"
+						>
+							Background painting
+						</Button>
+					</li>
+				</ul>
+			{/if}
 		</li>
 		<li>
-			<a
+			<Button
+				as="a"
 				href="/playground"
 				aria-current={isCurrentPage('/playground')}
-				class="menu__item">Playground</a
+				variant="ghost"
+				size="small"
+				class="nav-item"
 			>
+				Playground
+			</Button>
 		</li>
 		<li>
-			<a href="/about" aria-current={isCurrentPage('/about')} class="menu__item"
-				>About</a
+			<Button
+				as="a"
+				href="/about"
+				aria-current={isCurrentPage('/about')}
+				variant="ghost"
+				size="small"
+				class="nav-item"
 			>
+				About
+			</Button>
 		</li>
 	</ul>
 </nav>
 
 <style>
-	.nav a:not(:hover):not([aria-current='page']) {
-		text-decoration: none;
+	nav .cluster {
+		--gutter: 0;
 	}
 
-	.nav .cluster {
-		--gutter: 1ch;
+	.dropdown {
+		position: relative;
 	}
 
-	.dropdown__menu {
-		--cluster-direction: column;
-		--gutter: var(--space-s);
+	.dropdown-menu {
+		--_padding: var(--space-2xs);
+		--gutter: var(--_padding);
 
-		background-color: #fff;
-		padding: var(--space-s);
+		padding: var(--_padding);
+		background-color: var(--color-light);
 		border-radius: var(--radius-m);
-		box-shadow: 0px 0px 20px 16px rgba(17, 17, 26, 0.01);
+		box-shadow: var(--shadow-xl);
+		z-index: 9999;
+		position: absolute;
+		left: 50%;
+		transform: translateX(-50%);
+		width: max-content;
 	}
 
-	.dropdown__menu li {
-		width: 100%;
-		text-align: center;
-	}
-
-	.menu__item {
-		width: 100%;
-		background-color: var(--color-bg-global);
-		display: inline-block;
-		text-decoration: none;
-		font-size: var(--step-0);
-		text-transform: capitalize;
-		font-weight: var(--font-regular);
+	.dropdown-menu li {
 		border-radius: var(--radius-m);
-		padding: var(--space-4xs) var(--space-m);
-		line-height: var(--leading);
-
-		transition: background 0.125s ease;
 	}
 
-	.menu__item:active {
-		background-color: var(--color-mid);
-	}
-
-	.menu__item:focus-visible {
-		--focus-color: var(--color-global-text);
-
-		background-color: var(--color-mid);
-	}
-
-	.menu__item[aria-current='page'] {
-		color: var(--color-global-bg);
-		background-color: var(--color-global-text);
-	}
-
-	.dropdown__button {
-		display: flex;
-		gap: var(--space-s);
-	}
-
-	.dropdown__button svg {
+	:global(.dropdown-button svg) {
 		height: 1lh;
-		transition: transform 0.2s ease;
+		transition: transform 0.125s ease;
 	}
 
-	.dropdown__button[aria-expanded='true'] svg {
+	:global(.dropdown-button[aria-expanded='true'] svg) {
 		transform: rotate(180deg);
+	}
+
+	:global(.nav-item):focus-visible {
+		outline: none;
+		background-image: var(--gradient-accent);
 	}
 </style>

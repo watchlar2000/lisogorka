@@ -13,7 +13,7 @@ export interface IProjectsRepository {
 		id?: number;
 		slug?: string;
 	}): Promise<ProjectWithCoverImage | null>;
-	create(data: NewProject): Promise<Project>;
+	create(payload: NewProject): Promise<Project>;
 	update(id: number, payload: Partial<NewProject>): Promise<Project>;
 	deleteById(id: number): Promise<Project>;
 }

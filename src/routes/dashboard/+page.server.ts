@@ -1,20 +1,18 @@
 import { authService } from '$lib/server/auth/auth.service';
 import { deleteSessionTokenCookie } from '$lib/server/auth/cookie';
 import { fail, redirect } from '@sveltejs/kit';
-import type { Actions, PageServerLoad, RequestEvent } from './$types';
+import type { Actions, RequestEvent } from './$types';
 
-export const load: PageServerLoad = async (event) => {
-	if (event.locals.session === null || event.locals.user === null) {
-		return redirect(302, '/login');
-	}
-
-	return {
-		data: event.locals.user,
-	};
+export const load = () => {
+	/*
+	TODO: double check status code
+	*/
+	redirect(308, '/dashboard/projects');
 };
 
 export const actions: Actions = {
-	default: async (event: RequestEvent) => {
+	logout: async (event: RequestEvent) => {
+		console.log('firing action');
 		if (event.locals.session === null) {
 			return fail(401);
 		}

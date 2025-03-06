@@ -2,9 +2,9 @@
 	import Nav from './Nav.svelte';
 </script>
 
-<header class="repel">
+<header class="header repel">
 	<!-- svelte-ignore a11y_consider_explicit_label -->
-	<a href="/" tabindex="-1" class="header__logo">
+	<a href="/" tabindex="-1" class="header-logo">
 		<svg
 			aria-hidden="true"
 			focusable="false"
@@ -24,8 +24,11 @@
 </header>
 
 <style>
-	.header__logo svg {
-		height: 5ch;
+	.header {
+		padding-top: var(--space-m);
+	}
+	.header-logo svg {
+		height: 5rem;
 		width: auto;
 	}
 </style>

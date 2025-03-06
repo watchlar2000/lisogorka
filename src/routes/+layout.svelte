@@ -12,6 +12,5 @@
 	main {
 		height: 100%;
 		width: 100%;
-		padding-top: var(--space-l);
 	}
 </style>

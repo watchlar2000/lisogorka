@@ -1,7 +1,7 @@
+import { categories } from '$lib/constants';
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { pgEnum, pgTable as table } from 'drizzle-orm/pg-core';
-import { categories } from '../types/types';
 import { timestamps } from '../utils/drizzle';
 
 export const users = table('users', {
@@ -38,7 +38,7 @@ export const projects = table('projects', {
 		.integer('cover_image_id')
 		.notNull()
 		.references(() => images.id),
-	isFeatured: t.boolean('is_featured').default(false),
+	isFeatured: t.boolean('is_featured').default(false).notNull(),
 	...timestamps,
 });
 

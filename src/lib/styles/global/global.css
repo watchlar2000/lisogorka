@@ -1,6 +1,10 @@
 body {
-	background: var(--color-global-bg);
 	color: var(--color-global-text);
+	background-color: var(--color-dark-muted);
+	background-image: var(--gradient-light);
+	background-size: cover;
+	background-repeat: no-repeat;
+	background-attachment: fixed;
 	font-size: var(--step-1);
 	font-family: var(--font-base);
 	line-height: var(--leading);
@@ -16,17 +20,17 @@ body {
 
 h1 {
 	font-size: var(--step-5);
-	max-width: 20ch;
+	max-width: var(--size-text-max-width);
 }
 
 h2 {
 	font-size: var(--step-4);
-	max-width: 35ch;
+	max-width: var(--size-text-max-width);
 }
 
 h3 {
 	font-size: var(--step-3);
-	max-width: 35ch;
+	max-width: var(--size-text-max-width);
 }
 
 :is(h1, h2, h3) {
@@ -62,13 +66,20 @@ ol ::marker {
 }
 
 :is(a[aria-current='page']) {
-	background-color: var(--color-primary);
+	text-decoration: underline;
+	text-underline-offset: 0.2lh;
+	text-decoration-thickness: 0.2ex;
+	text-decoration-color: currentColor;
+}
+
+:is(a[aria-current='page']):hover {
+	text-decoration-color: currentColor;
 }
 
 :is(a) {
 	text-underline-offset: 0.15lh;
 	text-decoration-thickness: 0.2ex;
-	transition: color 0.1s ease;
+	transition: color 0.1s ease-in;
 }
 
 :is(a):hover {
@@ -80,7 +91,7 @@ ol ::marker {
 }
 
 :focus-visible {
-	outline: 3px solid var(--focus-color, currentColor);
+	outline: 4px solid var(--focus-color, var(--color-blue));
 	outline-offset: var(--focus-offset, 0.25rem);
 	border-radius: var(--radius-s);
 }
@@ -98,8 +109,8 @@ ol ::marker {
 }
 
 ::selection {
-	color: var(--color-light);
 	background: var(--color-dark);
+	color: var(--color-light);
 }
 
 hr {
@@ -127,11 +138,12 @@ svg[role='img'][width][height] {
 
 /* There's a .flow composition, but this prevents forms from having to have that applied where markup is harder to control in certain systems. It still uses the --flow-space variables though to make managing space easier */
 form > * + * {
-	margin-top: var(--flow-space, 1rem);
+	margin-top: var(--flow-space, 0.5rem);
 }
 
 :is(input, select, textarea) {
 	accent-color: var(--color-primary);
+	background-color: var(--color-light-muted);
 }
 
 :is(
@@ -140,10 +152,9 @@ form > * + * {
 	textarea
 ) {
 	padding: 0.5em 0.8em;
-	border-radius: var(--radius-s);
+	border-radius: var(--radius-m);
 	border: var(--stroke-solid);
-	background: var(--color-dark-glare);
-	color: var(--color-light);
+	color: var(--color-surface-text-interact);
 	width: 100%;
 }
 
@@ -152,8 +163,8 @@ form > * + * {
 		select,
 		textarea
 	)::placeholder {
-	color: var(--color-light);
-	opacity: 1;
+	color: var(--color-surface-text-interact);
+	opacity: 0.5;
 }
 
 label {
@@ -161,15 +172,15 @@ label {
 	font-weight: var(--font-medium);
 }
 
-label::after {
-	content: '\A';
-	white-space: pre;
+.label {
+	font-weight: var(--font-medium);
+	font-size: var(--text-size-meta);
 }
 
 /* Usually label wraps checkbox and radio buttons, so we give ourselves more layout and text-flow control with flex */
 label:has(input) {
 	display: flex;
-	align-items: baseline;
+	flex-direction: column;
 	gap: var(--space-s);
 	font-weight: var(--font-normal);
 }
@@ -190,4 +201,15 @@ input:disabled {
 input:disabled,
 label input:disabled + * {
 	cursor: not-allowed;
+}
+
+.invalid {
+	--gutter: var(--space-2xs);
+
+	color: var(--color-danger);
+	font-size: var(--text-size-lede);
+}
+
+input[data-invalid='true'] {
+	border-color: var(--color-danger);
 }

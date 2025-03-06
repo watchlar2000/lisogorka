@@ -133,7 +133,7 @@ picture {
 }
 
 img:not([alt]) {
-	filter: blur(6px);
+	filter: blur(4px);
 }
 
 :where(input, button, textarea, select) {
@@ -142,7 +142,7 @@ img:not([alt]) {
 }
 
 textarea:not([rows]) {
-	min-height: 10em;
+	min-height: 30ch;
 }
 
 /* Anything that has been anchored to should have extra scroll margin */

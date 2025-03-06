@@ -4,7 +4,11 @@ import {
 	deleteSessionTokenCookie,
 	setSessionTokenCookie,
 } from '$lib/server/auth/cookie';
-import type { Handle } from '@sveltejs/kit';
+import { type Handle } from '@sveltejs/kit';
+
+/*
+TODO: add rate limiting
+*/
 
 export const handle: Handle = async ({ event, resolve }) => {
 	const token = event.cookies.get(COOKIE.SESSION) ?? null;
@@ -25,5 +29,12 @@ export const handle: Handle = async ({ event, resolve }) => {
 
 	event.locals.session = session;
 	event.locals.user = user;
+
+	// const isDashboardRoute = (path: string) => path.startsWith('/dashboard');
+	// const urlPathName = event.url.pathname;
+	// if (session && isDashboardRoute(urlPathName)) {
+	// 	redirect(303, '/dashboard/projects');
+	// }
+
 	return resolve(event);
 };

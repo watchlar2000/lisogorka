@@ -1,12 +1,19 @@
 <script lang="ts">
 	import type { ProjectWithCoverImage } from '$lib/server/api/projects/projects.types';
+	import { cubicOut } from 'svelte/easing';
+	import { fade } from 'svelte/transition';
 
 	const { projects }: { projects: ProjectWithCoverImage[] } = $props();
 </script>
 
 <ul role="list" class="auto-grid projects__list">
-	{#each projects as p}
-		<li>
+	{#each projects as p (p.id)}
+		<li
+			in:fade|global={{
+				duration: 250,
+				easing: cubicOut,
+			}}
+		>
 			<a href="/{p.category}/{p.slug}">
 				<img src={p.coverImage?.url} alt="" aria-hidden="true" />
 				<span class="visually-hidden">{p.title}</span>
@@ -17,10 +24,10 @@
 
 <style>
 	.projects__list {
-		--auto-grid-min-size: clamp(25rem, 30vw, 30%);
+		--auto-grid-min-size: clamp(13rem, 30vw, 30%);
 		--auto-grid-gap: var(--gutter);
 
-		width: 100%;
+		min-width: 100%;
 	}
 
 	.projects__list li a {
