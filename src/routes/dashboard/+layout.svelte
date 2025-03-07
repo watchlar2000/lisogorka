@@ -12,7 +12,7 @@
 			<a href="/dashboard" class="header-logo">Dashboard</a>
 			<div class="cluster">
 				<form method="POST" action="logout?/logout" use:enhance>
-					<Button variant="secondary" size="small">Logout</Button>
+					<Button variant="secondary" type="submit" size="small">Logout</Button>
 				</form>
 			</div>
 		</div>
