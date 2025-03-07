@@ -1,7 +1,7 @@
 import { STATUS_CODE } from '$lib/constants';
 import { projectInsertSchema } from '$lib/server/api/projects/projects.types';
 import { routing } from '$lib/server/api/routing';
-import type { Category } from '$lib/types';
+import type { Category } from '$lib/types/common';
 import type { ActionRequestEvent } from '$lib/types/sveltekit';
 import { validateWithZod } from '$lib/utils/validateWIthZod';
 import { fail } from '@sveltejs/kit';

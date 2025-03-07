@@ -1,4 +1,4 @@
-import type { NavConfig } from './types';
+import type { NavConfig } from './types/common';
 
 export const siteConfig = {
 	name: 'Iryna Lisogor Portfolio Page',
@@ -7,7 +7,9 @@ export const siteConfig = {
 	description:
 		'Portfolio of Iryna Lisogor, showcasing works in visual development and background painting.',
 	links: {
-		/// add social links
+		instagram: 'https://www.instagram.com/iryna_lisogor/',
+		linkedin: 'https://www.linkedin.com/in/iryna-lisogor-72975316a/',
+		behance: 'https://www.behance.net/lisogorka8741b',
 	},
 	keywords:
 		'illustrator, visual development, background painting, art portfolio, Iryna Lisogor, lisogorka',
@@ -65,4 +67,15 @@ export const navConfig: NavConfig = {
 			],
 		},
 	],
+};
+
+export const ROUTES = {
+	home: '/',
+	about: '/about',
+	dashboard: '/dashboard',
+	visualDevelopment: '/dashboard/visual-development',
+	backgroundPainting: '/dashboard/background-painting',
+	playground: '/dashboard/playground',
+	login: '/auth/login',
+	logout: '/auth/logout',
 };

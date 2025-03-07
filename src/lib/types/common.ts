@@ -1,4 +1,4 @@
-import type { categories } from './constants';
+import type { categories } from '../constants';
 
 type NavItem = {
 	title: string;

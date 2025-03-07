@@ -1,4 +1,4 @@
-import type { Category } from '$lib/types';
+import type { Category } from '$lib/types/common';
 
 export type Project = {
 	id: number;

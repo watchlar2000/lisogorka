@@ -8,7 +8,7 @@
 	import SelectField from '$lib/components/SelectField.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
 	import { categories, CATEGORY, SUCCESS } from '$lib/constants';
-	import type { Category } from '$lib/types';
+	import type { Category } from '$lib/types/common';
 	import type { Image } from '$lib/types/images';
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
 	import { InternalError } from '$lib/utils/exceptions';

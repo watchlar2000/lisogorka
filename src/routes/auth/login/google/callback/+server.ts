@@ -1,3 +1,4 @@
+import { STATUS_CODE } from '$lib/constants';
 import { authService } from '$lib/server/auth/auth.service';
 import { CODE, COOKIE, STATE } from '$lib/server/auth/constants';
 import { setSessionTokenCookie } from '$lib/server/auth/cookie';
@@ -16,13 +17,13 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		codeVerifier === null
 	) {
 		return new Response(null, {
-			status: 400,
+			status: STATUS_CODE.BAD_REQUEST,
 		});
 	}
 
 	if (state !== storedState) {
 		return new Response(null, {
-			status: 400,
+			status: STATUS_CODE.BAD_REQUEST,
 		});
 	}
 
@@ -30,10 +31,11 @@ export async function GET(event: RequestEvent): Promise<Response> {
 		code,
 		codeVerifier,
 	});
+
 	setSessionTokenCookie(event, sessionToken, session.expiresAt);
 
 	return new Response(null, {
-		status: 302,
+		status: STATUS_CODE.REDIRECT,
 		headers: {
 			Location: '/dashboard',
 		},

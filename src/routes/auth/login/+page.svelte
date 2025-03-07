@@ -1,13 +1,17 @@
-<div class="wrapper flow sign-in">
-	<h3>Sign In to continue*</h3>
+<script>
+	import Button from '$lib/components/Ui/Button.svelte';
+</script>
+
+<div class="wrapper flow">
+	<h1>Sign In to continue</h1>
 	<p class="prose">
-		*If you are not the owner of this website, please go back to the <a
+		Note, that if you are not the owner of this website, please go back to the <a
 			href="/"
 		>
 			main page
 		</a>
 	</p>
-	<a href="/login/google" class="sign-in__link button cluster">
+	<Button as="a" href="/auth/login/google">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
 			aria-hidden="true"
@@ -31,31 +35,23 @@
 				d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"
 			/>
 		</svg>
+		<span class="visually-hidden">Log-in with</span>
 		Google
-	</a>
+	</Button>
 </div>
 
 <style>
-	.sign-in {
+	.wrapper {
 		display: grid;
 		place-content: center;
 		min-height: 100%;
-		/* max-width: 25ch; */
+		width: 100%;
+		max-width: 40ch;
 		margin-inline: auto;
 		padding-block: var(--space-l);
 	}
 
-	p {
-		font-size: var(--text-size-meta);
-	}
-
-	.sign-in__link {
-		--button-bg: var(--color-global-text);
-		--button-text: var(--color-global-bg);
-		--gutter: var(--space-s);
-
-		justify-content: center;
-		text-transform: capitalize;
-		border-radius: var(--radius-m);
+	.prose {
+		font-size: var(--text-size-lede);
 	}
 </style>
