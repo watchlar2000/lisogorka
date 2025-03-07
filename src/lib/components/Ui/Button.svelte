@@ -16,7 +16,7 @@
 			| 'destructive'
 			| 'outline'
 			| 'ghost';
-		size?: 'small' | 'regular' | 'large' | 'medium';
+		size?: 'x-small' | 'small' | 'regular' | 'large' | 'medium';
 		class?: string;
 		disabled?: boolean;
 		loading?: boolean;
@@ -179,6 +179,12 @@
 	[data-variant-type='outline']:active {
 		--opacity-state: 0.65;
 		border-color: rgba(var(--color-dark-rgb), var(--opacity-state));
+	}
+
+	[data-font-size='x-small'] {
+		font-size: var(--text-size-lede);
+		padding-inline: 0;
+		padding-block: 0.25ch;
 	}
 
 	[data-font-size='small'] {

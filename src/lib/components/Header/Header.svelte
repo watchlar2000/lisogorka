@@ -3,7 +3,6 @@
 </script>
 
 <header class="header repel">
-	<!-- svelte-ignore a11y_consider_explicit_label -->
 	<a href="/" tabindex="-1" class="header-logo">
 		<svg
 			aria-hidden="true"
@@ -19,6 +18,7 @@
 				fill="currentColor"
 			/>
 		</svg>
+		<span class="visually-hidden">Click to go to home page</span>
 	</a>
 	<Nav />
 </header>

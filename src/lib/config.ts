@@ -70,13 +70,13 @@ export const navConfig: NavConfig = {
 	],
 };
 
-export const ROUTES = {
+export const ROUTE = {
 	home: '/',
 	about: '/about',
 	dashboard: '/dashboard',
-	visualDevelopment: '/dashboard/visual-development',
-	backgroundPainting: '/dashboard/background-painting',
-	playground: '/dashboard/playground',
+	visualDevelopment: '/visual-development',
+	backgroundPainting: '/background-painting',
+	playground: '/playground',
 	login: '/auth/login',
 	logout: '/auth/logout',
 };

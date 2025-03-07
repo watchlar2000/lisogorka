@@ -1,22 +1,82 @@
-<script>
+<script lang="ts">
+	import { page } from '$app/state';
+	import { ROUTE } from '$lib/config';
+	import { PAGE } from '$lib/constants';
 	import Logo from './Logo.svelte';
+	import Button from './Ui/Button.svelte';
+
+	const { home, about, backgroundPainting, visualDevelopment, playground } =
+		ROUTE;
+
+	const isCurrentPage = (path: string) =>
+		page.url.pathname === path ? PAGE : undefined;
 </script>
 
 <footer class="footer">
 	<div class="wrapper flow">
 		<div class="repel">
 			<Logo size="small" />
-			<div>
-				<ul role="list" class="footer-nav">
-					<li><a href="/">Home</a></li>
-					<li><a href="/background-painting">Background painting</a></li>
-					<li><a href="/visual-development">Visual development</a></li>
-					<li><a href="/playground">Playground</a></li>
-					<li><a href="/about">About</a></li>
+			<nav aria-label="Secondary Footer Navigation">
+				<ul role="list" class="flow footer-nav">
+					<li>
+						<Button
+							as="a"
+							href={home}
+							size="x-small"
+							variant="ghost"
+							aria-current={isCurrentPage(home)}
+						>
+							Home
+						</Button>
+					</li>
+					<li>
+						<Button
+							as="a"
+							href={backgroundPainting}
+							size="x-small"
+							variant="ghost"
+							aria-current={isCurrentPage(backgroundPainting)}
+						>
+							Background painting
+						</Button>
+					</li>
+					<li>
+						<Button
+							as="a"
+							href={visualDevelopment}
+							size="x-small"
+							variant="ghost"
+							aria-current={isCurrentPage(visualDevelopment)}
+						>
+							Visual development
+						</Button>
+					</li>
+					<li>
+						<Button
+							as="a"
+							href={playground}
+							size="x-small"
+							variant="ghost"
+							aria-current={isCurrentPage(playground)}
+						>
+							Playground
+						</Button>
+					</li>
+					<li>
+						<Button
+							as="a"
+							href={about}
+							size="x-small"
+							variant="ghost"
+							aria-current={isCurrentPage(about)}
+						>
+							About
+						</Button>
+					</li>
 				</ul>
-			</div>
+			</nav>
 		</div>
-		<div>
+		<div class="footer-copy">
 			<p>All artistic content Copyright &#169;</p>
 			<p>{new Date().getFullYear()} Iryna Lisogor, All rights</p>
 		</div>
@@ -39,27 +99,37 @@
 		padding-block: var(--space-l);
 	}
 
-	.footer-nav a {
+	.footer-nav {
+		--flow-space: var(--space-2xs);
+	}
+
+	:global(.footer-nav a) {
 		--_opacity: var(--opacity-default);
+
+		justify-self: flex-start;
+		font-family: var(--font-display);
+		font-weight: var(--font-regular);
 		color: rgba(var(--color-light-rgb), var(--_opacity));
 		text-decoration-color: var(--color-light-muted);
-		text-decoration-thickness: 0.2ex;
 	}
 
-	.footer-nav a:hover {
+	:global(.footer-nav a:hover) {
 		--_opacity: var(--opacity-hover);
-		text-decoration-color: var(--color-blue-tint);
 	}
 
-	.footer-nav a:focus {
+	:global(.footer-nav a:focus) {
 		--_opacity: var(--opacity-focus);
 	}
 
-	.footer-nav a:active {
+	:global(.footer-nav a:active) {
 		--_opacity: var(--opacity-active);
 	}
 
 	.repel {
 		--repel-vertical-alignment: flex-start;
+	}
+
+	.footer-copy {
+		font-size: 0.9rem;
 	}
 </style>
