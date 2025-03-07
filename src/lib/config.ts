@@ -1,7 +1,8 @@
 import type { NavConfig } from './types/common';
 
 export const siteConfig = {
-	name: 'Iryna Lisogor Portfolio Page',
+	title: 'Iryna Lisogor Portfolio Page',
+	author: 'Iryna Lisogor',
 	url: 'https://www.irynalisogor.art/',
 	ogImage: 'https://www.irynalisogor.art/og.jpg',
 	description:
