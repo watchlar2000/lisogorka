@@ -46,7 +46,7 @@
 			const newCoverImageId = items[0].id;
 			return new Set([newCoverImageId, ...newImages]);
 		} else {
-			return [undefined, ...newImages];
+			return [items[0].id, ...newImages];
 		}
 	});
 
@@ -66,6 +66,7 @@
 		for (const id of newImageIdsList()) {
 			formData.append('imageId', String(id));
 		}
+		console.log(newImageIdsList());
 		return async ({ result }) => {
 			if (result.type === SUCCESS) {
 				await invalidateAll();

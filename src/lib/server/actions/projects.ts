@@ -80,6 +80,7 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 	}
 
 	const [coverImageId] = imageIdsList;
+	console.log(fd.getAll('imageId'));
 
 	try {
 		const editProjectPayload = {
@@ -106,7 +107,7 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 	} catch (error) {
 		console.log(error);
 		return fail(STATUS_CODE.INTERNAL_SERVER_ERROR, {
-			errors: 'Failed to create project.',
+			errors: `Failed to update project. Error: ${error?.message}`,
 		});
 	}
 };
