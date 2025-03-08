@@ -1,15 +1,25 @@
 <script>
+	import profileImage from '$lib/assets/iryna.webp';
+	import Seo from '$lib/components/SEO.svelte';
 	import { cubicOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
 </script>
 
+<Seo
+	title="About Page | Iryna Lisogor"
+	description="Learn more about Iryna Lisogor, an illustrator, passionate about vibrant artworks."
+/>
 <div class="prose flow">
-	<enhanced:img
-		src="./about.jpeg"
-		alt=""
+	<img
+		src={profileImage}
+		alt="Iryna Lisogor, illustrator and author of the content of this website"
 		class="avatar"
 		in:fade={{ duration: 250, easing: cubicOut }}
 	/>
+	<h1 class="visually-hidden">
+		Welcome to my About page, where I share a bit about myself and the things in
+		life that I admire.
+	</h1>
 	<h2>Hi!</h2>
 	<p>
 		I'm Ira, an illustrator based in Kyiv, Ukraine, with a passion for creating
@@ -22,7 +32,8 @@
 		exploring new things.
 	</p>
 	<p>
-		You can reach out to me via <a href="mailto:">
+		You can reach out to me via
+		<a href="mailto:iryna.lisogor.artwrk@gmail.com">
 			iryna.lisogor.artwrk@gmail.com
 		</a>
 		. Resume available upon request.
@@ -30,10 +41,6 @@
 </div>
 
 <style>
-	.prose {
-		display: grid;
-		place-content: center;
-	}
 	.avatar {
 		object-fit: cover;
 		height: 20ch;

@@ -1,10 +1,10 @@
 import type { NavConfig } from './types/common';
 
 export const siteConfig = {
-	title: 'Iryna Lisogor Portfolio Page',
+	title: 'Iryna Lisogor Website',
 	author: 'Iryna Lisogor',
-	url: 'https://www.irynalisogor.art/',
-	ogImage: 'https://www.irynalisogor.art/og.jpg',
+	url: 'https://www.irynalisogor.art',
+	ogImage: 'https://www.irynalisogor.art/og.webp',
 	description:
 		'Portfolio of Iryna Lisogor, showcasing works in visual development and background painting.',
 	links: {

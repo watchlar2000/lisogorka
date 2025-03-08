@@ -12,9 +12,7 @@
 	<div class="wrapper content">
 		{@render children()}
 	</div>
-	<!-- <div class=""> -->
 	<Footer />
-	<!-- </div> -->
 </div>
 
 <style>
