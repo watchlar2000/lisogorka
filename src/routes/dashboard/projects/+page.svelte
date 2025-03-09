@@ -61,8 +61,8 @@
 
 <style>
 	.cards-list {
-		--auto-grid-gap: var(--space-l);
-		--auto-grid-min-size: 20rem;
+		--auto-grid-min-size: clamp(13rem, 30vw, 30%);
+		--auto-grid-gap: var(--gutter);
 	}
 
 	.card {

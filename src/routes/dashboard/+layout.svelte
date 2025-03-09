@@ -27,7 +27,9 @@
 	<div class="wrapper content">
 		{@render children()}
 	</div>
-	<Footer />
+	<div>
+		<Footer />
+	</div>
 </div>
 
 <style>
