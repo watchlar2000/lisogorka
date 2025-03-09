@@ -1,6 +1,6 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
-	import { invalidateAll } from '$app/navigation';
+	import { goto, invalidateAll } from '$app/navigation';
 	import FormImagesList from '$lib/components/FormImagesList.svelte';
 	import InputField from '$lib/components/InputField.svelte';
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
@@ -8,7 +8,8 @@
 	import ProjectDescriptionField from '$lib/components/ProjectDescriptionField.svelte';
 	import SelectField from '$lib/components/SelectField.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
-	import { categories, SUCCESS } from '$lib/constants';
+	import { categories, FAILURE, SUCCESS } from '$lib/constants';
+	import { getToastState } from '$lib/services/toast/toast.svelte';
 	import type { Image } from '$lib/types/images';
 	import { createFormState } from '$lib/utils/createFormState.svelte';
 	import { InternalError } from '$lib/utils/exceptions';
@@ -22,6 +23,8 @@
 		items = [...e.detail.items];
 	};
 
+	const toastState = getToastState();
+
 	const { data, form }: PageProps = $props();
 
 	const imagesList = [
@@ -29,7 +32,8 @@
 		...data.project.images.filter(({ id }) => id !== data.project.coverImageId),
 	];
 
-	let loading = $state(false);
+	let loadingImage = $state(false);
+	let loadingProject = $state(false);
 	let modal: ImageModal;
 	let items = $state<Image[]>(imagesList);
 
@@ -37,16 +41,16 @@
 		const currentCoverImageId = data.project.coverImageId;
 		const currentImageIds = data.project.images.map(({ id }) => id);
 
-		const existingCoverImage = currentCoverImageId === items[0].id;
+		const existingCoverImage = currentCoverImageId === items[0]?.id;
 		const newImages = items
 			.filter(({ id }) => !currentImageIds.includes(id))
 			.map((image) => image.id);
 
 		if (!existingCoverImage) {
-			const newCoverImageId = items[0].id;
+			const newCoverImageId = items[0]?.id;
 			return new Set([newCoverImageId, ...newImages]);
 		} else {
-			return [items[0].id, ...newImages];
+			return [items[0]?.id, ...newImages];
 		}
 	});
 
@@ -66,11 +70,29 @@
 		for (const id of newImageIdsList()) {
 			formData.append('imageId', String(id));
 		}
-		console.log(newImageIdsList());
+		loadingProject = true;
 		return async ({ result }) => {
 			if (result.type === SUCCESS) {
 				await invalidateAll();
+				const updatedSlug = result?.data?.project.slug;
+
+				if (updatedSlug && updatedSlug !== data.project.slug) {
+					const newURL = `/dashboard/projects/${updatedSlug}/edit`;
+					goto(newURL, {
+						replaceState: true,
+					});
+				}
+				toastState.add({
+					message: 'Project updated',
+				});
+			} else if (result.type === FAILURE) {
+				toastState.add({
+					title: 'Error',
+					message: 'Something went wrong',
+					type: 'warning',
+				});
 			}
+			loadingProject = false;
 			await applyAction(result);
 		};
 	};
@@ -78,7 +100,7 @@
 	const onSaveImageCallback = async (params: ImageModalSaveParams) => {
 		const { id, alt, file } = params;
 		const action = !id ? '?/uploadImage' : '?/editImage';
-		loading = true;
+		loadingImage = true;
 		const imagePayload = {
 			id: Number(id),
 			alt,
@@ -89,7 +111,13 @@
 			options: { action },
 		});
 		if (!uploadedImage) {
-			return InternalError('Something went wrong with the uploaded image');
+			const errorMessage = 'Something went wrong with the uploaded image';
+			toastState.add({
+				title: 'Error',
+				message: errorMessage,
+				type: 'warning',
+			});
+			return InternalError(errorMessage);
 		}
 		if (!id) {
 			items = [...items, uploadedImage];
@@ -98,8 +126,11 @@
 				image.id === uploadedImage.id ? { ...image, ...uploadedImage } : image,
 			);
 		}
-		loading = false;
+		loadingImage = false;
 		modal.close();
+		toastState.add({
+			message: 'Image uploaded',
+		});
 	};
 
 	let selectedImageId = $state(0);
@@ -132,7 +163,7 @@
 		openModal();
 	};
 
-	const imageCount = $derived(items.length + 1);
+	const imageCount = $derived(items.length);
 </script>
 
 <ImageModal
@@ -141,7 +172,7 @@
 	id={selectedImageModalData?.id}
 	alt={selectedImageModalData?.alt}
 	url={selectedImageModalData?.url}
-	{loading}
+	loading={loadingImage}
 />
 
 <form
@@ -179,7 +210,7 @@
 				</span>
 			{/if}
 		</div>
-		<Button onclick={handleAddImage}>
+		<Button onclick={handleAddImage} variant="outline">
 			<ImagePlus aria-hidden="true" /> Add image
 		</Button>
 		{#if items.length}
@@ -201,7 +232,12 @@
 
 	<hr />
 	<div>
-		<Button type="submit" size="medium" variant="primary">
+		<Button
+			type="submit"
+			size="medium"
+			variant="primary"
+			loading={loadingProject}
+		>
 			<Save aria-hidden="true" /> Save
 		</Button>
 	</div>

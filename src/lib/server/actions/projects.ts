@@ -42,12 +42,10 @@ export const createProjectAction = async (event: ActionRequestEvent) => {
 				}),
 			),
 		);
-		console.log('New project created successfully');
-		return { success: true };
+		return { success: true, project: newProject };
 	} catch (error) {
-		console.log(error);
 		return fail(STATUS_CODE.INTERNAL_SERVER_ERROR, {
-			errors: 'Failed to create project.',
+			errors: `Failed to create project. Error: ${error?.message}`,
 		});
 	}
 };
@@ -70,7 +68,10 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 		data: projectMetaPayload,
 		schema: projectInsertSchema,
 	});
-	const imageIdsList = fd.getAll('imageId').map(Number);
+	const imageIdsList = fd
+		.getAll('imageId')
+		.filter((id) => typeof Number(id) === 'number')
+		.map(Number);
 
 	if (projectMetaErrors || !imageIdsList.length) {
 		return fail(STATUS_CODE.BAD_REQUEST, {
@@ -80,7 +81,6 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 	}
 
 	const [coverImageId] = imageIdsList;
-	console.log(fd.getAll('imageId'));
 
 	try {
 		const editProjectPayload = {
@@ -102,12 +102,10 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 					}),
 				),
 		);
-		console.log('Project updated successfully');
-		return { success: true };
+		return { success: true, project: updatedProject };
 	} catch (error) {
-		console.log(error);
 		return fail(STATUS_CODE.INTERNAL_SERVER_ERROR, {
-			errors: `Failed to update project. Error: ${error?.message}`,
+			errors: [`Failed to update project. Error: ${error?.message}`],
 		});
 	}
 };

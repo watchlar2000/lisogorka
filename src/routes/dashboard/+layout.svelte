@@ -1,11 +1,16 @@
 <script>
 	import { enhance } from '$app/forms';
 	import Footer from '$lib/components/Footer.svelte';
+	import Toaster from '$lib/components/Toaster.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
+	import { setToastState } from '$lib/services/toast/toast.svelte';
 
 	let { children } = $props();
+
+	setToastState();
 </script>
 
+<Toaster />
 <div class="container flow">
 	<header class="header">
 		<div class="wrapper repel">

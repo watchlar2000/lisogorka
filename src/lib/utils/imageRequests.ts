@@ -28,14 +28,18 @@ export const submitImage = async ({ payload, options }: SubmitImageParams) => {
 		fd.append('file', file);
 	}
 
-	const { result } = await sendRequest({
-		body: fd,
-		options: { action, method: 'POST' },
-	});
+	try {
+		const { result } = await sendRequest({
+			body: fd,
+			options: { action, method: 'POST' },
+		});
 
-	if (!result) return { image: null };
+		if (!result) return { image: null };
 
-	return { image: result.data?.image as Image };
+		return { image: result.data?.image as Image, errors: null };
+	} catch (error) {
+		return { image: null, errors: error.message };
+	}
 };
 
 export const removeImage = async ({ payload, options }: RemoveImageParams) => {

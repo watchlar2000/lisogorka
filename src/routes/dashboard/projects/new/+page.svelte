@@ -7,7 +7,8 @@
 	import ProjectDescriptionField from '$lib/components/ProjectDescriptionField.svelte';
 	import SelectField from '$lib/components/SelectField.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
-	import { categories, CATEGORY, SUCCESS } from '$lib/constants';
+	import { categories, CATEGORY, FAILURE, SUCCESS } from '$lib/constants';
+	import { getToastState } from '$lib/services/toast/toast.svelte';
 	import type { Category } from '$lib/types/common';
 	import type { Image } from '$lib/types/images';
 	import { createFormState } from '$lib/utils/createFormState.svelte.js';
@@ -22,10 +23,11 @@
 	const handleSort = (e: CustomEvent) => {
 		items = [...e.detail.items];
 	};
-
+	const toastState = getToastState();
 	const { form }: PageProps = $props();
 
-	let loading = $state(false);
+	let loadingProject = $state(false);
+	let loadingImage = $state(false);
 	let modal: ImageModal;
 	let items = $state<Image[]>([]);
 
@@ -47,11 +49,21 @@
 			formData.append('imageId', String(image.id));
 		}
 
+		loadingProject = true;
 		return async ({ result }) => {
 			if (result.type === SUCCESS) {
 				await invalidateAll();
+				toastState.add({
+					message: 'Project updated',
+				});
+			} else if (result.type === FAILURE) {
+				toastState.add({
+					title: 'Error',
+					message: 'Project failed',
+					type: 'warning',
+				});
 			}
-
+			loadingProject = false;
 			await applyAction(result);
 		};
 	};
@@ -59,7 +71,7 @@
 	const onSaveImageCallback = async (params: ImageModalSaveParams) => {
 		const { id, alt, file } = params;
 		const action = !id ? '?/uploadImage' : '?/editImage';
-		loading = true;
+		loadingImage = true;
 		const imagePayload = {
 			id: Number(id),
 			alt,
@@ -72,6 +84,7 @@
 		});
 
 		if (!uploadedImage) {
+			loadingImage = false;
 			return InternalError('Something went wrong with the uploaded image');
 		}
 
@@ -83,7 +96,7 @@
 			);
 		}
 
-		loading = false;
+		loadingImage = false;
 		modal.close();
 	};
 
@@ -123,7 +136,7 @@
 	id={selectedImageModalData?.id}
 	alt={selectedImageModalData?.alt}
 	url={selectedImageModalData?.url}
-	{loading}
+	loading={loadingImage}
 />
 <form
 	method="POST"
@@ -180,8 +193,13 @@
 	</div>
 
 	<hr />
-	<div>
-		<Button type="submit" size="medium" variant="primary">
+	<div class="cluster">
+		<Button
+			type="submit"
+			size="medium"
+			variant="primary"
+			loading={loadingProject}
+		>
 			<Save aria-hidden="true" /> Save
 		</Button>
 	</div>
