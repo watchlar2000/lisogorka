@@ -164,4 +164,8 @@
 	.card-controls {
 		--gutter: var(--space-s);
 	}
+
+	:global(.copy-button) {
+		z-index: 99999;
+	}
 </style>
