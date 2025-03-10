@@ -2,7 +2,7 @@ import type { categories } from '../constants';
 
 type NavItem = {
 	title: string;
-	href: string;
+	href: string | undefined;
 };
 
 type NavItemWithChildren = NavItem & {

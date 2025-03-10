@@ -2,11 +2,14 @@
 	import { page } from '$app/state';
 	import { ROUTE } from '$lib/config';
 	import { PAGE } from '$lib/constants';
+	import { capitalizeFirstLetter } from '$lib/utils/capitalizeFirstLetter';
 	import Logo from './Logo.svelte';
 	import Button from './Ui/Button.svelte';
 
-	const { home, about, backgroundPainting, visualDevelopment, playground } =
-		ROUTE;
+	const routes = Object.entries(ROUTE).map(([title, href]) => ({
+		title: capitalizeFirstLetter(title),
+		href,
+	}));
 
 	const isCurrentPage = (path: string) =>
 		page.url.pathname === path ? PAGE : undefined;
@@ -17,66 +20,26 @@
 		<div class="repel">
 			<Logo size="small" />
 			<nav aria-label="Secondary Footer Navigation">
-				<ul role="list" class="flow footer-nav">
-					<li>
-						<Button
-							as="a"
-							href={home}
-							size="x-small"
-							variant="ghost"
-							aria-current={isCurrentPage(home)}
-						>
-							Home
-						</Button>
-					</li>
-					<li>
-						<Button
-							as="a"
-							href={backgroundPainting}
-							size="x-small"
-							variant="ghost"
-							aria-current={isCurrentPage(backgroundPainting)}
-						>
-							Background painting
-						</Button>
-					</li>
-					<li>
-						<Button
-							as="a"
-							href={visualDevelopment}
-							size="x-small"
-							variant="ghost"
-							aria-current={isCurrentPage(visualDevelopment)}
-						>
-							Visual development
-						</Button>
-					</li>
-					<li>
-						<Button
-							as="a"
-							href={playground}
-							size="x-small"
-							variant="ghost"
-							aria-current={isCurrentPage(playground)}
-						>
-							Playground
-						</Button>
-					</li>
-					<li>
-						<Button
-							as="a"
-							href={about}
-							size="x-small"
-							variant="ghost"
-							aria-current={isCurrentPage(about)}
-						>
-							About
-						</Button>
-					</li>
+				<ul role="list" class="cluster footer-nav">
+					{#each routes as route (route.title)}
+						<li>
+							<Button
+								as="a"
+								href={route.href}
+								size="x-small"
+								variant="ghost"
+								aria-current={isCurrentPage(route.href)}
+							>
+								{route.title}
+							</Button>
+						</li>
+					{/each}
 				</ul>
 			</nav>
 		</div>
-		<div class="footer-copy">
+	</div>
+	<div class="footer-copy">
+		<div class="wrapper">
 			<p>All artistic content Copyright &#169;</p>
 			<p>{new Date().getFullYear()} Iryna Lisogor, All rights</p>
 		</div>
@@ -84,33 +47,32 @@
 </footer>
 
 <style>
+	.footer > .wrapper {
+		padding-inline: var(--gutter);
+		padding-block: var(--space-l);
+	}
 	.footer {
 		--flow-space: var(--space-m);
 
 		font-family: var(--font-display);
 		font-size: var(--text-size-lede);
 		margin-top: var(--space-l-3xl);
-		background-color: var(--color-global-text);
+		background-color: var(--color-dark);
 		color: var(--color-light-tint);
 	}
 
-	.wrapper {
-		padding-inline: var(--gutter);
-		padding-block: var(--space-l);
-	}
-
 	.footer-nav {
-		--flow-space: var(--space-2xs);
+		--cluster-direction: column;
+		--gutter: var(--space-2xs);
+		--cluster-vertical-alignment: flex-start;
 	}
 
 	:global(.footer-nav a) {
 		--_opacity: var(--opacity-default);
 
-		justify-self: flex-start;
-		font-family: var(--font-display);
 		font-weight: var(--font-regular);
 		color: rgba(var(--color-light-rgb), var(--_opacity));
-		text-decoration-color: var(--color-light-muted);
+		text-decoration: none;
 	}
 
 	:global(.footer-nav a:hover) {
@@ -130,6 +92,9 @@
 	}
 
 	.footer-copy {
+		padding-block: var(--space-s);
 		font-size: 0.9rem;
+		font-weight: var(--font-light);
+		background-color: rgb(25, 25, 25);
 	}
 </style>

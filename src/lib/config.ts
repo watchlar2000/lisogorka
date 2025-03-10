@@ -24,8 +24,13 @@ export const siteConfig = {
 export const navConfig: NavConfig = {
 	website: [
 		{
+			title: 'Home',
+			href: '/',
+			items: [],
+		},
+		{
 			title: 'Works',
-			href: '/works',
+			href: undefined,
 			items: [
 				{
 					title: 'Visual development',
@@ -65,6 +70,11 @@ export const navConfig: NavConfig = {
 					href: '/auth/login',
 					items: [],
 				},
+				{
+					title: 'Logout',
+					href: '/auth/logout',
+					items: [],
+				},
 			],
 		},
 	],
@@ -73,10 +83,13 @@ export const navConfig: NavConfig = {
 export const ROUTE = {
 	home: '/',
 	about: '/about',
-	dashboard: '/dashboard',
 	visualDevelopment: '/visual-development',
 	backgroundPainting: '/background-painting',
 	playground: '/playground',
+};
+
+export const ROUTE_DASHBOARD = {
+	dashboard: '/dashboard',
 	login: '/auth/login',
 	logout: '/auth/logout',
 };
