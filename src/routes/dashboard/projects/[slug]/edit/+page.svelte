@@ -2,6 +2,7 @@
 	import { applyAction, enhance } from '$app/forms';
 	import { goto, invalidateAll } from '$app/navigation';
 	import FormImagesList from '$lib/components/FormImagesList.svelte';
+	import InputCheckbox from '$lib/components/InputCheckbox.svelte';
 	import InputField from '$lib/components/InputField.svelte';
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
 	import type { ImageModalSaveParams } from '$lib/components/Modal/ImageModal/types';
@@ -32,6 +33,7 @@
 		...data.project.images.filter(({ id }) => id !== data.project.coverImageId),
 	];
 
+	let isFeatured = $state(data.project.isFeatured);
 	let loadingImage = $state(false);
 	let loadingProject = $state(false);
 	let modal: ImageModal;
@@ -83,7 +85,7 @@
 					});
 				}
 				toastState.add({
-					message: 'Project updated',
+					message: 'Project was updated successfully',
 				});
 			} else if (result.type === FAILURE) {
 				toastState.add({
@@ -184,6 +186,9 @@
 	id="editProject"
 >
 	<div class="flow">
+		<InputCheckbox {isFeatured} />
+	</div>
+	<div class="flow">
 		<InputField
 			type="text"
 			title="title"
@@ -242,3 +247,6 @@
 		</Button>
 	</div>
 </form>
+
+<style>
+</style>

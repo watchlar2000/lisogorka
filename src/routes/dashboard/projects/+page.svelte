@@ -10,7 +10,7 @@
 
 <div class="flow">
 	<div class="repel">
-		<h2 class="title">Projects</h2>
+		<h1>Projects</h1>
 		<Button as="a" href="/dashboard/projects/new" variant="outline">
 			<PackagePlusIcon aria-hidden="true" /> New project
 		</Button>

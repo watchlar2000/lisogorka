@@ -12,12 +12,16 @@ export const createProjectAction = async (event: ActionRequestEvent) => {
 		title: String(fd.get('title')),
 		description: String(fd.get('description')),
 		category: String(fd.get('category')) as Category,
+		isFeatured: Boolean(fd.get('isFeatured')),
 	};
 	const { errors: projectMetaErrors } = validateWithZod({
 		data: projectMetaPayload,
 		schema: projectInsertSchema,
 	});
-	const imageIdsList = fd.getAll('imageId').map(Number);
+	const imageIdsList = fd
+		.getAll('imageId')
+		.filter((id) => typeof id === 'number')
+		.map(Number);
 
 	if (projectMetaErrors || !imageIdsList.length) {
 		return fail(STATUS_CODE.BAD_REQUEST, {
@@ -31,7 +35,6 @@ export const createProjectAction = async (event: ActionRequestEvent) => {
 		const newProjectPayload = {
 			...projectMetaPayload,
 			coverImageId,
-			isFeatured: true,
 		};
 		const newProject = await routing.projects.create(newProjectPayload);
 		await Promise.all(
@@ -63,6 +66,7 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 		title: String(fd.get('title')),
 		description: String(fd.get('description')),
 		category: String(fd.get('category')) as Category,
+		isFeatured: Boolean(fd.get('isFeatured')),
 	};
 	const { errors: projectMetaErrors } = validateWithZod({
 		data: projectMetaPayload,
@@ -70,7 +74,7 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 	});
 	const imageIdsList = fd
 		.getAll('imageId')
-		.filter((id) => typeof Number(id) === 'number')
+		.filter((id) => typeof id === 'number')
 		.map(Number);
 
 	if (projectMetaErrors || !imageIdsList.length) {
@@ -85,7 +89,6 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 	try {
 		const editProjectPayload = {
 			...projectMetaPayload,
-			isFeatured: true,
 			coverImageId: coverImageId,
 		};
 		const updatedProject = await routing.projects.update(

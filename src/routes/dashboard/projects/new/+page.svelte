@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { applyAction, enhance } from '$app/forms';
 	import { invalidateAll } from '$app/navigation';
+	import InputCheckbox from '$lib/components/InputCheckbox.svelte';
 	import InputField from '$lib/components/InputField.svelte';
 	import ImageModal from '$lib/components/Modal/ImageModal/ImageModal.svelte';
 	import type { ImageModalSaveParams } from '$lib/components/Modal/ImageModal/types.js';
@@ -26,6 +27,7 @@
 	const toastState = getToastState();
 	const { form }: PageProps = $props();
 
+	let isFeatured = $state(true);
 	let loadingProject = $state(false);
 	let loadingImage = $state(false);
 	let modal: ImageModal;
@@ -54,12 +56,12 @@
 			if (result.type === SUCCESS) {
 				await invalidateAll();
 				toastState.add({
-					message: 'Project updated',
+					message: 'Project was created successfully',
 				});
 			} else if (result.type === FAILURE) {
 				toastState.add({
 					title: 'Error',
-					message: 'Project failed',
+					message: 'Project failed to be created',
 					type: 'warning',
 				});
 			}
@@ -146,6 +148,9 @@
 	enctype="multipart/form-data"
 	id="createProject"
 >
+	<div class="flow">
+		<InputCheckbox {isFeatured} />
+	</div>
 	<div class="flow">
 		<InputField
 			type="text"
