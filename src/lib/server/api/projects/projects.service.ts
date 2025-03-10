@@ -1,3 +1,8 @@
+import {
+	DatabaseError,
+	NotFoundError,
+	ValidationError,
+} from '$lib/utils/errors';
 import { titleToSlug } from '../utils/titleToSlug';
 import { type IProjectsRepository } from './projects.repository';
 import {
@@ -7,7 +12,7 @@ import {
 } from './projects.types';
 
 interface IProjectsService {
-	listAll: (where?: Pick<Project, 'isFeatured'>) => Promise<Project[]>;
+	listAll: (where?: { isFeatured: boolean | null }) => Promise<Project[]>;
 	findById: (id: number) => Promise<Project>;
 	findBySlug: (slug: string) => Promise<Project>;
 	create: (payload: NewProject) => Promise<Project>;
@@ -21,54 +26,99 @@ export class ProjectsService implements IProjectsService {
 		this.projectRepository = projectRepository;
 	}
 
-	async listAll(where: Pick<Project, 'isFeatured'> = { isFeatured: null }) {
-		return this.projectRepository.listAll(where);
+	async listAll(
+		where: {
+			isFeatured: boolean | null;
+		} = { isFeatured: null },
+	) {
+		try {
+			return await this.projectRepository.listAll(where);
+		} catch (error) {
+			console.error('Error fetching projects:', error);
+			throw new DatabaseError(
+				'Could not fetch projects. Please try again later.',
+			);
+		}
 	}
 
 	async findById(id: number) {
-		const found = await this.projectRepository.findByIdOrSlug({ id });
+		try {
+			const found = await this.projectRepository.findByIdOrSlug({ id });
 
-		if (!found) {
-			throw new Error('Project not found');
+			if (!found) {
+				throw new NotFoundError(`Project with ID "${id}" not found.`);
+			}
+
+			return found;
+		} catch (error) {
+			console.error(`Error finding project with ID ${id}:`, error);
+			throw error instanceof NotFoundError
+				? error
+				: new DatabaseError(
+						'Failed to retrieve project. Please try again later.',
+					);
 		}
-
-		return found;
 	}
 
 	async findBySlug(slug: string) {
-		const found = await this.projectRepository.findByIdOrSlug({ slug });
+		try {
+			const found = await this.projectRepository.findByIdOrSlug({ slug });
 
-		if (!found) {
-			throw new Error('Project not found');
+			if (!found) {
+				throw new NotFoundError(`Project with slug "${slug}" not found.`);
+			}
+
+			return found;
+		} catch (error) {
+			throw error instanceof NotFoundError
+				? error
+				: new DatabaseError(
+						'Failed to retrieve project. Please try again later.',
+					);
 		}
-
-		return found;
 	}
 
 	async create(payload: NewProject) {
-		const {
-			success,
-			data: values,
-			error,
-		} = projectInsertSchema.safeParse(payload);
+		const validatedData = this.validateProjectData(payload);
 
-		if (!success) {
-			const { fieldErrors } = error.flatten();
-			const errorMessage = Object.entries(fieldErrors)
-				.map(([field, errors]) =>
-					errors ? `${field}: ${errors.join(', ')}` : field,
-				)
-				.join('\n');
-			throw new Error(errorMessage);
+		try {
+			return await this.projectRepository.create({
+				...validatedData,
+				slug: titleToSlug(validatedData.title),
+			});
+		} catch (error) {
+			console.error('Error creating project:', error);
+			throw new DatabaseError(
+				'Failed to create project. Please try again later.',
+			);
 		}
-
-		return this.projectRepository.create({
-			...values,
-			slug: titleToSlug(values.title),
-		});
 	}
 
 	async update(id: number, payload: NewProject) {
+		const validatedData = this.validateProjectData(payload);
+
+		try {
+			return this.projectRepository.update(id, {
+				...validatedData,
+				slug: titleToSlug(validatedData.title),
+			});
+		} catch (error) {
+			console.error(`Error updating project with ID ${id}:`, error);
+			throw new DatabaseError(
+				'Failed to update project. Please try again later.',
+			);
+		}
+	}
+
+	private formatValidationErrors(fieldErrors: Record<string, string[]>) {
+		return Object.entries(fieldErrors)
+			.map(([field, errors]) =>
+				errors ? `${field}: ${errors.join(', ')}` : field,
+			)
+			.join('\n');
+	}
+
+	private validateProjectData(payload: NewProject) {
 		const {
 			success,
 			data: values,
@@ -76,18 +126,12 @@ export class ProjectsService implements IProjectsService {
 		} = projectInsertSchema.safeParse(payload);
 
 		if (!success) {
-			const { fieldErrors } = error.flatten();
-			const errorMessage = Object.entries(fieldErrors)
-				.map(([field, errors]) =>
-					errors ? `${field}: ${errors.join(', ')}` : field,
-				)
-				.join('\n');
-			throw new Error(errorMessage);
+			const errorMessage = this.formatValidationErrors(
+				error.flatten().fieldErrors,
+			);
+			throw new ValidationError(errorMessage);
 		}
 
-		return this.projectRepository.update(id, {
-			...values,
-			slug: titleToSlug(values.title),
-		});
+		return values;
 	}
 }

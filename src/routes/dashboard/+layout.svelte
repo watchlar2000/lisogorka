@@ -1,18 +1,30 @@
 <script>
 	import { enhance } from '$app/forms';
 	import Footer from '$lib/components/Footer.svelte';
+	import Toaster from '$lib/components/Toaster.svelte';
 	import Button from '$lib/components/Ui/Button.svelte';
+	import { setToastState } from '$lib/services/toast/toast.svelte';
 
 	let { children } = $props();
+
+	setToastState();
 </script>
 
+<Toaster />
 <div class="container flow">
 	<header class="header">
 		<div class="wrapper repel">
 			<a href="/dashboard" class="header-logo">Dashboard</a>
 			<div class="cluster">
-				<form method="POST" action="logout?/logout" use:enhance>
-					<Button variant="secondary" size="small">Logout</Button>
+				<form method="POST" use:enhance>
+					<Button
+						variant="secondary"
+						type="submit"
+						formaction="/auth/logout?/logout"
+						size="small"
+					>
+						Logout
+					</Button>
 				</form>
 			</div>
 		</div>
@@ -20,7 +32,9 @@
 	<div class="wrapper content">
 		{@render children()}
 	</div>
-	<Footer />
+	<div>
+		<Footer />
+	</div>
 </div>
 
 <style>

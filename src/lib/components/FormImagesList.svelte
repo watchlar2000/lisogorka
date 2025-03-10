@@ -27,7 +27,7 @@
 		width,
 		height,
 	}: Omit<Image, 'id'>) => {
-		const imgTag = `<img src="${url}" alt="${alt}" width="${width}" height="${height}" loading="lazy">`;
+		const imgTag = `<img src="${url}" alt="${alt}" width="${width}" height="${height}" loading="lazy" decoding="async">`;
 		navigator.clipboard.writeText(imgTag);
 	};
 
@@ -151,7 +151,6 @@
 
 	.card-meta {
 		font-size: var(--text-size-meta);
-		padding: var(--space-s);
 	}
 
 	.card-image {
@@ -163,5 +162,9 @@
 
 	.card-controls {
 		--gutter: var(--space-s);
+	}
+
+	:global(.copy-button) {
+		z-index: 99999;
 	}
 </style>

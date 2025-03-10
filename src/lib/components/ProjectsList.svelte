@@ -6,7 +6,7 @@
 	const { projects }: { projects: ProjectWithCoverImage[] } = $props();
 </script>
 
-<ul role="list" class="auto-grid projects__list">
+<ul role="list" class="auto-grid projects-list">
 	{#each projects as p (p.id)}
 		<li
 			in:fade|global={{
@@ -23,14 +23,14 @@
 </ul>
 
 <style>
-	.projects__list {
+	.projects-list {
 		--auto-grid-min-size: clamp(13rem, 30vw, 30%);
 		--auto-grid-gap: var(--gutter);
 
 		min-width: 100%;
 	}
 
-	.projects__list li a {
+	.projects-list li a {
 		display: block;
 		width: 100%;
 		height: 100%;
@@ -38,7 +38,7 @@
 		overflow: hidden;
 	}
 
-	.projects__list img {
+	.projects-list img {
 		object-fit: cover;
 		aspect-ratio: 1.5;
 		width: 100%;

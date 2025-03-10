@@ -10,7 +10,7 @@
 
 <div class="flow">
 	<div class="repel">
-		<h2 class="title">Projects</h2>
+		<h1>Projects</h1>
 		<Button as="a" href="/dashboard/projects/new" variant="outline">
 			<PackagePlusIcon aria-hidden="true" /> New project
 		</Button>
@@ -61,8 +61,8 @@
 
 <style>
 	.cards-list {
-		--auto-grid-gap: var(--space-l);
-		--auto-grid-min-size: 20rem;
+		--auto-grid-min-size: clamp(13rem, 30vw, 30%);
+		--auto-grid-gap: var(--gutter);
 	}
 
 	.card {

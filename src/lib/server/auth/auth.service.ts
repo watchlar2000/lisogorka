@@ -1,5 +1,5 @@
 import { ALLOWED_GOOGLE_EMAIL } from '$env/static/private';
-import { Unauthorized } from '$lib/utils/exceptions';
+import { BadRequest, Unauthorized } from '$lib/utils/exceptions';
 import { sha256 } from '@oslojs/crypto/sha2';
 import {
 	encodeBase32LowerCaseNoPadding,
@@ -44,7 +44,7 @@ export class AuthService {
 		const session: NewSession = {
 			userId,
 			token: sessionToken,
-			expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24 * 2),
+			expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 2),
 		};
 		await this.sessionsService.create(session);
 		return session;
@@ -66,8 +66,8 @@ export class AuthService {
 			return { session: null, user: null };
 		}
 
-		if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 24) {
-			session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 24 * 2);
+		if (Date.now() >= session.expiresAt.getTime() - 1000 * 60 * 60 * 2) {
+			session.expiresAt = new Date(Date.now() + 1000 * 60 * 60 * 2);
 			await this.sessionsService.updateByToken(session.token, {
 				expiresAt: session.expiresAt,
 			});
@@ -128,10 +128,8 @@ export class AuthService {
 				sessionToken,
 			};
 		} catch (error) {
-			console.error(`Error: ${error}`);
-			return new Response('Something went wrong. Please try one more time.', {
-				status: 400,
-			});
+			console.log(error, 'bad....');
+			BadRequest(`Failed to authenticate with Google: ${error?.message}`);
 		}
 	}
 }

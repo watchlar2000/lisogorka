@@ -1,7 +1,7 @@
 import { STATUS_CODE } from '$lib/constants';
 import { projectInsertSchema } from '$lib/server/api/projects/projects.types';
 import { routing } from '$lib/server/api/routing';
-import type { Category } from '$lib/types';
+import type { Category } from '$lib/types/common';
 import type { ActionRequestEvent } from '$lib/types/sveltekit';
 import { validateWithZod } from '$lib/utils/validateWIthZod';
 import { fail } from '@sveltejs/kit';
@@ -12,12 +12,16 @@ export const createProjectAction = async (event: ActionRequestEvent) => {
 		title: String(fd.get('title')),
 		description: String(fd.get('description')),
 		category: String(fd.get('category')) as Category,
+		isFeatured: Boolean(fd.get('isFeatured')),
 	};
 	const { errors: projectMetaErrors } = validateWithZod({
 		data: projectMetaPayload,
 		schema: projectInsertSchema,
 	});
-	const imageIdsList = fd.getAll('imageId').map(Number);
+	const imageIdsList = fd
+		.getAll('imageId')
+		.map(Number)
+		.filter((id) => !isNaN(id));
 
 	if (projectMetaErrors || !imageIdsList.length) {
 		return fail(STATUS_CODE.BAD_REQUEST, {
@@ -31,7 +35,6 @@ export const createProjectAction = async (event: ActionRequestEvent) => {
 		const newProjectPayload = {
 			...projectMetaPayload,
 			coverImageId,
-			isFeatured: true,
 		};
 		const newProject = await routing.projects.create(newProjectPayload);
 		await Promise.all(
@@ -42,12 +45,10 @@ export const createProjectAction = async (event: ActionRequestEvent) => {
 				}),
 			),
 		);
-		console.log('New project created successfully');
-		return { success: true };
+		return { success: true, project: newProject };
 	} catch (error) {
-		console.log(error);
 		return fail(STATUS_CODE.INTERNAL_SERVER_ERROR, {
-			errors: 'Failed to create project.',
+			errors: `Failed to create project. Error: ${error?.message}`,
 		});
 	}
 };
@@ -65,12 +66,17 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 		title: String(fd.get('title')),
 		description: String(fd.get('description')),
 		category: String(fd.get('category')) as Category,
+		isFeatured: Boolean(fd.get('isFeatured')),
 	};
 	const { errors: projectMetaErrors } = validateWithZod({
 		data: projectMetaPayload,
 		schema: projectInsertSchema,
 	});
-	const imageIdsList = fd.getAll('imageId').map(Number);
+	console.log(fd.getAll('imageId'));
+	const imageIdsList = fd
+		.getAll('imageId')
+		.map(Number)
+		.filter((id) => !isNaN(id));
 
 	if (projectMetaErrors || !imageIdsList.length) {
 		return fail(STATUS_CODE.BAD_REQUEST, {
@@ -84,7 +90,6 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 	try {
 		const editProjectPayload = {
 			...projectMetaPayload,
-			isFeatured: true,
 			coverImageId: coverImageId,
 		};
 		const updatedProject = await routing.projects.update(
@@ -101,12 +106,10 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 					}),
 				),
 		);
-		console.log('Project updated successfully');
-		return { success: true };
+		return { success: true, project: updatedProject };
 	} catch (error) {
-		console.log(error);
 		return fail(STATUS_CODE.INTERNAL_SERVER_ERROR, {
-			errors: 'Failed to create project.',
+			errors: [`Failed to update project. Error: ${error?.message}`],
 		});
 	}
 };

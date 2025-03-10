@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { ROUTE } from '$lib/config';
 	import { PAGE } from '$lib/constants';
 	import { clickOutside } from '$lib/directives/clickOutside';
 	import { ChevronDown } from 'lucide-svelte';
@@ -7,6 +8,9 @@
 	import { cubicOut } from 'svelte/easing';
 	import { fly } from 'svelte/transition';
 	import Button from '../Ui/Button.svelte';
+
+	const { home, about, backgroundPainting, visualDevelopment, playground } =
+		ROUTE;
 
 	let showDropdown = $state(false);
 	let dropdownButton = $state<HTMLElement>();
@@ -62,12 +66,6 @@
 		return [...nodes];
 	};
 
-	// const focusFirstDropdownItem = (items: HTMLAnchorElement[]) => {
-	// 	if (items.length > 0) {
-	// 		items[0].focus();
-	// 	}
-	// };
-
 	const handleKeydown = async (event: KeyboardEvent) => {
 		const { key } = event;
 		const currentIndex = dropdownItems.indexOf(
@@ -115,10 +113,10 @@
 		<li>
 			<Button
 				as="a"
-				href="/"
+				href={home}
 				variant="ghost"
 				size="small"
-				aria-current={isCurrentPage('/')}
+				aria-current={isCurrentPage(home)}
 				class="nav-item"
 			>
 				Home
@@ -151,10 +149,10 @@
 					<li data-menu-item>
 						<Button
 							as="a"
-							href="/visual-development"
+							href={visualDevelopment}
 							variant="ghost"
 							size="small"
-							aria-current={isCurrentPage('/visual-development')}
+							aria-current={isCurrentPage(visualDevelopment)}
 							class="dropdown-item nav-item"
 						>
 							Visual development
@@ -163,10 +161,10 @@
 					<li data-menu-item>
 						<Button
 							as="a"
-							href="/background-painting"
+							href={backgroundPainting}
 							variant="ghost"
 							size="small"
-							aria-current={isCurrentPage('/background-painting')}
+							aria-current={isCurrentPage(backgroundPainting)}
 							class="dropdown-item nav-item"
 						>
 							Background painting
@@ -178,8 +176,8 @@
 		<li>
 			<Button
 				as="a"
-				href="/playground"
-				aria-current={isCurrentPage('/playground')}
+				href={playground}
+				aria-current={isCurrentPage(playground)}
 				variant="ghost"
 				size="small"
 				class="nav-item"
@@ -190,8 +188,8 @@
 		<li>
 			<Button
 				as="a"
-				href="/about"
-				aria-current={isCurrentPage('/about')}
+				href={about}
+				aria-current={isCurrentPage(about)}
 				variant="ghost"
 				size="small"
 				class="nav-item"

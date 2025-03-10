@@ -1,13 +1,16 @@
-import type { NavConfig } from './types';
+import type { NavConfig } from './types/common';
 
 export const siteConfig = {
-	name: 'Iryna Lisogor Portfolio Page',
-	url: 'https://www.irynalisogor.art/',
-	ogImage: 'https://www.irynalisogor.art/og.jpg',
+	title: 'Iryna Lisogor Website',
+	author: 'Iryna Lisogor',
+	url: 'https://www.irynalisogor.art',
+	ogImage: 'https://www.irynalisogor.art/og.webp',
 	description:
 		'Portfolio of Iryna Lisogor, showcasing works in visual development and background painting.',
 	links: {
-		/// add social links
+		instagram: 'https://www.instagram.com/iryna_lisogor/',
+		linkedin: 'https://www.linkedin.com/in/iryna-lisogor-72975316a/',
+		behance: 'https://www.behance.net/lisogorka8741b',
 	},
 	keywords:
 		'illustrator, visual development, background painting, art portfolio, Iryna Lisogor, lisogorka',
@@ -21,8 +24,13 @@ export const siteConfig = {
 export const navConfig: NavConfig = {
 	website: [
 		{
+			title: 'Home',
+			href: '/',
+			items: [],
+		},
+		{
 			title: 'Works',
-			href: '/works',
+			href: undefined,
 			items: [
 				{
 					title: 'Visual development',
@@ -62,7 +70,26 @@ export const navConfig: NavConfig = {
 					href: '/auth/login',
 					items: [],
 				},
+				{
+					title: 'Logout',
+					href: '/auth/logout',
+					items: [],
+				},
 			],
 		},
 	],
+};
+
+export const ROUTE = {
+	home: '/',
+	about: '/about',
+	visualDevelopment: '/visual-development',
+	backgroundPainting: '/background-painting',
+	playground: '/playground',
+};
+
+export const ROUTE_DASHBOARD = {
+	dashboard: '/dashboard',
+	login: '/auth/login',
+	logout: '/auth/logout',
 };

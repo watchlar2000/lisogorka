@@ -1,3 +1,4 @@
+import { DatabaseError } from '$lib/utils/errors';
 import { desc, eq, getTableColumns } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { images, projects } from '../database/schema';
@@ -8,7 +9,9 @@ import type {
 } from './projects.types';
 
 export interface IProjectsRepository {
-	listAll(where: Pick<Project, 'isFeatured'>): Promise<ProjectWithCoverImage[]>;
+	listAll(where: {
+		isFeatured: boolean | null;
+	}): Promise<ProjectWithCoverImage[]>;
 	findByIdOrSlug(params: {
 		id?: number;
 		slug?: string;
@@ -27,66 +30,88 @@ export class ProjectsRepository<T extends Record<string, unknown>>
 		this.db = db;
 	}
 
-	async listAll(where: Pick<Project, 'isFeatured'>) {
+	async listAll(where: { isFeatured: boolean | null }) {
 		const { isFeatured } = where;
+		try {
+			const query = this.db
+				.select({
+					...getTableColumns(projects),
+					coverImage: images,
+				})
+				.from(projects)
+				.orderBy(desc(projects.createdAt))
+				.leftJoin(images, eq(projects.coverImageId, images.id))
+				.$dynamic();
 
-		const query = this.db
-			.select({
-				...getTableColumns(projects),
-				coverImage: images,
-			})
-			.from(projects)
-			.orderBy(desc(projects.createdAt))
-			.leftJoin(images, eq(projects.coverImageId, images.id))
-			.$dynamic();
+			if (isFeatured !== null) {
+				return query.where(eq(projects.isFeatured, isFeatured));
+			}
 
-		if (isFeatured) {
-			return query.where(eq(projects.isFeatured, isFeatured));
+			return query.execute();
+		} catch (error) {
+			throw new DatabaseError('Could not retrieve projects.', error);
 		}
-
-		return query.execute();
 	}
 
 	async findByIdOrSlug(params: { id: number; slug: string }) {
 		const { id, slug } = params;
 
 		const whereCondition = id ? eq(projects.id, id) : eq(projects.slug, slug);
-		const [found] = await this.db
-			.select({
-				...getTableColumns(projects),
-				coverImage: images,
-			})
-			.from(projects)
-			.leftJoin(images, eq(projects.coverImageId, images.id))
-			.where(whereCondition);
-		return found ?? null;
+		try {
+			const [found] = await this.db
+				.select({
+					...getTableColumns(projects),
+					coverImage: images,
+				})
+				.from(projects)
+				.leftJoin(images, eq(projects.coverImageId, images.id))
+				.where(whereCondition);
+			return found ?? null;
+		} catch (error) {
+			throw new DatabaseError(
+				`Could not find project by ${params.id ? `ID ${params.id}` : `slug "${params.slug}"`}.`,
+				error,
+			);
+		}
 	}
 
 	async create(payload: NewProject) {
-		const [project] = await this.db
-			.insert(projects)
-			.values(payload)
-			.returning();
+		try {
+			const [project] = await this.db
+				.insert(projects)
+				.values(payload)
+				.returning();
 
-		return project;
+			return project;
+		} catch (error) {
+			throw new DatabaseError('Failed to create a new project.', error);
+		}
 	}
 
 	async update(id: number, payload: Partial<NewProject>) {
-		const [project] = await this.db
-			.update(projects)
-			.set(payload)
-			.where(eq(projects.id, id))
-			.returning();
+		try {
+			const [project] = await this.db
+				.update(projects)
+				.set(payload)
+				.where(eq(projects.id, id))
+				.returning();
 
-		return project;
+			return project;
+		} catch (error) {
+			throw new DatabaseError(`Could not update project with ID ${id}.`, error);
+		}
 	}
 
 	async deleteById(id: number) {
-		const [project] = await this.db
-			.delete(projects)
-			.where(eq(projects.id, id))
-			.returning();
+		try {
+			const [project] = await this.db
+				.delete(projects)
+				.where(eq(projects.id, id))
+				.returning();
 
-		return project;
+			return project;
+		} catch (error) {
+			throw new DatabaseError(`Could not delete project with ID ${id}.`, error);
+		}
 	}
 }
