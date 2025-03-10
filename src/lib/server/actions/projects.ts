@@ -20,8 +20,8 @@ export const createProjectAction = async (event: ActionRequestEvent) => {
 	});
 	const imageIdsList = fd
 		.getAll('imageId')
-		.filter((id) => typeof id === 'number')
-		.map(Number);
+		.map(Number)
+		.filter((id) => !isNaN(id));
 
 	if (projectMetaErrors || !imageIdsList.length) {
 		return fail(STATUS_CODE.BAD_REQUEST, {
@@ -72,10 +72,11 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 		data: projectMetaPayload,
 		schema: projectInsertSchema,
 	});
+	console.log(fd.getAll('imageId'));
 	const imageIdsList = fd
 		.getAll('imageId')
-		.filter((id) => typeof id === 'number')
-		.map(Number);
+		.map(Number)
+		.filter((id) => !isNaN(id));
 
 	if (projectMetaErrors || !imageIdsList.length) {
 		return fail(STATUS_CODE.BAD_REQUEST, {

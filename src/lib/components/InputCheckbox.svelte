@@ -17,6 +17,9 @@
 <style>
 	.toggle {
 		font-size: inherit;
+		width: max-content;
+		padding-block: var(--space-2xs);
+		user-select: none;
 	}
 	.hidden-checkbox {
 		position: absolute;
