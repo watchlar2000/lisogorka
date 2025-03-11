@@ -171,7 +171,7 @@
 	--stroke: 3px dashed var(--color-stroke, var(--color-surface-bg));
 	--stroke-solid: 3px solid
 		var(--color-stroke, var(--color-surface-text-interact));
-	--base-radius: 0px;
+	--base-radius: 0.1em;
 	--radius-s: calc(var(--base-radius) * 1);
 	--radius-m: calc(var(--base-radius) * 5);
 	--radius-l: calc(var(--base-radius) * 12.5);

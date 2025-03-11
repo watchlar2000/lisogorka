@@ -220,6 +220,7 @@
 		box-shadow: var(--shadow-xl);
 		z-index: 9999;
 		position: absolute;
+		top: 2.5rem;
 		left: 50%;
 		transform: translateX(-50%);
 		width: max-content;
