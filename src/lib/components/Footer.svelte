@@ -168,7 +168,6 @@
 	.footer {
 		--flow-space: var(--space-m);
 
-		/* font-family: var(--font-display); */
 		font-size: var(--text-size-lede);
 		margin-top: var(--space-l-3xl);
 		background-color: var(--color-dark);
@@ -218,12 +217,6 @@
 
 	.socials {
 		--flow-space: var(--space-2xs);
-
-		background-color: var(--color-dark-muted);
-		background-image: var(--gradient-accent);
-		padding: var(--space-2xs);
-		border-radius: var(--radius-m);
-		box-shadow: var(--shadow-xl);
 	}
 
 	.socials span {
