@@ -25,109 +25,90 @@
 				<div class="flow socials">
 					<span>Let's connect</span>
 					<div>
-						<ul role="list">
+						<ul role="list" class="cluster socials-list">
 							<li>
-								<ul role="list" class="cluster socials-list">
-									<li>
-										<Button
-											as="a"
-											href="https://www.instagram.com/iryna_lisogor/"
-											size="x-small"
-										>
-											<svg
-												aria-hidden="true"
-												width="32"
-												height="32"
-												viewBox="0 0 24 24"
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="1.5"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-											>
-												<rect
-													width="20"
-													height="20"
-													x="2"
-													y="2"
-													rx="5"
-													ry="5"
-												/>
-												<path
-													d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"
-												/>
-												<line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-											</svg>
-											<span class="visually-hidden">Instagram page link</span>
-										</Button>
-									</li>
-									<li>
-										<Button
-											as="a"
-											href="https://www.linkedin.com/in/iryna-lisogor-72975316a/"
-											size="x-small"
-										>
-											<svg
-												aria-hidden="true"
-												width="32"
-												height="32"
-												viewBox="0 0 24 24"
-												xmlns="http://www.w3.org/2000/svg"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="1.5"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-											>
-												<rect
-													width="20"
-													height="20"
-													x="2"
-													y="2"
-													rx="5"
-													ry="5"
-												/>
-												<text
-													x="6.5"
-													y="17"
-													font-weight="normal"
-													font-size="14"
-													fill="currentColor"
-												>
-													in
-												</text>
-											</svg>
-											<span class="visually-hidden">Linkedin page link</span>
-										</Button>
-									</li>
-									<li>
-										<Button
-											as="a"
-											href="mailto:email@iryna.lisogor.artwrk@gmail.com"
-											size="x-small"
-										>
-											<svg
-												aria-hidden="true"
-												xmlns="http://www.w3.org/2000/svg"
-												width="32"
-												height="32"
-												viewBox="0 0 24 24"
-												fill="none"
-												stroke="currentColor"
-												stroke-width="1.5"
-												stroke-linecap="round"
-												stroke-linejoin="round"
-											>
-												<rect width="20" height="16" x="2" y="4" rx="2" />
-												<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
-											</svg>
-											<span class="visually-hidden">
-												Send me an email to iryna.lisogor.artwrk@gmail.com
-											</span>
-										</Button>
-									</li>
-								</ul>
+								<Button
+									as="a"
+									href="https://www.instagram.com/iryna_lisogor/"
+									size="x-small"
+								>
+									<svg
+										aria-hidden="true"
+										width="32"
+										height="32"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+										<path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+										<line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+									</svg>
+									<span class="visually-hidden">Instagram page link</span>
+								</Button>
+							</li>
+							<li>
+								<Button
+									as="a"
+									href="https://www.linkedin.com/in/iryna-lisogor-72975316a/"
+									size="x-small"
+								>
+									<svg
+										aria-hidden="true"
+										width="32"
+										height="32"
+										viewBox="0 0 24 24"
+										xmlns="http://www.w3.org/2000/svg"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<rect
+											width="20"
+											height="20"
+											x="2"
+											y="2"
+											rx="5"
+											ry="5"
+										></rect>
+										<line x1="8" y1="10" x2="8" y2="16"></line>
+										<circle cx="8" cy="7" r="0.5"></circle>
+										<path d="M 12 16 V 10 H 14 Q 16 10 16 12 V 16"></path>
+									</svg>
+									<span class="visually-hidden">Linkedin page link</span>
+								</Button>
+							</li>
+							<li>
+								<Button
+									as="a"
+									href="mailto:email@iryna.lisogor.artwrk@gmail.com"
+									size="x-small"
+								>
+									<svg
+										aria-hidden="true"
+										xmlns="http://www.w3.org/2000/svg"
+										width="32"
+										height="32"
+										viewBox="0 0 24 24"
+										fill="none"
+										stroke="currentColor"
+										stroke-width="1.5"
+										stroke-linecap="round"
+										stroke-linejoin="round"
+									>
+										<rect width="20" height="16" x="2" y="4" rx="2" />
+										<path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7" />
+									</svg>
+									<span class="visually-hidden">
+										Send me an email to iryna.lisogor.artwrk@gmail.com
+									</span>
+								</Button>
 							</li>
 						</ul>
 					</div>
@@ -216,13 +197,13 @@
 	}
 
 	.socials {
-		--flow-space: var(--space-2xs);
+		--flow-space: var(--space-3xs);
 	}
 
 	.socials span {
 		font-size: var(--text-size-meta);
 		font-family: var(--font-display);
-		font-weight: var(--font-bold);
+		font-weight: var(--font-medium);
 	}
 
 	.socials-list {
