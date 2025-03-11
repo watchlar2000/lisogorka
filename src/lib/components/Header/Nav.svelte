@@ -109,13 +109,13 @@
 </script>
 
 <nav aria-label="Primary Navigation">
-	<ul class="cluster" role="list">
+	<ul class="cluster nav-list" role="list">
 		<li>
 			<Button
 				as="a"
 				href={home}
 				variant="ghost"
-				size="small"
+				size="x-small"
 				aria-current={isCurrentPage(home)}
 				class="nav-item"
 			>
@@ -129,7 +129,7 @@
 				aria-controls="work-options"
 				bind:node={dropdownButton}
 				variant="ghost"
-				size="small"
+				size="x-small"
 				class="dropdown-button nav-item"
 			>
 				Works
@@ -140,30 +140,30 @@
 				<ul
 					id="work-options"
 					role="list"
-					class="dropdown-menu"
+					class="dropdown-menu cluster"
 					bind:this={dropdownMenu}
 					onkeydown={handleKeydown}
 					onclick={handleSubMenuClick}
 					transition:fly={{ y: -10, duration: 125, easing: cubicOut }}
 				>
-					<li data-menu-item>
+					<li>
 						<Button
 							as="a"
 							href={visualDevelopment}
 							variant="ghost"
-							size="small"
+							size="x-small"
 							aria-current={isCurrentPage(visualDevelopment)}
 							class="dropdown-item nav-item"
 						>
 							Visual development
 						</Button>
 					</li>
-					<li data-menu-item>
+					<li>
 						<Button
 							as="a"
 							href={backgroundPainting}
 							variant="ghost"
-							size="small"
+							size="x-small"
 							aria-current={isCurrentPage(backgroundPainting)}
 							class="dropdown-item nav-item"
 						>
@@ -179,7 +179,7 @@
 				href={playground}
 				aria-current={isCurrentPage(playground)}
 				variant="ghost"
-				size="small"
+				size="x-small"
 				class="nav-item"
 			>
 				Playground
@@ -191,7 +191,7 @@
 				href={about}
 				aria-current={isCurrentPage(about)}
 				variant="ghost"
-				size="small"
+				size="x-small"
 				class="nav-item"
 			>
 				About
@@ -201,8 +201,8 @@
 </nav>
 
 <style>
-	nav .cluster {
-		--gutter: 0;
+	.nav-list {
+		--gutter: clamp(0.4em, 3vw, 3rem);
 	}
 
 	.dropdown {
@@ -212,6 +212,7 @@
 	.dropdown-menu {
 		--_padding: var(--space-2xs);
 		--gutter: var(--_padding);
+		--cluster-direction: column;
 
 		padding: var(--_padding);
 		background-color: var(--color-light);
@@ -219,6 +220,7 @@
 		box-shadow: var(--shadow-xl);
 		z-index: 9999;
 		position: absolute;
+		top: 2.5rem;
 		left: 50%;
 		transform: translateX(-50%);
 		width: max-content;
@@ -229,7 +231,7 @@
 	}
 
 	:global(.dropdown-button svg) {
-		height: 1lh;
+		height: 0.75lh;
 		transition: transform 0.125s ease;
 	}
 
@@ -237,8 +239,12 @@
 		transform: rotate(180deg);
 	}
 
+	:global(.nav-item) {
+		--gutter: 0 !important;
+	}
+
 	:global(.nav-item):focus-visible {
-		outline: none;
+		/* outline: none; */
 		background-image: var(--gradient-accent);
 	}
 </style>
