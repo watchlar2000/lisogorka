@@ -126,18 +126,6 @@
 	--color-light-glare: rgba(var(--color-light-rgb), 0.8);
 	--color-light-shade: rgba(var(--color-light-rgb), 0.3);
 
-	/* Colors */
-	/* --color-dark: #262626;
-	--color-dark-glare: #545454;
-	--color-mid: #c9c9c9;
-	--color-mid-shade: #dedede;
-	--color-light: rgb(240, 240, 240); */
-	/* --color-light-shade: ; */
-	/* --color-blue: #1a8fe3; */
-	/* --color-purple: #ae01ff; */
-	/* --color-blue-glare: #c2e3ff; */
-	/* --color-danger: rgb(212, 53, 28); */
-
 	--leading: 1.5;
 	--leading-fine: 1.1;
 	--leading-loose: 1.7;
@@ -154,15 +142,13 @@
 	--text-size-heading-4: var(--step-2);
 	--text-size-heading-5: var(--step-1);
 	--text-size-heading-6: var(--step--2);
-	--gutter: var(--space-m-l);
+	--gutter: var(--space-s-m);
 	--space-gutter: var(--space-m);
 	--space-gutter-s: var(--space-s);
 	--space-gutter-l: var(--space-l);
 	--space-regions: var(--space-xl);
 	--size-text-max-width: 44rem;
 	--wrapper-max-width: 1360px;
-	/* --color-global-bg: var(--color-light-glare); */
-	/* --color-global-text: var(--color-dark); */
 	--color-surface-bg: var(--color-mid);
 	--color-surface-bg-interact: var(--color-mid-shade);
 	--color-surface-text: var(--color-dark);

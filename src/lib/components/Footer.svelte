@@ -18,7 +18,9 @@
 <footer class="footer">
 	<div class="wrapper flow">
 		<div class="repel">
-			<Logo size="small" />
+			<div class="footer-logo">
+				<Logo size="small" />
+			</div>
 			<nav aria-label="Secondary Footer Navigation">
 				<ul role="list" class="cluster footer-nav">
 					{#each routes as route (route.title)}
@@ -93,8 +95,11 @@
 
 	.footer-copy {
 		padding-block: var(--space-s);
-		font-size: 0.9rem;
 		font-weight: var(--font-light);
 		background-color: rgb(25, 25, 25);
+	}
+
+	.footer-logo {
+		padding-block: 0.5rem;
 	}
 </style>
