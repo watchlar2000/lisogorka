@@ -29,6 +29,7 @@
 							<li>
 								<Button
 									as="a"
+									target="_blank"
 									href="https://www.instagram.com/iryna_lisogor/"
 									size="x-small"
 								>
@@ -54,6 +55,7 @@
 							<li>
 								<Button
 									as="a"
+									target="_blank"
 									href="https://www.linkedin.com/in/iryna-lisogor-72975316a/"
 									size="x-small"
 								>
@@ -87,6 +89,7 @@
 							<li>
 								<Button
 									as="a"
+									target="_blank"
 									href="mailto:email@iryna.lisogor.artwrk@gmail.com"
 									size="x-small"
 								>
