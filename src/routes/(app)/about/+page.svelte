@@ -14,6 +14,10 @@
 		src={profileImage}
 		alt="Iryna Lisogor, illustrator and author of the content of this website"
 		class="avatar"
+		width="50%"
+		height="auto"
+		loading="lazy"
+		decoding="async"
 		in:fade={{ duration: 250, easing: cubicOut }}
 	/>
 	<h1 class="visually-hidden">
@@ -43,8 +47,6 @@
 <style>
 	.avatar {
 		object-fit: cover;
-		height: 20ch;
-		width: 20ch;
 		border-radius: 50%;
 		margin-inline: auto;
 	}
