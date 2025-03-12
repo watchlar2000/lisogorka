@@ -2,12 +2,12 @@
 	import { page } from '$app/state';
 	import { ROUTE } from '$lib/config';
 	import { PAGE } from '$lib/constants';
-	import { capitalizeFirstLetter } from '$lib/utils/capitalizeFirstLetter';
+	import { formatCamelCase } from '$lib/utils/formatCamelCase';
 	import Logo from './Logo.svelte';
 	import Button from './Ui/Button.svelte';
 
 	const routes = Object.entries(ROUTE).map(([title, href]) => ({
-		title: capitalizeFirstLetter(title),
+		title: formatCamelCase(title),
 		href,
 	}));
 
@@ -190,6 +190,8 @@
 		font-weight: var(--font-light);
 		background-color: rgb(25, 25, 25);
 		box-shadow: var(--shadow-xl);
+		letter-spacing: var(--kerning-uppercase);
+		font-family: var(--font-display);
 	}
 
 	.footer-logo {
