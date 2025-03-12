@@ -108,8 +108,8 @@
 		page.url.pathname === path ? PAGE : undefined;
 </script>
 
-<nav aria-label="Primary Navigation">
-	<ul class="cluster nav-list" role="list">
+<nav aria-label="Primary Navigation" class="nav">
+	<ul class="repel nav-list" role="list">
 		<li>
 			<Button
 				as="a"
@@ -201,8 +201,12 @@
 </nav>
 
 <style>
+	.nav {
+		width: 100%;
+		max-width: 30ch;
+	}
 	.nav-list {
-		--gutter: clamp(0.4em, 3vw, 3rem);
+		--repel-wrap: nowrap;
 	}
 
 	.dropdown {
