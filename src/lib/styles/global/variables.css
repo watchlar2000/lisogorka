@@ -154,8 +154,10 @@
 	--color-surface-text: var(--color-dark);
 	--color-surface-text-interact: var(--color-dark-glare);
 	--color-primary: var(--color-blue);
-	--font-base: 'Urbanist', sans-serif;
-	--font-display: 'Ubuntu', sans-serif;
+	--font-base: 'Urbanist', 'Urbanist', -apple-system, BlinkMacSystemFont,
+		'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+	--font-display: 'Ubuntu', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+		Roboto, sans-serif;
 	--font-light: 300;
 	--font-regular: 400;
 	--font-medium: 500;
