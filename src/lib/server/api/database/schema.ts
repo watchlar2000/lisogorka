@@ -1,7 +1,7 @@
-import { categories } from '$lib/constants';
 import { relations } from 'drizzle-orm';
 import * as t from 'drizzle-orm/pg-core';
 import { pgEnum, pgTable as table } from 'drizzle-orm/pg-core';
+import { categories } from '../../../constants';
 import { timestamps } from '../utils/drizzle';
 
 export const users = table('users', {

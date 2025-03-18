@@ -38,8 +38,8 @@ export const navConfig: NavConfig = {
 					items: [],
 				},
 				{
-					title: 'Background painting',
-					href: '/background-painting',
+					title: 'Paintings',
+					href: '/paintings',
 					items: [],
 				},
 			],
@@ -84,7 +84,7 @@ export const ROUTE = {
 	home: '/',
 	about: '/about',
 	visualDevelopment: '/visual-development',
-	backgroundPainting: '/background-painting',
+	paintings: '/paintings',
 	playground: '/playground',
 };
 

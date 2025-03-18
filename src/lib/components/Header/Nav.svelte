@@ -9,8 +9,7 @@
 	import { fly } from 'svelte/transition';
 	import Button from '../Ui/Button.svelte';
 
-	const { home, about, backgroundPainting, visualDevelopment, playground } =
-		ROUTE;
+	const { home, about, paintings, visualDevelopment, playground } = ROUTE;
 
 	let showDropdown = $state(false);
 	let dropdownButton = $state<HTMLElement>();
@@ -161,13 +160,13 @@
 					<li>
 						<Button
 							as="a"
-							href={backgroundPainting}
+							href={paintings}
 							variant="ghost"
 							size="x-small"
-							aria-current={isCurrentPage(backgroundPainting)}
+							aria-current={isCurrentPage(paintings)}
 							class="dropdown-item nav-item"
 						>
-							Background painting
+							Paintings
 						</Button>
 					</li>
 				</ul>

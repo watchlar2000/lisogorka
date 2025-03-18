@@ -19,13 +19,13 @@ export const ACCEPTED_FILE_TYPES = [
 ];
 
 export const CATEGORY = {
-	BACKGROUND_PAINTING: 'background-painting',
+	BACKGROUND_PAINTING: 'paintings',
 	VISUAL_DEVELOPMENT: 'visual-development',
 	PLAYGROUND: 'playground',
 };
 
 export const categories = [
-	'background-painting',
+	'paintings',
 	'visual-development',
 	'playground',
 ] as const;

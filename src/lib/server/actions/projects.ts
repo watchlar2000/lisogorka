@@ -72,7 +72,6 @@ export const editProjectAction = async (event: ActionRequestEvent) => {
 		data: projectMetaPayload,
 		schema: projectInsertSchema,
 	});
-	console.log(fd.getAll('imageId'));
 	const imageIdsList = fd
 		.getAll('imageId')
 		.map(Number)
