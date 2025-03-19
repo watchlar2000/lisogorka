@@ -8,6 +8,8 @@
 
 	let { source = $bindable() }: ProjectDescriptionFieldProps = $props();
 
+	const previewSource = $derived(sanitizeMarkdown(source));
+
 	const tabs = [
 		{ id: 'description', title: 'Description' },
 		{ id: 'preview', title: 'Preview' },
@@ -16,16 +18,22 @@
 	let activeTab = $state(tabs[0].id);
 </script>
 
-{#snippet description()}
-	<textarea name="description" id="description" bind:value={source}></textarea>
+{#snippet description(hidden = false)}
+	<textarea
+		name="description"
+		id="description"
+		bind:value={source}
+		{hidden}
+	></textarea>
 {/snippet}
 
-{#snippet preview(markdown: string)}
-	{#if !markdown.trim().length}
+{#snippet preview(html: string)}
+	{#if !html.trim().length}
 		<p>No description provided yet...</p>
 	{/if}
+	{@render description(true)}
 	<article class="flow prose">
-		{@html sanitizeMarkdown(markdown)}
+		{@html html}
 	</article>
 {/snippet}
 
@@ -33,7 +41,7 @@
 	{#if currentTabId === 'description'}
 		{@render description()}
 	{:else}
-		{@render preview(source)}
+		{@render preview(previewSource)}
 	{/if}
 {/snippet}
 
