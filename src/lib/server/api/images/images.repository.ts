@@ -1,3 +1,4 @@
+import { DatabaseError } from '$lib/utils/errors';
 import { eq, inArray } from 'drizzle-orm';
 import type { PostgresJsDatabase } from 'drizzle-orm/postgres-js';
 import { images } from '../database/schema';
@@ -20,41 +21,64 @@ export class ImagesRepository implements IImagesRepository {
 	}
 
 	async listAll() {
-		return this.db.select().from(images);
+		try {
+			return await this.db.select().from(images);
+		} catch (error) {
+			throw new DatabaseError('Could not retrieve images.', error);
+		}
 	}
 
 	async findById(id: number) {
-		const [image] = await this.db
-			.select()
-			.from(images)
-			.where(eq(images.id, id));
-
-		return image;
+		try {
+			const [image] = await this.db
+				.select()
+				.from(images)
+				.where(eq(images.id, id));
+			return image;
+		} catch (error) {
+			throw new DatabaseError(`Could not find image with ID ${id}.`, error);
+		}
 	}
 
 	async findByIds(ids: number[]) {
-		return this.db.select().from(images).where(inArray(images.id, ids));
+		try {
+			return await this.db.select().from(images).where(inArray(images.id, ids));
+		} catch (error) {
+			throw new DatabaseError(`Could not find images by IDs provided.`, error);
+		}
 	}
 
 	async create(payload: NewImage) {
-		const [image] = await this.db.insert(images).values(payload).returning();
-		return image;
+		try {
+			const [image] = await this.db.insert(images).values(payload).returning();
+			return image;
+		} catch (error) {
+			throw new DatabaseError('Failed to create a new image.', error);
+		}
 	}
 
 	async update(id: number, payload: Partial<Image>) {
-		const [image] = await this.db
-			.update(images)
-			.set(payload)
-			.where(eq(images.id, id))
-			.returning();
-		return image;
+		try {
+			const [image] = await this.db
+				.update(images)
+				.set(payload)
+				.where(eq(images.id, id))
+				.returning();
+			return image;
+		} catch (error) {
+			throw new DatabaseError(`Could not update image with ID ${id}.`, error);
+		}
 	}
 
 	async delete(id: number) {
-		const [image] = await this.db
-			.delete(images)
-			.where(eq(images.id, id))
-			.returning();
-		return image;
+		try {
+			const [image] = await this.db
+				.delete(images)
+				.where(eq(images.id, id))
+				.returning();
+			return image;
+		} catch (error) {
+			throw new DatabaseError(`Could not delete image with ID ${id}.`, error);
+		}
 	}
 }

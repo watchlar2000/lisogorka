@@ -56,12 +56,12 @@
 		}
 	});
 
-	const projectInitValues = $state({
+	const projectInitValues = {
 		id: data.project.id,
 		title: data.project.title,
 		description: data.project.description ?? '',
 		category: data.project.category,
-	});
+	};
 
 	const { formState, register } = createFormState({
 		defaultDataValues: { ...projectInitValues },

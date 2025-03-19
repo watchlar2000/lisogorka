@@ -1,3 +1,4 @@
+import { DatabaseError, NotFoundError } from '$lib/utils/errors';
 import { CloudinaryService } from '../../cloudinary/cloudinary.service';
 import { type IImagesRepository } from './images.repository';
 import { type Image } from './images.types';
@@ -29,54 +30,104 @@ export class ImagesService implements IImagesService {
 	}
 
 	async listAll() {
-		return this.repository.listAll();
+		try {
+			return await this.repository.listAll();
+		} catch (error) {
+			console.error('Error fetching projects:', error);
+			throw new DatabaseError(
+				'Could not fetch images. Please try again later.',
+			);
+		}
 	}
 
 	async findById(id: number) {
-		return this.repository.findById(id);
+		try {
+			const found = await this.repository.findById(id);
+
+			if (!found) {
+				throw new NotFoundError(`Image with ID "${id}" not found.`);
+			}
+
+			return found;
+		} catch (error) {
+			console.error(`Error finding image with ID ${id}:`, error);
+			throw error instanceof NotFoundError
+				? error
+				: new DatabaseError(
+						'Failed to retrieve image. Please try again later.',
+					);
+		}
 	}
 
 	async findByIds(ids: number[]) {
-		return this.repository.findByIds(ids);
+		try {
+			return await this.repository.findByIds(ids);
+		} catch (error) {
+			console.error('Error fetching images by IDs provided:', error);
+			throw new DatabaseError(
+				'Could not fetch images. Please try again later.',
+			);
+		}
 	}
 
 	async create({ file, alt }: UpdateImageParams) {
-		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const { public_id, width, height, secure_url } =
-			await this.cloudinaryService.upload({
-				image: file,
-			});
+		try {
+			// eslint-disable-next-line @typescript-eslint/no-unused-vars
+			const { public_id, width, height, secure_url } =
+				await this.cloudinaryService.upload({
+					image: file,
+				});
 
-		const payload = {
-			url: secure_url,
-			alt,
-			width,
-			height,
-		};
+			const payload = {
+				url: secure_url,
+				alt,
+				width,
+				height,
+			};
 
-		return await this.repository.create(payload);
+			return await this.repository.create(payload);
+		} catch (error) {
+			console.error('Error creating image:', error);
+			throw new DatabaseError(
+				'Failed to create image. Please try again later.',
+			);
+		}
 	}
 	async update(id: number, { file, alt }: Partial<UpdateImageParams>) {
-		const cloudinaryImage = file
-			? await this.cloudinaryService.upload({
-					image: file,
-				})
-			: null;
+		try {
+			const cloudinaryImage = file
+				? await this.cloudinaryService.upload({
+						image: file,
+					})
+				: null;
 
-		const payload = {
-			alt,
-			...(cloudinaryImage && {
-				url: cloudinaryImage.secure_url,
-				width: cloudinaryImage.width,
-				height: cloudinaryImage.height,
-			}),
-		};
+			const payload = {
+				alt,
+				...(cloudinaryImage && {
+					url: cloudinaryImage.secure_url,
+					width: cloudinaryImage.width,
+					height: cloudinaryImage.height,
+				}),
+			};
 
-		return this.repository.update(id, payload);
+			return await this.repository.update(id, payload);
+		} catch (error) {
+			console.error('Error updating image:', error);
+			throw new DatabaseError(
+				'Failed to update image. Please try again later.',
+			);
+		}
 	}
 
 	async delete(id: number) {
-		// TODO: remove image from cloudinary
-		return this.repository.delete(id);
+		try {
+			// TODO: remove image from cloudinary
+			return await this.repository.delete(id);
+		} catch (error) {
+			console.error('Error deleting image:', error);
+			throw new DatabaseError(
+				'Failed to delete image. Please try again later.',
+			);
+		}
 	}
 }

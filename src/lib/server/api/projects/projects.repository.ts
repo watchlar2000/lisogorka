@@ -55,7 +55,6 @@ export class ProjectsRepository<T extends Record<string, unknown>>
 
 	async findByIdOrSlug(params: { id: number; slug: string }) {
 		const { id, slug } = params;
-
 		const whereCondition = id ? eq(projects.id, id) : eq(projects.slug, slug);
 		try {
 			const [found] = await this.db
@@ -81,7 +80,6 @@ export class ProjectsRepository<T extends Record<string, unknown>>
 				.insert(projects)
 				.values(payload)
 				.returning();
-
 			return project;
 		} catch (error) {
 			throw new DatabaseError('Failed to create a new project.', error);
@@ -95,7 +93,6 @@ export class ProjectsRepository<T extends Record<string, unknown>>
 				.set(payload)
 				.where(eq(projects.id, id))
 				.returning();
-
 			return project;
 		} catch (error) {
 			throw new DatabaseError(`Could not update project with ID ${id}.`, error);
@@ -108,7 +105,6 @@ export class ProjectsRepository<T extends Record<string, unknown>>
 				.delete(projects)
 				.where(eq(projects.id, id))
 				.returning();
-
 			return project;
 		} catch (error) {
 			throw new DatabaseError(`Could not delete project with ID ${id}.`, error);
