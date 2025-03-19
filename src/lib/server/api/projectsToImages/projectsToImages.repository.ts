@@ -21,6 +21,7 @@ export class ProjectsToImagesRepository<T extends Record<string, unknown>>
 		const [relation] = await this.db
 			.insert(projectsToImages)
 			.values(payload)
+			.onConflictDoNothing()
 			.returning();
 		return relation;
 	}

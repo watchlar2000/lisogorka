@@ -1,0 +1,1 @@
+ALTER TABLE "projects_to_images" ADD CONSTRAINT "projects_to_images_project_id_image_id_pk" PRIMARY KEY("project_id","image_id");

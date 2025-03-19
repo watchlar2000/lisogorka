@@ -63,16 +63,20 @@ export const imagesRelations = relations(images, ({ many }) => ({
 	projects: many(projectsToImages),
 }));
 
-export const projectsToImages = table('projects_to_images', {
-	projectId: t
-		.integer('project_id')
-		.notNull()
-		.references(() => projects.id, { onDelete: 'cascade' }),
-	imageId: t
-		.integer('image_id')
-		.notNull()
-		.references(() => images.id, { onDelete: 'cascade' }),
-});
+export const projectsToImages = table(
+	'projects_to_images',
+	{
+		projectId: t
+			.integer('project_id')
+			.notNull()
+			.references(() => projects.id, { onDelete: 'cascade' }),
+		imageId: t
+			.integer('image_id')
+			.notNull()
+			.references(() => images.id, { onDelete: 'cascade' }),
+	},
+	(table) => [t.primaryKey({ columns: [table.projectId, table.imageId] })],
+);
 
 export const projectsToImagesRelations = relations(
 	projectsToImages,
