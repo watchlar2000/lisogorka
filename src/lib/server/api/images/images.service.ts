@@ -72,19 +72,17 @@ export class ImagesService implements IImagesService {
 
 	async create({ file, alt }: UpdateImageParams) {
 		try {
-			// eslint-disable-next-line @typescript-eslint/no-unused-vars
-			const { public_id, width, height, secure_url } =
-				await this.cloudinaryService.upload({
+			const { width, height, secure_url } = await this.cloudinaryService.upload(
+				{
 					image: file,
-				});
-
+				},
+			);
 			const payload = {
 				url: secure_url,
 				alt,
 				width,
 				height,
 			};
-
 			return await this.repository.create(payload);
 		} catch (error) {
 			console.error('Error creating image:', error);
@@ -120,9 +118,23 @@ export class ImagesService implements IImagesService {
 	}
 
 	async delete(id: number) {
+		function extractPublicId(url: string) {
+			try {
+				new URL(url);
+				const parts = url.split('/');
+				const folder = parts.at(-2);
+				const id = parts.at(-1)?.split('.')[0];
+				return `${folder}/${id}`;
+			} catch {
+				throw new Error('Invalid URL provided');
+			}
+		}
+
 		try {
-			// TODO: remove image from cloudinary
-			return await this.repository.delete(id);
+			const image = await this.repository.delete(id);
+			const publicId = extractPublicId(image.url);
+			await this.cloudinaryService.deleteByPublicId(publicId);
+			return image;
 		} catch (error) {
 			console.error('Error deleting image:', error);
 			throw new DatabaseError(

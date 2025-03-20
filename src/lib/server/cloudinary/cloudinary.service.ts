@@ -1,4 +1,5 @@
 import { config } from '$lib/server/api/configs/config';
+import { NotFoundError, ValidationError } from '$lib/utils/errors';
 import { v2 as cloudinary } from 'cloudinary';
 
 const { CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET } =
@@ -33,20 +34,41 @@ export class CloudinaryService {
 			const arrayBuffer = await image.arrayBuffer();
 			const base64String = Buffer.from(arrayBuffer).toString('base64');
 			const dataUri = `data:${image.type};base64,${base64String}`;
-
-			return await this.client.uploader.upload(dataUri, {
+			const result = await this.client.uploader.upload(dataUri, {
 				upload_preset: uploadPreset,
 			});
+
+			if (!result || !result.public_id) {
+				throw new ValidationError('Upload to Cloudinary failed');
+			}
+
+			return result;
 		} catch (error: unknown) {
-			throw new Error(`Cloudinary upload failed: ${error?.message}`);
+			throw new ValidationError(
+				`Cloudinary upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
+				error,
+			);
 		}
 	}
 
 	async deleteByPublicId(publicId: string): Promise<void> {
+		if (!publicId) {
+			throw new ValidationError('Public ID must be provided');
+		}
+
 		try {
-			await this.client.uploader.destroy(publicId);
+			const result = await this.client.uploader.destroy(publicId);
+
+			if (result.result !== 'ok') {
+				throw new NotFoundError(
+					`Failed to delete Cloudinary image with public ID: ${publicId}`,
+				);
+			}
 		} catch (error: unknown) {
-			throw new Error(`Failed to delete Cloudinary image: ${error?.message}`);
+			throw new NotFoundError(
+				`Failed to delete Cloudinary image: ${error instanceof Error ? error.message : 'Unknown error'}`,
+				error,
+			);
 		}
 	}
 }
