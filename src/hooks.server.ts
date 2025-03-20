@@ -6,7 +6,8 @@ import {
 	deleteSessionTokenCookie,
 	setSessionTokenCookie,
 } from '$lib/server/auth/cookie';
-import { type Handle } from '@sveltejs/kit';
+import { NotFoundError } from '$lib/utils/errors';
+import { type Handle, type HandleServerError } from '@sveltejs/kit';
 import { sequence } from '@sveltejs/kit/hooks';
 
 const bucket = new TokenBucket<string>(100, 1);
@@ -51,6 +52,22 @@ export const authHandle: Handle = async ({ event, resolve }) => {
 	event.locals.user = user;
 
 	return resolve(event);
+};
+
+export const handleError: HandleServerError = async ({
+	error,
+	event,
+	status,
+}) => {
+	console.error({
+		error,
+		event,
+		status,
+	});
+	return {
+		message: error?.message ?? 'Something went wrong',
+		status: error instanceof NotFoundError ? 404 : 500,
+	};
 };
 
 export const handle = sequence(rateLimitHandle, authHandle);
