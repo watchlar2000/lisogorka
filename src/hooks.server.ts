@@ -66,7 +66,7 @@ export const handleError: HandleServerError = async ({
 	});
 	return {
 		message: error?.message ?? 'Something went wrong',
-		status: error instanceof NotFoundError ? 404 : 500,
+		status: error instanceof NotFoundError ? 404 : status,
 	};
 };
 
