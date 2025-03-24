@@ -44,6 +44,6 @@
 }
 
 .prose img {
-	height: 100vh;
+	max-height: 100vh;
 	width: auto;
 }
