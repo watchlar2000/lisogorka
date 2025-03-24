@@ -17,7 +17,7 @@ export const UploadImageValidationSchema = (isEditMode = false) => {
 					.instanceof(File, { message: 'Upload an image file' })
 					.refine((file) => {
 						return file.size <= MAX_UPLOAD_SIZE;
-					}, 'File size must be less than 3MB')
+					}, 'File size must be less than 7MB')
 					.refine((file) => {
 						return ACCEPTED_FILE_TYPES.includes(file.type);
 					}, 'Either file type is incorrect or selected image type is not supported.'),

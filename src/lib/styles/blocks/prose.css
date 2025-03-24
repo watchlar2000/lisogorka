@@ -42,3 +42,8 @@
 	text-decoration-color: var(--color-primary);
 	color: var(--color-primary);
 }
+
+.prose img {
+	height: 100vh;
+	width: auto;
+}
