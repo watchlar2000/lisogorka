@@ -39,7 +39,7 @@ export class ProjectsRepository<T extends Record<string, unknown>>
 					coverImage: images,
 				})
 				.from(projects)
-				.orderBy(desc(projects.createdAt))
+				.orderBy(desc(projects.updatedAt))
 				.leftJoin(images, eq(projects.coverImageId, images.id))
 				.$dynamic();
 
