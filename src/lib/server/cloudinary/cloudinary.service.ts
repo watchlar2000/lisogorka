@@ -23,6 +23,18 @@ export class CloudinaryService {
 		this.client.config(config);
 	}
 
+	private optimizeUrl(url: string): string {
+		const optimizationParams = [
+			'q_auto',
+			'f_auto',
+			'w_1360,c_limit',
+			'dpr_auto',
+		].join(',');
+
+		const urlParts = url.split('/upload/');
+		return `${urlParts[0]}/upload/${optimizationParams}/${urlParts[1]}`;
+	}
+
 	async upload({
 		image,
 		uploadPreset = 'lisogorka',
@@ -42,7 +54,10 @@ export class CloudinaryService {
 				throw new ValidationError('Upload to Cloudinary failed');
 			}
 
-			return result;
+			return {
+				...result,
+				secure_url: this.optimizeUrl(result.secure_url),
+			};
 		} catch (error: unknown) {
 			throw new ValidationError(
 				`Cloudinary upload failed: ${error instanceof Error ? error.message : 'Unknown error'}`,
