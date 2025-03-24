@@ -3,7 +3,7 @@ export const MODE_CREATE = 'create';
 export const MODE_EDIT = 'edit';
 export const SUCCESS = 'success';
 export const FAILURE = 'failure';
-export const MAX_UPLOAD_SIZE = 1024 * 1024 * 3; // 3MB
+export const MAX_UPLOAD_SIZE = 1024 * 1024 * 7; // 7MB
 export const ACCEPTED_FILE_TYPES = [
 	'image/png',
 	'image/jpeg',
