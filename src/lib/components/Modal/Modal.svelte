@@ -3,7 +3,7 @@
 
 	type ModalProps = {
 		header: Snippet;
-		content: Snippet;
+		content?: Snippet;
 		controls: Snippet;
 		onCloseCallback?: () => void;
 	};
@@ -16,23 +16,38 @@
 	}: ModalProps = $props();
 	let dialog: HTMLDialogElement;
 
+	let isOpen = $state(false);
+
 	export const open = () => {
 		dialog.showModal();
+		isOpen = true;
 	};
 
 	export const close = () => {
 		dialog.close();
+		isOpen = false;
 		if (onCloseCallback) {
 			onCloseCallback();
 		}
 	};
 </script>
 
+<svelte:window
+	on:wheel|nonpassive={(e) => {
+		if (isOpen) e.preventDefault();
+	}}
+/>
 <dialog bind:this={dialog} onclose={close}>
-	<div class="wrapper flow" data-wrapper-type="inner">
+	<div
+		class="wrapper flow"
+		data-wrapper-type="inner"
+		onwheel={(e) => {
+			if (isOpen) e.stopPropagation();
+		}}
+	>
 		<header class="repel">
 			{@render header()}
-			<button class="button button__close" onclick={close}>
+			<button class="button button__close" type="button" onclick={close}>
 				<svg
 					xmlns="http://www.w3.org/2000/svg"
 					width="36"
@@ -51,7 +66,9 @@
 				<span class="visually-hidden">Close dialog window</span>
 			</button>
 		</header>
-		{@render content()}
+		{#if content}
+			{@render content()}
+		{/if}
 		<hr />
 		{@render controls()}
 	</div>
