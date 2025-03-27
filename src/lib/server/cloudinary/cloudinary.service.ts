@@ -25,9 +25,9 @@ export class CloudinaryService {
 
 	private optimizeUrl(url: string): string {
 		const optimizationParams = [
-			'q_auto',
+			// 'q_auto',
 			'f_auto',
-			'w_1360,c_limit',
+			// 'w_1360,c_limit',
 			'dpr_auto',
 		].join(',');
 
